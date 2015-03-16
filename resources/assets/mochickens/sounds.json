@@ -1,0 +1,5 @@
+{
+	"layDiamond": {"category": "neutral","sounds": ["layDiamond"]},
+	"deepCluck": {"category": "neutral","sounds": ["deepCluck1", "deepCluck2", "deepCluck3"]},
+	"giantHurt": {"category": "neutral","sounds": ["giantHurt1", "giantHurt2"]}
+}
