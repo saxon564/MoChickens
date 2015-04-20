@@ -136,7 +136,7 @@ public class GlowingChickenConfig {
 		allowBabies = config.get("entity data", "Allow Breeding", true).getBoolean(true);
 		canTeleport = config.get("entity data", "Allow Teleporting", false).getBoolean(false);
 		emitsLight = config.get("entity data", "Emits Light", true).getBoolean(true);
-		lightLevel = config.get("entity data", "Light Level Emited", 16).getInt(16);
+		lightLevel = config.get("entity data", "Light Level Emited", 15).getInt(15);
 		immuneToFire = config.get("entity data", "Immune To Fire", true).getBoolean(true);
 		burnsInLight = config.get("entity data", "Burns in Sun", false).getBoolean(false);
 		waterDamage = config.get("entity data", "Gets Hurt by Water", false).getBoolean(false);
