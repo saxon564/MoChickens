@@ -1,8 +1,7 @@
 package me.saxon564.mochickens;
 
-import java.util.List;
-
-
+import me.saxon564.mochickens.compatability.AdvancedGenetics;
+import me.saxon564.mochickens.compatability.Thaumcraft;
 import me.saxon564.mochickens.configs.FileManager;
 import me.saxon564.mochickens.configs.GeneralConfig;
 import me.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
@@ -50,50 +49,29 @@ import me.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import me.saxon564.mochickens.entities.mobs.EntitySnowChicken;
 import me.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import me.saxon564.mochickens.recipes.CraftingRecipes;
-//import me.saxon564.mochickens.registers.RegisterBiomes;
 import me.saxon564.mochickens.registers.RegisterBlocks;
 import me.saxon564.mochickens.registers.RegisterChickens;
 import me.saxon564.mochickens.registers.RegisterEggs;
-import me.saxon564.mochickens.registers.RegisterGameInfo;
 import me.saxon564.mochickens.registers.RegisterItems;
 import me.saxon564.mochickens.registers.RegisterOreDict;
-//import me.saxon564.mochickens.registers.RegisterDimensions;
 import me.saxon564.mochickens.registers.RegisterSpawns;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.WorldProviderHell;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+//import me.saxon564.mochickens.registers.RegisterBiomes;
+//import me.saxon564.mochickens.registers.RegisterDimensions;
 
 
 @Mod(modid = MoChickensReference.MODID, name = MoChickensReference.MODNAME, version = MoChickensReference.VERSION)
@@ -171,8 +149,6 @@ public class MoChickens {
 		
 		path = event.getModConfigurationDirectory().toString() + "\\MoChickens";
 		
-
-		
 		FileManager.PreInit(event);
 
 		RegisterItems.itemRegisters();
@@ -181,6 +157,24 @@ public class MoChickens {
 		RegisterEggs.EggRegisters();
 		//RegisterDimensions.dimensionRegisters();
 		//RegisterBiomes.biomeRegisters();
+		
+		if (Loader.isModLoaded(Thaumcraft.id)) {
+			loadThaumcraft();
+		}
+		
+		if (Loader.isModLoaded(AdvancedGenetics.id)) {
+			loadAG();
+		}
+	}
+	
+	@Optional.Method(modid = Thaumcraft.id)
+	private void loadThaumcraft() {
+		Thaumcraft.addAspects();
+	}
+	
+	@Optional.Method(modid = AdvancedGenetics.id)
+	private void loadAG() {
+		AdvancedGenetics.addAbilities();
 	}
 
 	@EventHandler

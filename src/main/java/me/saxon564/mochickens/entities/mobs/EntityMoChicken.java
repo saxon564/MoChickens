@@ -102,7 +102,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				.get("Hit Box Size Z").getDouble();
 		this.setSize(x, z);
 		float f = 0.25F;
-		attackingSpeedBoostModifier = (new AttributeModifier(
+		this.attackingSpeedBoostModifier = (new AttributeModifier(
 				attackingSpeedBoostModifierUUID, "attackingSpeedBoostModifier",
 				config.getCategory("attack data").get("Attack Speed")
 						.getDouble(), 0)).setSaved(false);
@@ -130,6 +130,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 					.getInt(), 15.0F);
 		}
 		this.setTamed(false);
+	}
+
+	protected void entityInit() {
+		super.entityInit();
+		this.dataWatcher.addObject(18, new Byte((byte) 0));
 	}
 
 	/**

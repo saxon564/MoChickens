@@ -18,67 +18,67 @@ public class RegisterSpawns {
 	public static void entitySpawns() {
 		if (DiamondChickenConfig.spawn == true) {
 			generateSpawning(EntityDiamondChicken.class,
-					EnumCreatureType.creature, DiamondChickenConfig.config);
+					EnumCreatureType.monster, DiamondChickenConfig.config);
 		}
 
 		if (CoalChickenConfig.spawn == true) {
 			generateSpawning(EntityCoalChicken.class,
-					EnumCreatureType.creature, CoalChickenConfig.config);
+					EnumCreatureType.monster, CoalChickenConfig.config);
 		}
 
 		if (IronChickenConfig.spawn == true) {
 			generateSpawning(EntityIronChicken.class,
-					EnumCreatureType.creature, IronChickenConfig.config);
+					EnumCreatureType.monster, IronChickenConfig.config);
 		}
 
 		if (GoldChickenConfig.spawn == true) {
 			generateSpawning(EntityGoldChicken.class,
-					EnumCreatureType.creature, GoldChickenConfig.config);
+					EnumCreatureType.monster, GoldChickenConfig.config);
 		}
 
 		if (LapisChickenConfig.spawn == true) {
 			generateSpawning(EntityLapisChicken.class,
-					EnumCreatureType.creature, LapisChickenConfig.config);
+					EnumCreatureType.monster, LapisChickenConfig.config);
 		}
 
 		if (RedstoneChickenConfig.spawn == true) {
 			generateSpawning(EntityRedstoneChicken.class,
-					EnumCreatureType.creature, RedstoneChickenConfig.config);
+					EnumCreatureType.monster, RedstoneChickenConfig.config);
 		}
 
 		if (EmeraldChickenConfig.spawn == true) {
 			generateSpawning(EntityEmeraldChicken.class,
-					EnumCreatureType.creature, EmeraldChickenConfig.config);
+					EnumCreatureType.monster, EmeraldChickenConfig.config);
 		}
 
 		if (GiantChickenConfig.spawn == true) {
 			generateSpawning(EntityGiantChicken.class,
-					EnumCreatureType.creature, GiantChickenConfig.config);
+					EnumCreatureType.monster, GiantChickenConfig.config);
 		}
 
 		if (QuartzChickenConfig.spawn == true) {
 			generateSpawning(EntityQuartzChicken.class,
-					EnumCreatureType.creature, QuartzChickenConfig.config);
+					EnumCreatureType.monster, QuartzChickenConfig.config);
 		}
 
 		if (CookieChickenConfig.spawn == true) {
 			generateSpawning(EntityCookieChicken.class,
-					EnumCreatureType.creature, CookieChickenConfig.config);
+					EnumCreatureType.monster, CookieChickenConfig.config);
 		}
 
 		if (SnowChickenConfig.spawn == true) {
 			generateSpawning(EntitySnowChicken.class,
-					EnumCreatureType.creature, SnowChickenConfig.config);
+					EnumCreatureType.monster, SnowChickenConfig.config);
 		}
 
 		if (ClayChickenConfig.spawn == true) {
 			generateSpawning(EntityClayChicken.class,
-					EnumCreatureType.creature, ClayChickenConfig.config);
+					EnumCreatureType.monster, ClayChickenConfig.config);
 		}
 
 		if (RainbowChickenConfig.spawn == true) {
 			generateSpawning(EntityRainbowChicken.class,
-					EnumCreatureType.creature, RainbowChickenConfig.config);
+					EnumCreatureType.monster, RainbowChickenConfig.config);
 		}
 
 		if (SkeletonChickenConfig.spawn == true) {
@@ -88,7 +88,7 @@ public class RegisterSpawns {
 
 		if (EnderChickenConfig.spawn == true) {
 			generateSpawning(EntityEnderChicken.class,
-					EnumCreatureType.creature, EnderChickenConfig.config);
+					EnumCreatureType.monster, EnderChickenConfig.config);
 		}
 
 		if (CreeperChickenConfig.spawn == true) {
@@ -98,27 +98,27 @@ public class RegisterSpawns {
 
 		if (BeefyChickenConfig.spawn == true) {
 			generateSpawning(EntityBeefyChicken.class,
-					EnumCreatureType.creature, BeefyChickenConfig.config);
+					EnumCreatureType.monster, BeefyChickenConfig.config);
 		}
 
 		if (GlowingChickenConfig.spawn == true) {
 			generateSpawning(EntityGlowingChicken.class,
-					EnumCreatureType.creature, GlowingChickenConfig.config);
+					EnumCreatureType.monster, GlowingChickenConfig.config);
 		}
 
 		if (BlazingChickenConfig.spawn == true) {
 			generateSpawning(EntityBlazingChicken.class,
-					EnumCreatureType.creature, BlazingChickenConfig.config);
+					EnumCreatureType.monster, BlazingChickenConfig.config);
 		}
 
 		if (EnchantedChickenConfig.spawn == true) {
 			generateSpawning(EntityEnchantedChicken.class,
-					EnumCreatureType.creature, EnchantedChickenConfig.config);
+					EnumCreatureType.monster, EnchantedChickenConfig.config);
 		}
 
 		if (NuuwChickenConfig.spawn == true) {
 			generateSpawning(EntityNuuwChicken.class,
-					EnumCreatureType.creature, NuuwChickenConfig.config);
+					EnumCreatureType.monster, NuuwChickenConfig.config);
 		}
 	}
 

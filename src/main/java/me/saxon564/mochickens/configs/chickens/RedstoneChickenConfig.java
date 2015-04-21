@@ -183,8 +183,8 @@ public class RedstoneChickenConfig {
 	public static void attackData() {
 		ConfigComments.attackDataComments(config);
 		attackDamage = (float) config.get("attack data", "Attack Damage", 5.0D).getDouble(5.0D);
-		setFire = config.get("attack data", "Set Target On Fire", false).getBoolean(false);
-		fireTimer = config.get("attack data", "Fire Duration", 0).getInt(0);
+		setFire = config.get("attack data", "Set Target On Fire", true).getBoolean(true);
+		fireTimer = config.get("attack data", "Fire Duration", 15).getInt(15);
 		attackSpeed = config.get("attack data", "Attack Speed", 0.25D).getDouble(0.25D);
 		savedEffectIds = config.get("attack data", "Effect IDs", effectIds);
 		savedEffectDurations = config.get("attack data", "Effect Durations", effectDurations);

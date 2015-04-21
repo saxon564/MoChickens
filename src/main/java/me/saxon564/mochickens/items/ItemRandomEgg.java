@@ -69,7 +69,7 @@ public class ItemRandomEgg extends Item {
 					EntityLiving newEntity = (EntityLiving) type
 							.getDeclaredConstructor(World.class).newInstance(
 									par2EntityPlayer.worldObj);
-					System.out.println(newEntity.toString());
+					//System.out.println(newEntity.toString());
 					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
 						// prevent tying to age bat
 					} else {
