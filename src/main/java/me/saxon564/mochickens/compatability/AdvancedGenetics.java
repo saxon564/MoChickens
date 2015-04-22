@@ -37,6 +37,7 @@ public class AdvancedGenetics {
 		RegistrationHelper.addEntityToAbility("nofall", EntityDiamondChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityEmeraldChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityQuartzChicken.class);
+		RegistrationHelper.addEntityToAbility("lavaswim", EntityQuartzChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityGiantChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityClayChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityRainbowChicken.class);
@@ -46,9 +47,14 @@ public class AdvancedGenetics {
 		RegistrationHelper.addEntityToAbility("nofall", EntityNuuwChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityBeefyChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntitySkeletonChicken.class);
+		RegistrationHelper.addEntityToAbility("infinity", EntitySkeletonChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityCreeperChicken.class);
+		RegistrationHelper.addEntityToAbility("selfexplode", EntityCreeperChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityEnderChicken.class);
+		RegistrationHelper.addEntityToAbility("teleport", EntityEnderChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityGlowingChicken.class);
+		RegistrationHelper.addEntityToAbility("lavaswim", EntityGlowingChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityBlazingChicken.class);
+		RegistrationHelper.addEntityToAbility("lavaswim", EntityBlazingChicken.class);
 	}
 }
