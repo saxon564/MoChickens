@@ -10,7 +10,17 @@
 /eclipse/.metadata/.lock
 /eclipse/.metadata/.log
 /eclipse/.metadata/version.ini
+/eclipse/.metadata/.plugins/org.eclipse.core.resources
+/eclipse/.metadata/.plugins/org.eclipse.core.runtime
+/eclipse/.metadata/.plugins/org.eclipse.debug.core
+/eclipse/.metadata/.plugins/org.eclipse.debug.ui
+/eclipse/.metadata/.plugins/org.eclipse.e4.workbench
 /eclipse/.metadata/.plugins/org.eclipse.jdt.launching
+/eclipse/.metadata/.plugins/org.eclipse.jdt.ui
+/eclipse/.metadata/.plugins/org.eclipse.ltk.core.refactoring
+/eclipse/.metadata/.plugins/org.eclipse.ltk.ui.refactoring
+/eclipse/.metadata/.plugins/org.eclipse.pde.core
+/eclipse/.metadata/.plugins/org.eclipse.ui.workbench
 /bin
 /build
 /.gradle
