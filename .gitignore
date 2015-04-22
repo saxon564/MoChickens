@@ -7,6 +7,7 @@
 /eclipse/saves
 /eclipse/options.txt
 /eclipse/usernamecache.json
+/eclipse/.metadata/.plugins/org.eclipse.debug.core
 /bin
 /build
 /.gradle
