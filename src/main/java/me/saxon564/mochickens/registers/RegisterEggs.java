@@ -43,7 +43,7 @@ public class RegisterEggs {
                                          int primaryColor, int secondaryColor)
     {
         int id = getUniqueEntityID();
-        EntityList.IDtoClassMapping.put(id, entity);
+        EntityList.idToClassMapping.put(id, entity);
         EntityList.entityEggs.put(id, new EntityList.EntityEggInfo(id, primaryColor,
                                   secondaryColor));
     }
