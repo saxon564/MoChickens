@@ -1,9 +1,0 @@
-!SESSION 2015-04-21 23:56:26.281 -----------------------------------------------
-eclipse.buildId=M20130204-1200
-java.version=1.8.0_60-ea
-java.vendor=Oracle Corporation
-BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
-Command-line arguments:  -os win32 -ws win32 -arch x86_64
-
-!ENTRY org.eclipse.core.resources 4 374 2015-04-21 23:56:40.937
-!MESSAGE Resource '/.org.eclipse.jdt.core.external.folders' already exists.
