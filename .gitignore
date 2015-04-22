@@ -1,4 +1,12 @@
-/eclipse
+/eclipse/asm
+/eclipse/config
+/eclipse/crash-reports
+/eclipse/logs
+/eclipse/mods
+/eclipse/resourcepacks
+/eclipse/saves
+/eclipse/options.txt
+/eclipse/usernamecache.json
 /bin
 /build
 /.gradle
