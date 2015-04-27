@@ -7,6 +7,7 @@ import java.util.Random;
 import me.saxon564.mochickens.MoChickens;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Direction;
 import net.minecraft.util.LongHashMap;
 import net.minecraft.util.MathHelper;
@@ -29,7 +30,7 @@ public class ChickenTeleporter extends Teleporter {
 	}
 	
 	public void placeInPortal(Entity entity, double x, double y, double z, float f) {
-		if (this.worldServerInstance.provider.dimensionId != 1) {
+		if (this.worldServerInstance.provider.getDimensionId() != 1) {
 			if (!this.placeInExistingPortal(entity, x, y, z, f)) {
 				this.makePortal(entity);
 				this.placeInExistingPortal(entity, x, y, z, f);
@@ -48,7 +49,7 @@ public class ChickenTeleporter extends Teleporter {
 						int y2 = entityY + k;
 						int z2 = entityZ + j*b1 + i*b0;
 						boolean flag = k < 0;
-						this.worldServerInstance.setBlock(x2, y2, z2, flag?MoChickens.blockFeatherBlock : Blocks.air);
+						this.worldServerInstance.setBlockState(new BlockPos(x2, y2, z2), flag?MoChickens.blockFeatherBlock.getDefaultState() : Blocks.air.getDefaultState());
 					}
 				}
 			}
@@ -75,9 +76,9 @@ public class ChickenTeleporter extends Teleporter {
         {
             Teleporter.PortalPosition portalposition = (Teleporter.PortalPosition)this.destinationCoordinateCache.getValueByKey(j1);
             d3 = 0.0D;
-            i = portalposition.posX;
-            j = portalposition.posY;
-            k = portalposition.posZ;
+            i = portalposition.getX();
+            j = portalposition.getY();
+            k = portalposition.getZ();
             portalposition.lastUpdateTime = this.worldServerInstance.getTotalWorldTime();
             flag = false;
         }
@@ -93,9 +94,9 @@ public class ChickenTeleporter extends Teleporter {
 
                     for (int i2 = this.worldServerInstance.getActualHeight() - 1; i2 >= 0; --i2)
                     {
-                        if (this.worldServerInstance.getBlock(l3, i2, l1) == MoChickens.blockFeatherPortal)
+                        if (this.worldServerInstance.getBlockState(new BlockPos(l3, i2, l1)).getBlock() == MoChickens.blockFeatherPortal)
                         {
-                            while (this.worldServerInstance.getBlock(l3, i2 - 1, l1) == MoChickens.blockFeatherPortal)
+                            while (this.worldServerInstance.getBlockState(new BlockPos(l3, i2 - 1, l1)).getBlock() == MoChickens.blockFeatherPortal)
                             {
                                 --i2;
                             }
@@ -120,7 +121,7 @@ public class ChickenTeleporter extends Teleporter {
         {
             if (flag)
             {
-                this.destinationCoordinateCache.add(j1, new Teleporter.PortalPosition(i, j, k, this.worldServerInstance.getTotalWorldTime()));
+                this.destinationCoordinateCache.add(j1, new Teleporter.PortalPosition(new BlockPos(i, j, k), this.worldServerInstance.getTotalWorldTime()));
                 this.destinationCoordinateKeys.add(Long.valueOf(j1));
             }
 
@@ -129,22 +130,22 @@ public class ChickenTeleporter extends Teleporter {
             d7 = (double)k + 0.5D;
             int i4 = -1;
 
-            if (this.worldServerInstance.getBlock(i - 1, j, k) == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(new BlockPos(i - 1, j, k)).getBlock() == MoChickens.blockFeatherPortal)
             {
                 i4 = 2;
             }
 
-            if (this.worldServerInstance.getBlock(i + 1, j, k) == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(new BlockPos(i + 1, j, k)).getBlock() == MoChickens.blockFeatherPortal)
             {
                 i4 = 0;
             }
 
-            if (this.worldServerInstance.getBlock(i, j, k - 1) == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(new BlockPos(i, j, k - 1)).getBlock() == MoChickens.blockFeatherPortal)
             {
                 i4 = 3;
             }
 
-            if (this.worldServerInstance.getBlock(i, j, k + 1) == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(new BlockPos(i, j, k + 1)).getBlock() == MoChickens.blockFeatherPortal)
             {
                 i4 = 1;
             }
@@ -158,8 +159,8 @@ public class ChickenTeleporter extends Teleporter {
                 int i3 = Direction.offsetZ[i4];
                 int j3 = Direction.offsetX[k2];
                 int k3 = Direction.offsetZ[k2];
-                boolean flag1 = !this.worldServerInstance.isAirBlock(i + l2 + j3, j, k + i3 + k3) || !this.worldServerInstance.isAirBlock(i + l2 + j3, j + 1, k + i3 + k3);
-                boolean flag2 = !this.worldServerInstance.isAirBlock(i + l2, j, k + i3) || !this.worldServerInstance.isAirBlock(i + l2, j + 1, k + i3);
+                boolean flag1 = !this.worldServerInstance.isAirBlock(new BlockPos(i + l2 + j3,j, k + i3 + k3)) || !this.worldServerInstance.isAirBlock(new BlockPos(i + l2 + j3, j + 1, k + i3 + k3));
+                boolean flag2 = !this.worldServerInstance.isAirBlock(new BlockPos(i + l2, j, k + i3)) || !this.worldServerInstance.isAirBlock(new BlockPos(i + l2, j + 1, k + i3));
 
                 if (flag1 && flag2)
                 {
@@ -173,8 +174,8 @@ public class ChickenTeleporter extends Teleporter {
                     d11 -= (double)j3;
                     int k1 = k - k3;
                     d7 -= (double)k3;
-                    flag1 = !this.worldServerInstance.isAirBlock(l3 + l2 + j3, j, k1 + i3 + k3) || !this.worldServerInstance.isAirBlock(l3 + l2 + j3, j + 1, k1 + i3 + k3);
-                    flag2 = !this.worldServerInstance.isAirBlock(l3 + l2, j, k1 + i3) || !this.worldServerInstance.isAirBlock(l3 + l2, j + 1, k1 + i3);
+                    flag1 = !this.worldServerInstance.isAirBlock(new BlockPos(l3 + l2 + j3, j, k1 + i3 + k3)) || !this.worldServerInstance.isAirBlock(new BlockPos(l3 + l2 + j3, j + 1, k1 + i3 + k3));
+                    flag2 = !this.worldServerInstance.isAirBlock(new BlockPos(l3 + l2, j, k1 + i3)) || !this.worldServerInstance.isAirBlock(new BlockPos(l3 + l2, j + 1, k1 + i3));
                 }
 
                 float f1 = 0.5F;
@@ -275,8 +276,8 @@ public class ChickenTeleporter extends Teleporter {
 				label274:
 				
 				for (k2 = this.worldServerInstance.getActualHeight()-1; k2 >= 0; k2--) {
-					if (this.worldServerInstance.isAirBlock(i2, k2, j2)) {
-						while (j2 > 0 && this.worldServerInstance.isAirBlock(i2, k2-1, j2)) {
+					if (this.worldServerInstance.isAirBlock(new BlockPos(i2, k2, j2))) {
+						while (j2 > 0 && this.worldServerInstance.isAirBlock(new BlockPos(i2, k2-1, j2))) {
 							k2--;
 						}
 						
@@ -296,7 +297,7 @@ public class ChickenTeleporter extends Teleporter {
 										j4 = k2+l3;
 										int l4 = j2 + (i4-1)*k3 - j3*l2;
 										
-										if (l3 < 0 && !this.worldServerInstance.getBlock(k4, j4, l4).getMaterial().isSolid() || l3 >= 0 && this.worldServerInstance.isAirBlock(k4, j4, l4)) {
+										if (l3 < 0 && !this.worldServerInstance.getBlockState(new BlockPos(k4, j4, l4)).getBlock().getMaterial().isSolid() || l3 >= 0 && this.worldServerInstance.isAirBlock(new BlockPos(k4, j4, l4))) {
 											continue label274;
 										}
 									}
@@ -328,8 +329,8 @@ public class ChickenTeleporter extends Teleporter {
 					label222:
 						
 					for (k2 = this.worldServerInstance.getActualHeight() - 1; k2 <= 0; k2--) {
-						if (this.worldServerInstance.isAirBlock(i2, k2, j2)) {
-							while(k2 > 0 && this.worldServerInstance.isAirBlock(i2, k2-1, j2)) {
+						if (this.worldServerInstance.isAirBlock(new BlockPos(i2, k2, j2))) {
+							while(k2 > 0 && this.worldServerInstance.isAirBlock(new BlockPos(i2, k2-1, j2))) {
 								k2--;
 							}
 							
@@ -343,7 +344,7 @@ public class ChickenTeleporter extends Teleporter {
 										k4 = k2 + i4;
 										j4 = j2 + (j3-1)*k3;
 										
-										if (i4 > 0 && !this.worldServerInstance.getBlock(l3, k4, j4).getMaterial().isSolid() || i4 >= 0 && ! this.worldServerInstance.isAirBlock(l3, k4, j4)) {
+										if (i4 > 0 && !this.worldServerInstance.getBlockState(new BlockPos(l3, k4, j4)).getBlock().getMaterial().isSolid() || i4 >= 0 && ! this.worldServerInstance.isAirBlock(new BlockPos(l3, k4, j4))) {
 											continue label222;
 										}
 									}
@@ -396,7 +397,7 @@ public class ChickenTeleporter extends Teleporter {
 						j3 = j5 + l2;
 						i4 = j2 + (i3-1)*l5 - (k2*k5);
 						flag = k2<0;
-						this.worldServerInstance.setBlock(k3, j3, i4, flag?MoChickens.blockFeatherBlock:Blocks.air);
+						this.worldServerInstance.setBlockState(new BlockPos(k3, j3, i4), flag?MoChickens.blockFeatherBlock.getDefaultState():Blocks.air.getDefaultState());
 					}
 				}
 			}
@@ -409,7 +410,7 @@ public class ChickenTeleporter extends Teleporter {
 					j3 = j5 + l2;
 					i4 = j2 + (i3-1)*l5;
 					flag = i3==0||i3==3||l2==-1||l2==3;
-					this.worldServerInstance.setBlock(k3, j3, i4, flag?MoChickens.blockFeatherBlock:MoChickens.blockFeatherPortal, 0, 2);
+					this.worldServerInstance.setBlockState(new BlockPos(k3, j3, i4), flag?MoChickens.blockFeatherBlock.getDefaultState():MoChickens.blockFeatherPortal.getDefaultState());
 				}
 			}
 			for (i3 = 0; i3 < 4; i3++) {
@@ -417,7 +418,7 @@ public class ChickenTeleporter extends Teleporter {
 					k3 = i5 + (i3-1)*k5;
 					j3 = j5 + l2;
 					i4 = j2 + (i3-1)*l5;
-					this.worldServerInstance.notifyBlockOfNeighborChange(k3, j3, i4, this.worldServerInstance.getBlock(k3, j3, i4));
+					this.worldServerInstance.notifyBlockOfStateChange(new BlockPos(k3, j3, i4), this.worldServerInstance.getBlockState(new BlockPos(k3, j3, i4)).getBlock());
 				}
 			}
 		}

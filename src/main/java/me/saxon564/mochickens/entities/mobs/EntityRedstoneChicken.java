@@ -2,6 +2,7 @@ package me.saxon564.mochickens.entities.mobs;
 
 import me.saxon564.mochickens.configs.chickens.RedstoneChickenConfig;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -21,9 +22,9 @@ public class EntityRedstoneChicken extends EntityMoChicken
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.boundingBox.minY);
+        int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
-        return this.worldObj.getBlock(i, j - 1, k) == Blocks.grass && this.worldObj.getFullBlockLightValue(i, j, k) > 8 && super.getCanSpawnHere();
+        return this.worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock() == Blocks.grass && this.worldObj.getLightBrightness(new BlockPos(i, j, k)) > 8 && super.getCanSpawnHere();
     }
 
     /**

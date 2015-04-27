@@ -173,4 +173,9 @@ public class MapGenChickenVillage extends MapGenStructure
                 this.hasMoreThanTwoComponents = p_143017_1_.getBoolean("Valid");
             }
         }
+
+	@Override
+	public String getStructureName() {
+		return null;
+	}
 }

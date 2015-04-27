@@ -49,8 +49,10 @@ import me.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import me.saxon564.mochickens.entities.mobs.EntitySnowChicken;
 import me.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import me.saxon564.mochickens.recipes.CraftingRecipes;
+import me.saxon564.mochickens.registers.RegisterBiomes;
 import me.saxon564.mochickens.registers.RegisterBlocks;
 import me.saxon564.mochickens.registers.RegisterChickens;
+import me.saxon564.mochickens.registers.RegisterDimensions;
 import me.saxon564.mochickens.registers.RegisterEggs;
 import me.saxon564.mochickens.registers.RegisterItems;
 import me.saxon564.mochickens.registers.RegisterOreDict;
@@ -60,6 +62,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -70,8 +73,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-//import me.saxon564.mochickens.registers.RegisterBiomes;
-//import me.saxon564.mochickens.registers.RegisterDimensions;
 
 
 @Mod(modid = MoChickensReference.MODID, name = MoChickensReference.MODNAME, version = MoChickensReference.VERSION)
@@ -128,13 +129,13 @@ public class MoChickens {
 	public static String path;
 	
 	//Dimensions
-	//public static int chickenDimensionId;
+	public static int chickenDimensionId;
 	
 	//Biomes
-	//public static BiomeGenBase biomeChickenForest;
-	//public static BiomeGenBase biomeChickenPlains;
-	//public static int biomeChickenForestId;
-	//public static int biomeChickenPlainsId;
+	public static BiomeGenBase biomeChickenForest;
+	public static BiomeGenBase biomeChickenPlains;
+	public static int biomeChickenForestId;
+	public static int biomeChickenPlainsId;
 
 	public static int startEntityId = 300;
 	
@@ -148,26 +149,26 @@ public class MoChickens {
 	public void preInit(FMLPreInitializationEvent event) {
 		
 		path = event.getModConfigurationDirectory().toString() + "\\MoChickens";
-		
+		 
 		FileManager.PreInit(event);
 
 		RegisterItems.itemRegisters();
 		RegisterBlocks.blockRegisters();
 		RegisterChickens.entityRegisters();
 		RegisterEggs.EggRegisters();
-		//RegisterDimensions.dimensionRegisters();
-		//RegisterBiomes.biomeRegisters();
+		RegisterDimensions.dimensionRegisters();
+		RegisterBiomes.biomeRegisters();
 		
-		if (Loader.isModLoaded(Thaumcraft.id)) {
+		/*if (Loader.isModLoaded(Thaumcraft.id)) {
 			loadThaumcraft();
 		}
 		
 		if (Loader.isModLoaded(AdvancedGenetics.id)) {
 			loadAG();
-		}
+		}*/
 	}
 	
-	@Optional.Method(modid = Thaumcraft.id)
+	/*@Optional.Method(modid = Thaumcraft.id)
 	private void loadThaumcraft() {
 		Thaumcraft.addAspects();
 	}
@@ -175,10 +176,10 @@ public class MoChickens {
 	@Optional.Method(modid = AdvancedGenetics.id)
 	private void loadAG() {
 		AdvancedGenetics.addAbilities();
-	}
+	}*/
 
 	@EventHandler
-	public void load(FMLInitializationEvent event) {
+	public void load(FMLInitializationEvent event) { 
 		CraftingRecipes.CraftingRecipieManager();
 		RegisterOreDict.AddOres();
 		proxy.registerSounds();

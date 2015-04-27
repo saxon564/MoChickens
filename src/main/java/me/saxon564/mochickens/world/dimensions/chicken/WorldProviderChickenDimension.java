@@ -5,12 +5,14 @@ import me.saxon564.mochickens.world.dimensions.chicken.chunks.ChunkProviderChick
 import me.saxon564.mochickens.world.dimensions.chicken.chunks.WorldChunkManagerChicken;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
 
 public class WorldProviderChickenDimension extends WorldProvider {
 
 	public void registerWorldChunkManager() {
+		WorldType terrainType = worldObj.getWorldInfo().getTerrainType();
 		this.worldChunkMgr = new WorldChunkManagerChicken(worldObj.getSeed(), terrainType);
 		//this.dimensionId = MoChickens.chickenDimensionId;
 	}
@@ -33,6 +35,11 @@ public class WorldProviderChickenDimension extends WorldProvider {
 	public int getRespawnDimension(EntityPlayerMP player)
 	{
 		return 0;
+	}
+
+	@Override
+	public String getInternalNameSuffix() {
+		return null;
 	}
 
 }

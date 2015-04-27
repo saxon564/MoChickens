@@ -1,8 +1,5 @@
 package me.saxon564.mochickens.blocks;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,10 +8,12 @@ import me.saxon564.mochickens.MoChickens;
 import me.saxon564.mochickens.MoChickensReference;
 import me.saxon564.mochickens.world.dimensions.chicken.teleporters.ChickenTeleporter;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,279 +22,187 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.Direction;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFeatherPortal extends BlockPortal
 {
+	public static final PropertyEnum AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class, new EnumFacing.Axis[] {EnumFacing.Axis.X, EnumFacing.Axis.Z});
+    
     public BlockFeatherPortal()
     {
-        this.setTickRandomly(true);
-        this.setBlockName("chicken_portal");
+        setTickRandomly(true);
+		setUnlocalizedName("chicken_portal");
     }
 
-    /**
-     * Ticks the block if it's been scheduled
-     */
-    public void updateTick(World world, int x, int y, int z, Random rand)
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
-        super.updateTick(world, x, y, z, rand);
-        
-        EnumDifficulty difficulty = world.difficultySetting;
-        int serverDifficulty;
-        
-        if (difficulty.toString() == "HARD") {
-        	serverDifficulty = 3;
-        } else if (difficulty.toString() == "NORMAL") {
-        	serverDifficulty = 2;
-        } else if (difficulty.toString() == "EASY") {
-        	serverDifficulty = 1;
-        } else {
-        	serverDifficulty = 0;
-        }
+        super.updateTick(worldIn, pos, state, rand);
 
-        if (world.provider.isSurfaceWorld() && rand.nextInt(2000) < serverDifficulty)
+        if (worldIn.provider.isSurfaceWorld() && worldIn.getGameRules().getGameRuleBooleanValue("doMobSpawning") && rand.nextInt(2000) < worldIn.getDifficulty().getDifficultyId())
         {
-            int l;
+            int i = pos.getY();
+            BlockPos blockpos1;
 
-            for (l = y; !world.doesBlockHaveSolidTopSurface(world, x, l, z) && l > 0; --l)
+            for (blockpos1 = pos; !World.doesBlockHaveSolidTopSurface(worldIn, blockpos1) && blockpos1.getY() > 0; blockpos1 = blockpos1.down())
             {
                 ;
             }
 
-            if (l > 0 && !world.isBlockNormalCubeDefault(x, l + 1, z, false))
+            if (i > 0 && !worldIn.getBlockState(blockpos1.up()).getBlock().isNormalCube())
             {
-                Entity entity = ItemMonsterPlacer.spawnCreature(world, 93, (double)x + 0.5D, (double)l + 1.1D, (double)z + 0.5D);
+                Entity entity = ItemMonsterPlacer.spawnCreature(worldIn, 57, (double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 1.1D, (double)blockpos1.getZ() + 0.5D);
 
                 if (entity != null)
                 {
-                	LogManager.getLogger().info(entity.getEntityId());
                     entity.timeUntilPortal = entity.getPortalCooldown();
                 }
             }
         }
     }
 
-    /**
-     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
-     * cleared to be reused)
-     */
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
     {
         return null;
     }
 
-    /**
-     * Updates the blocks bounds based on its current state. Args: world, x, y, z
-     */
-    public void setBlockBoundsBasedOnState(IBlockAccess worldBlock, int x, int y, int z)
+    public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        float f;
-        float f1;
+        EnumFacing.Axis axis = (EnumFacing.Axis)worldIn.getBlockState(pos).getValue(AXIS);
+        float f = 0.125F;
+        float f1 = 0.125F;
 
-        if (worldBlock.getBlock(x - 1, y, z) != this && worldBlock.getBlock(x + 1, y, z) != this)
-        {
-            f = 0.125F;
-            f1 = 0.5F;
-            this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f1, 0.5F + f, 1.0F, 0.5F + f1);
-        }
-        else
+        if (axis == EnumFacing.Axis.X)
         {
             f = 0.5F;
-            f1 = 0.125F;
-            this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f1, 0.5F + f, 1.0F, 0.5F + f1);
         }
+
+        if (axis == EnumFacing.Axis.Z)
+        {
+            f1 = 0.5F;
+        }
+
+        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f1, 0.5F + f, 1.0F, 0.5F + f1);
     }
 
-    /**
-     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
-     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
-     */
-    public boolean isOpaqueCube()
+    public static int getMetaForAxis(EnumFacing.Axis axis)
+    {
+        return axis == EnumFacing.Axis.X ? 1 : (axis == EnumFacing.Axis.Z ? 2 : 0);
+    }
+
+    public boolean isFullCube()
     {
         return false;
     }
 
-    /**
-     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
-     */
-    public boolean renderAsNormalBlock()
+    public boolean func_176548_d(World worldIn, BlockPos p_176548_2_)
     {
-        return false;
-    }
+        BlockFeatherPortal.Size size = new BlockFeatherPortal.Size(worldIn, p_176548_2_, EnumFacing.Axis.X);
 
-    /**
-     * Checks to see if this location is valid to create a portal and will return True if it does. Args: world, x, y, z
-     */
-    public boolean tryToCreatePortal(World world, int x, int y, int z)
-    {
-        byte b0 = 0;
-        byte b1 = 0;
-
-        if (world.getBlock(x - 1, y, z) == MoChickens.blockFeatherBlock || world.getBlock(x + 1, y, z) == MoChickens.blockFeatherBlock)
+        if (size.func_150860_b() && size.field_150864_e == 0)
         {
-            b0 = 1;
-        }
-
-        if (world.getBlock(x, y, z - 1) == MoChickens.blockFeatherBlock || world.getBlock(x, y, z + 1) == MoChickens.blockFeatherBlock)
-        {
-            b1 = 1;
-        }
-
-        if (b0 == b1)
-        {
-            return false;
-        }
-        else
-        {
-            if (world.isAirBlock(x - b0, y, z - b1))
-            {
-                x -= b0;
-                z -= b1;
-            }
-
-            int l;
-            int i1;
-
-            for (l = -1; l <= 2; ++l)
-            {
-                for (i1 = -1; i1 <= 3; ++i1)
-                {
-                    boolean flag = l == -1 || l == 2 || i1 == -1 || i1 == 3;
-
-                    if (l != -1 && l != 2 || i1 != -1 && i1 != 3)
-                    {
-                        Block j1 = world.getBlock(x + b0 * l, y + i1, z + b1 * l);
-                        boolean isAirBlock = world.isAirBlock(x + b0 * l, y + i1, z + b1 * l);
-
-                        if (flag)
-                        {
-                            if (j1 != MoChickens.blockFeatherBlock)
-                            {
-                                return false;
-                            }
-                        }
-                        else if (!isAirBlock && j1 != MoChickens.blockChickenFire)
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            for (l = 0; l < 2; ++l)
-            {
-                for (i1 = 0; i1 < 3; ++i1)
-                {
-                    world.setBlock(x + b0 * l, y + i1, z + b1 * l, this, 0, 2);
-                }
-            }
-
+            size.func_150859_c();
             return true;
         }
-    }
-    
-    public boolean func_150000_e(World p_150000_1_, int p_150000_2_, int p_150000_3_, int p_150000_4_){return false;}
-
-    /**
-     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: world, x, y, z
-     */
-    
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor)
-    {
-        byte b0 = 0;
-        byte b1 = 1;
-
-        if (world.getBlock(x - 1, y, z) == this || world.getBlock(x + 1, y, z) == this)
-        {
-            b0 = 1;
-            b1 = 0;
-        }
-
-        int i1;
-
-        for (i1 = y; world.getBlock(x, i1 - 1, z) == this; --i1)
-        {
-            
-        }
-
-        if (world.getBlock(x, i1 - 1, z) != MoChickens.blockFeatherBlock)
-        {
-            ((World) world).setBlockToAir(x, y, z);
-        }
         else
         {
-            int j1;
+            BlockFeatherPortal.Size size1 = new BlockFeatherPortal.Size(worldIn, p_176548_2_, EnumFacing.Axis.Z);
 
-            for (j1 = 1; j1 < 4 && world.getBlock(x, i1 + j1, z) == this; ++j1)
+            if (size1.func_150860_b() && size1.field_150864_e == 0)
             {
-                
-            }
-
-            if (j1 == 3 && world.getBlock(x, i1 + j1, z) == MoChickens.blockFeatherBlock)
-            {
-                boolean flag = world.getBlock(x - 1, y, z) == this || world.getBlock(x + 1, y, z) == this;
-                boolean flag1 = world.getBlock(x, y, z - 1) == this || world.getBlock(x, y, z + 1) == this;
-
-                if (flag && flag1)
-                {
-                    ((World) world).setBlockToAir(x, y, z);
-                }
-                else
-                {
-                    if ((world.getBlock(x + b0, y, z + b1) != MoChickens.blockFeatherBlock || world.getBlock(x - b0, y, z - b1) != this) && (world.getBlock(x - b0, y, z - b1) != MoChickens.blockFeatherBlock || world.getBlock(x + b0, y, z + b1) != this))
-                    {
-                        ((World) world).setBlockToAir(x, y, z);
-                    }
-                }
+                size1.func_150859_c();
+                return true;
             }
             else
             {
-                ((World) world).setBlockToAir(x, y, z);
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Called when a neighboring block changes.
+     */
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+    {
+        EnumFacing.Axis axis = (EnumFacing.Axis)state.getValue(AXIS);
+        BlockFeatherPortal.Size size;
+
+        if (axis == EnumFacing.Axis.X)
+        {
+            size = new BlockFeatherPortal.Size(worldIn, pos, EnumFacing.Axis.X);
+
+            if (!size.func_150860_b() || size.field_150864_e < size.field_150868_h * size.field_150862_g)
+            {
+                worldIn.setBlockState(pos, Blocks.air.getDefaultState());
+            }
+        }
+        else if (axis == EnumFacing.Axis.Z)
+        {
+            size = new BlockFeatherPortal.Size(worldIn, pos, EnumFacing.Axis.Z);
+
+            if (!size.func_150860_b() || size.field_150864_e < size.field_150868_h * size.field_150862_g)
+            {
+                worldIn.setBlockState(pos, Blocks.air.getDefaultState());
             }
         }
     }
 
     @SideOnly(Side.CLIENT)
-
-    /**
-     * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
-     * coordinates.  Args: blockAccess, x, y, z, side
-     */
-    public boolean shouldSideBeRendered(IBlockAccess worldBlock, int x, int y, int z, int par5)
+    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        if (worldBlock.getBlock(x, y, z) == this)
+        EnumFacing.Axis axis = null;
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+
+        if (worldIn.getBlockState(pos).getBlock() == this)
         {
-            return false;
+            axis = (EnumFacing.Axis)iblockstate.getValue(AXIS);
+
+            if (axis == null)
+            {
+                return false;
+            }
+
+            if (axis == EnumFacing.Axis.Z && side != EnumFacing.EAST && side != EnumFacing.WEST)
+            {
+                return false;
+            }
+
+            if (axis == EnumFacing.Axis.X && side != EnumFacing.SOUTH && side != EnumFacing.NORTH)
+            {
+                return false;
+            }
         }
-        else
-        {
-            boolean flag = worldBlock.getBlock(x - 1, y, z) == this && worldBlock.getBlock(x - 2, y, z) != this;
-            boolean flag1 = worldBlock.getBlock(x + 1, y, z) == this && worldBlock.getBlock(x + 2, y, z) != this;
-            boolean flag2 = worldBlock.getBlock(x, y, z - 1) == this && worldBlock.getBlock(x, y, z - 2) != this;
-            boolean flag3 = worldBlock.getBlock(x, y, z + 1) == this && worldBlock.getBlock(x, y, z + 2) != this;
-            boolean flag4 = flag || flag1;
-            boolean flag5 = flag2 || flag3;
-            return flag4 && par5 == 4 ? true : (flag4 && par5 == 5 ? true : (flag5 && par5 == 2 ? true : flag5 && par5 == 3));
-        }
+
+        boolean flag = worldIn.getBlockState(pos.west()).getBlock() == this && worldIn.getBlockState(pos.west(2)).getBlock() != this;
+        boolean flag1 = worldIn.getBlockState(pos.east()).getBlock() == this && worldIn.getBlockState(pos.east(2)).getBlock() != this;
+        boolean flag2 = worldIn.getBlockState(pos.north()).getBlock() == this && worldIn.getBlockState(pos.north(2)).getBlock() != this;
+        boolean flag3 = worldIn.getBlockState(pos.south()).getBlock() == this && worldIn.getBlockState(pos.south(2)).getBlock() != this;
+        boolean flag4 = flag || flag1 || axis == EnumFacing.Axis.X;
+        boolean flag5 = flag2 || flag3 || axis == EnumFacing.Axis.Z;
+        return flag4 && side == EnumFacing.WEST ? true : (flag4 && side == EnumFacing.EAST ? true : (flag5 && side == EnumFacing.NORTH ? true : flag5 && side == EnumFacing.SOUTH));
     }
 
     /**
      * Returns the quantity of items to drop on block destruction.
      */
-    public int quantityDropped(Random par1Random)
+    public int quantityDropped(Random random)
     {
         return 0;
     }
 
     /**
-     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+     * Called When an Entity Collided with the Block
      */
-    /*public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entity)
     {
     	if (entity.ridingEntity == null && entity.riddenByEntity == null && entity instanceof EntityPlayerMP)
         {
@@ -313,64 +220,231 @@ public class BlockFeatherPortal extends BlockPortal
             	player.mcServer.getConfigurationManager().transferPlayerToDimension(player, 0, new ChickenTeleporter(server.worldServerForDimension(0)));
             }
         }
-    }*/
-
-    @SideOnly(Side.CLIENT)
+    }
 
     /**
-     * Returns which pass should this block be rendered on. 0 for solids and 1 for alpha
+     * Convert the given metadata into a BlockState for this Block
      */
-    public int getRenderBlockPass()
+    public IBlockState getStateFromMeta(int meta)
     {
-        return 1;
+        return this.getDefaultState().withProperty(AXIS, (meta & 3) == 2 ? EnumFacing.Axis.Z : EnumFacing.Axis.X);
     }
 
     @SideOnly(Side.CLIENT)
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.TRANSLUCENT;
+    }
 
-    /**
-     * A randomly called display update to be able to add particles or other items for display
-     */
-    public void randomDisplayTick(World world, int x, int y, int z, Random rand)
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (rand.nextInt(100) == 0)
         {
-            world.playSound((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "portal.portal", 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
+            worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "portal.portal", 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
         }
 
-        for (int l = 0; l < 4; ++l)
+        for (int i = 0; i < 4; ++i)
         {
-            double d0 = (double)((float)x + rand.nextFloat());
-            double d1 = (double)((float)y + rand.nextFloat());
-            double d2 = (double)((float)z + rand.nextFloat());
-            double d3 = 0.0D;
-            double d4 = 0.0D;
-            double d5 = 0.0D;
-            int i1 = rand.nextInt(2) * 2 - 1;
-            d3 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
-            d4 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
-            d5 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
+            double d0 = (double)((float)pos.getX() + rand.nextFloat());
+            double d1 = (double)((float)pos.getY() + rand.nextFloat());
+            double d2 = (double)((float)pos.getZ() + rand.nextFloat());
+            double d3 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
+            double d4 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
+            double d5 = ((double)rand.nextFloat() - 0.5D) * 0.5D;
+            int j = rand.nextInt(2) * 2 - 1;
 
-            if (world.getBlock(x - 1, y, z) != this && world.getBlock(x + 1, y, z) != this)
+            if (worldIn.getBlockState(pos.west()).getBlock() != this && worldIn.getBlockState(pos.east()).getBlock() != this)
             {
-                d0 = (double)x + 0.5D + 0.25D * (double)i1;
-                d3 = (double)(rand.nextFloat() * 2.0F * (float)i1);
+                d0 = (double)pos.getX() + 0.5D + 0.25D * (double)j;
+                d3 = (double)(rand.nextFloat() * 2.0F * (float)j);
             }
             else
             {
-                d2 = (double)z + 0.5D + 0.25D * (double)i1;
-                d5 = (double)(rand.nextFloat() * 2.0F * (float)i1);
+                d2 = (double)pos.getZ() + 0.5D + 0.25D * (double)j;
+                d5 = (double)(rand.nextFloat() * 2.0F * (float)j);
             }
 
-            world.spawnParticle("portal", d0, d1, d2, d3, d4, d5);
+            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5, new int[0]);
         }
     }
-    
-    @SideOnly(Side.CLIENT)
-    public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_){return Item.getItemById(0);}
-    
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister icon)
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
     {
-        this.blockIcon = icon.registerIcon(MoChickensReference.MODID + ":" + getUnlocalizedName().substring(5));
+        return getMetaForAxis((EnumFacing.Axis)state.getValue(AXIS));
     }
+
+    @SideOnly(Side.CLIENT)
+    public Item getItem(World worldIn, BlockPos pos)
+    {
+        return null;
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {AXIS});
+    }
+
+    public static class Size
+        {
+            private final World world;
+            private final EnumFacing.Axis axis;
+            private final EnumFacing field_150866_c;
+            private final EnumFacing field_150863_d;
+            private int field_150864_e = 0;
+            private BlockPos field_150861_f;
+            private int field_150862_g;
+            private int field_150868_h;
+            private static final String __OBFID = "CL_00000285";
+
+            public Size(World worldIn, BlockPos p_i45694_2_, EnumFacing.Axis p_i45694_3_)
+            {
+                this.world = worldIn;
+                this.axis = p_i45694_3_;
+
+                if (p_i45694_3_ == EnumFacing.Axis.X)
+                {
+                    this.field_150863_d = EnumFacing.EAST;
+                    this.field_150866_c = EnumFacing.WEST;
+                }
+                else
+                {
+                    this.field_150863_d = EnumFacing.NORTH;
+                    this.field_150866_c = EnumFacing.SOUTH;
+                }
+
+                for (BlockPos blockpos1 = p_i45694_2_; p_i45694_2_.getY() > blockpos1.getY() - 21 && p_i45694_2_.getY() > 0 && this.func_150857_a(worldIn.getBlockState(p_i45694_2_.down()).getBlock()); p_i45694_2_ = p_i45694_2_.down())
+                {
+                    ;
+                }
+
+                int i = this.func_180120_a(p_i45694_2_, this.field_150863_d) - 1;
+
+                if (i >= 0)
+                {
+                    this.field_150861_f = p_i45694_2_.offset(this.field_150863_d, i);
+                    this.field_150868_h = this.func_180120_a(this.field_150861_f, this.field_150866_c);
+
+                    if (this.field_150868_h < 2 || this.field_150868_h > 21)
+                    {
+                        this.field_150861_f = null;
+                        this.field_150868_h = 0;
+                    }
+                }
+
+                if (this.field_150861_f != null)
+                {
+                    this.field_150862_g = this.func_150858_a();
+                }
+            }
+
+            protected int func_180120_a(BlockPos p_180120_1_, EnumFacing p_180120_2_)
+            {
+                int i;
+
+                for (i = 0; i < 22; ++i)
+                {
+                    BlockPos blockpos1 = p_180120_1_.offset(p_180120_2_, i);
+
+                    if (!this.func_150857_a(this.world.getBlockState(blockpos1).getBlock()) || this.world.getBlockState(blockpos1.down()).getBlock() != MoChickens.blockFeatherBlock)
+                    {
+                        break;
+                    }
+                }
+
+                Block block = this.world.getBlockState(p_180120_1_.offset(p_180120_2_, i)).getBlock();
+                return block == MoChickens.blockFeatherBlock ? i : 0;
+            }
+
+            protected int func_150858_a()
+            {
+                int i;
+                label56:
+
+                for (this.field_150862_g = 0; this.field_150862_g < 21; ++this.field_150862_g)
+                {
+                    for (i = 0; i < this.field_150868_h; ++i)
+                    {
+                        BlockPos blockpos = this.field_150861_f.offset(this.field_150866_c, i).up(this.field_150862_g);
+                        Block block = this.world.getBlockState(blockpos).getBlock();
+
+                        if (!this.func_150857_a(block))
+                        {
+                            break label56;
+                        }
+
+                        if (block == MoChickens.blockFeatherPortal)
+                        {
+                            ++this.field_150864_e;
+                        }
+
+                        if (i == 0)
+                        {
+                            block = this.world.getBlockState(blockpos.offset(this.field_150863_d)).getBlock();
+
+                            if (block != MoChickens.blockFeatherBlock)
+                            {
+                                break label56;
+                            }
+                        }
+                        else if (i == this.field_150868_h - 1)
+                        {
+                            block = this.world.getBlockState(blockpos.offset(this.field_150866_c)).getBlock();
+
+                            if (block != MoChickens.blockFeatherBlock)
+                            {
+                                break label56;
+                            }
+                        }
+                    }
+                }
+
+                for (i = 0; i < this.field_150868_h; ++i)
+                {
+                    if (this.world.getBlockState(this.field_150861_f.offset(this.field_150866_c, i).up(this.field_150862_g)).getBlock() != MoChickens.blockFeatherBlock)
+                    {
+                        this.field_150862_g = 0;
+                        break;
+                    }
+                }
+
+                if (this.field_150862_g <= 21 && this.field_150862_g >= 3)
+                {
+                    return this.field_150862_g;
+                }
+                else
+                {
+                    this.field_150861_f = null;
+                    this.field_150868_h = 0;
+                    this.field_150862_g = 0;
+                    return 0;
+                }
+            }
+
+            protected boolean func_150857_a(Block p_150857_1_)
+            {
+                return p_150857_1_.getMaterial() == Material.air || p_150857_1_ == MoChickens.blockChickenFire || p_150857_1_ == MoChickens.blockFeatherPortal;
+            }
+
+            public boolean func_150860_b()
+            {
+                return this.field_150861_f != null && this.field_150868_h >= 2 && this.field_150868_h <= 21 && this.field_150862_g >= 3 && this.field_150862_g <= 21;
+            }
+
+            public void func_150859_c()
+            {
+                for (int i = 0; i < this.field_150868_h; ++i)
+                {
+                    BlockPos blockpos = this.field_150861_f.offset(this.field_150866_c, i);
+
+                    for (int j = 0; j < this.field_150862_g; ++j)
+                    {
+                        this.world.setBlockState(blockpos.up(j), MoChickens.blockFeatherPortal.getDefaultState().withProperty(BlockPortal.AXIS, this.axis), 2);
+                    }
+                }
+            }
+        }
 }

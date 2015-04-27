@@ -6,6 +6,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenDungeons;
@@ -35,7 +36,7 @@ public class GenDungeons
             {
                 for (i2 = j2 - i1 - 1; i2 <= j2 + i1 + 1; ++i2)
                 {
-                    Material material = world.getBlock(k1, l1, i2).getMaterial();
+                    Material material = world.getBlockState(new BlockPos(k1, l1, i2)).getBlock().getMaterial();
 
                     if (l1 == y - 1 && !material.isSolid())
                     {
@@ -47,7 +48,7 @@ public class GenDungeons
                         return false;
                     }
 
-                    if ((k1 == z - l - 1 || k1 == z + l + 1 || i2 == j2 - i1 - 1 || i2 == j2 + i1 + 1) && l1 == y && world.isAirBlock(k1, l1, i2) && world.isAirBlock(k1, l1 + 1, i2))
+                    if ((k1 == z - l - 1 || k1 == z + l + 1 || i2 == j2 - i1 - 1 || i2 == j2 + i1 + 1) && l1 == y && world.isAirBlock(new BlockPos(k1, l1, i2)) && world.isAirBlock(new BlockPos(k1, l1 + 1, i2)))
                     {
                         ++j1;
                     }
@@ -65,21 +66,21 @@ public class GenDungeons
                     {
                         if (k1 != z - l - 1 && l1 != y - 1 && i2 != j2 - i1 - 1 && k1 != z + l + 1 && l1 != y + b0 + 1 && i2 != j2 + i1 + 1)
                         {
-                            world.setBlockToAir(k1, l1, i2);
+                            world.setBlockToAir(new BlockPos(k1, l1, i2));
                         }
-                        else if (l1 >= 0 && !world.getBlock(k1, l1 - 1, i2).getMaterial().isSolid())
+                        else if (l1 >= 0 && !world.getBlockState(new BlockPos(k1, l1 - 1, i2)).getBlock().getMaterial().isSolid())
                         {
-                            world.setBlockToAir(k1, l1, i2);
+                            world.setBlockToAir(new BlockPos(k1, l1, i2));
                         }
-                        else if (world.getBlock(k1, l1, i2).getMaterial().isSolid())
+                        else if (world.getBlockState(new BlockPos(k1, l1, i2)).getBlock().getMaterial().isSolid())
                         {
                             if (l1 == y - 1 && rand.nextInt(4) != 0)
                             {
-                                world.setBlock(k1, l1, i2, Blocks.mossy_cobblestone, 0, 2);
+                                world.setBlockState(new BlockPos(k1, l1, i2), Blocks.mossy_cobblestone.getDefaultState());
                             }
                             else
                             {
-                                world.setBlock(k1, l1, i2, Blocks.cobblestone, 0, 2);
+                                world.setBlockState(new BlockPos(k1, l1, i2), Blocks.cobblestone.getDefaultState());
                             }
                         }
                     }
@@ -101,34 +102,34 @@ public class GenDungeons
                             i2 = z + rand.nextInt(l * 2 + 1) - l;
                             int j3 = j2 + rand.nextInt(i1 * 2 + 1) - i1;
 
-                            if (world.isAirBlock(i2, y, j3))
+                            if (world.isAirBlock(new BlockPos(i2, y, j3)))
                             {
                                 int k2 = 0;
 
-                                if (world.getBlock(i2 - 1, y, j3).getMaterial().isSolid())
+                                if (world.getBlockState(new BlockPos(i2 - 1, y, j3)).getBlock().getMaterial().isSolid())
                                 {
                                     ++k2;
                                 }
 
-                                if (world.getBlock(i2 + 1, y, j3).getMaterial().isSolid())
+                                if (world.getBlockState(new BlockPos(i2 + 1, y, j3)).getBlock().getMaterial().isSolid())
                                 {
                                     ++k2;
                                 }
 
-                                if (world.getBlock(i2, y, j3 - 1).getMaterial().isSolid())
+                                if (world.getBlockState(new BlockPos(i2, y, j3 - 1)).getBlock().getMaterial().isSolid())
                                 {
                                     ++k2;
                                 }
 
-                                if (world.getBlock(i2, y, j3 + 1).getMaterial().isSolid())
+                                if (world.getBlockState(new BlockPos(i2, y, j3 + 1)).getBlock().getMaterial().isSolid())
                                 {
                                     ++k2;
                                 }
 
                                 if (k2 == 1)
                                 {
-                                    world.setBlock(i2, y, j3, Blocks.chest, 0, 2);
-                                    TileEntityChest tileentitychest = (TileEntityChest)world.getTileEntity(i2, y, j3);
+                                    world.setBlockState(new BlockPos(i2, y, j3), Blocks.chest.getDefaultState());
+                                    TileEntityChest tileentitychest = (TileEntityChest)world.getTileEntity(new BlockPos(i2, y, j3));
 
                                     if (tileentitychest != null)
                                     {

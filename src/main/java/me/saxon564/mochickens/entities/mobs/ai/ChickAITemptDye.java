@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.server.MinecraftServer;
 
 public class ChickAITemptDye extends EntityAIBase
@@ -83,7 +84,7 @@ public class ChickAITemptDye extends EntityAIBase
             {
                 return false;
             }
-            else if (this.getTemptingPlayer().getDisplayName() != owner)
+            else if (!this.getTemptingPlayer().getUniqueID().toString().equals(owner))
             {
                 return false;
             }
@@ -143,9 +144,9 @@ public class ChickAITemptDye extends EntityAIBase
         this.targetY = this.getTemptingPlayer().posY;
         this.targetZ = this.getTemptingPlayer().posZ;
         this.isRunning = true;
-        this.field_75286_m = this.getTemptedEntity().getNavigator()
-                             .getAvoidsWater();
-        this.getTemptedEntity().getNavigator().setAvoidsWater(false);
+        this.field_75286_m = ((PathNavigateGround)this.temptedEntity.getNavigator())
+        		.func_179689_e();
+        ((PathNavigateGround)this.temptedEntity.getNavigator()).func_179690_a(false);
     }
 
     /**
@@ -157,8 +158,8 @@ public class ChickAITemptDye extends EntityAIBase
         this.getTemptedEntity().getNavigator().clearPathEntity();
         this.setDelayTemptCounter(this.configedDelay);
         this.isRunning = false;
-        this.getTemptedEntity().getNavigator()
-        .setAvoidsWater(this.field_75286_m);
+        ((PathNavigateGround)this.temptedEntity.getNavigator())
+        .func_179690_a(this.field_75286_m);
     }
 
     /**

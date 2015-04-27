@@ -1,16 +1,4 @@
-/eclipse/asm
-/eclipse/config
-/eclipse/crash-reports
-/eclipse/logs
-/eclipse/mods
-/eclipse/resourcepacks
-/eclipse/saves
-/eclipse/options.txt
-/eclipse/usernamecache.json
-/eclipse/.metadata/.lock
-/eclipse/.metadata/.log
-/eclipse/.metadata/version.ini
-/eclipse/.metadata/.plugins/org.eclipse.jdt.launching
+/eclipse
 /bin
 /build
 /.gradle

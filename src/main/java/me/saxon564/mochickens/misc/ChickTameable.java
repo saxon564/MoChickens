@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.EntityAISit;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public abstract class ChickTameable extends EntityAnimal implements IEntityOwnable
@@ -67,11 +68,11 @@ public abstract class ChickTameable extends EntityAnimal implements IEntityOwnab
      */
     protected void playTameEffect(boolean par1)
     {
-        String s = "heart";
+    	EnumParticleTypes s = EnumParticleTypes.HEART;
 
         if (!par1)
         {
-            s = "smoke";
+            s = EnumParticleTypes.SMOKE_NORMAL;
         }
 
         for (int i = 0; i < 7; ++i)

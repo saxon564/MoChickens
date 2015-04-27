@@ -14,11 +14,11 @@ public class BlockCoalGemOreBlock extends Block {
 		
 		super(Material.rock);
 		//setCreativeTab(MoChickens.moChickensTab);
-		setBlockName("coal_gem_ore");
-		setBlockTextureName(MoChickensReference.MODID + ":" + getUnlocalizedName().substring(5));
-		this.setStepSound(soundTypeStone);
-		this.setHardness(4.0F);
-		this.setHarvestLevel("pickaxe", 3);
+		setUnlocalizedName("coal_gem_ore");
+		//setBlockTextureName(MoChickensReference.MODID + ":" + getUnlocalizedName().substring(5));
+		setStepSound(soundTypeStone);
+		setHardness(4.0F);
+		setHarvestLevel("pickaxe", 3);
 	}
 
 }

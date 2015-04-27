@@ -7,20 +7,30 @@ import me.saxon564.mochickens.MoChickens;
 import me.saxon564.mochickens.MoChickensReference;
 import me.saxon564.mochickens.entities.mobs.EntityMoChicken;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFence;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Facing;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
@@ -33,42 +43,66 @@ public class ItemRandomEgg extends Item {
 		setMaxStackSize(64);
 		setCreativeTab(MoChickens.moChickensTab);
 		setUnlocalizedName("random_egg");
-		setTextureName(MoChickensReference.MODID + ":"
-				+ getUnlocalizedName().substring(5));
+		//setTextureName(MoChickensReference.MODID + ":"
+		//		+ getUnlocalizedName().substring(5));
 	}
 
-	public boolean onItemUse(ItemStack par1ItemStack,
-			EntityPlayer par2EntityPlayer, World par3World, int par4, int par5,
-			int par6, int par7, float par8, float par9, float par10) {
-		double d0 = 0.0D;
+	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
 
-		if (par3World.isRemote) {
-			return true;
-		} else {
-			Block i1 = par3World.getBlock(par4, par5, par6);
-			par4 += Facing.offsetsXForSide[par7];
-			par5 += Facing.offsetsYForSide[par7];
-			par6 += Facing.offsetsZForSide[par7];
-
-			if (par7 == 1 && i1 != null
-					&& i1.getRenderType() == 11) {
-				d0 = 0.5D;
-			}
-
-			if (!par2EntityPlayer.capabilities.isCreativeMode) {
-				--par1ItemStack.stackSize;
-			}
-
-			float look = -par2EntityPlayer.rotationYaw;
+		if (worldIn.isRemote)
+        {
+            return true;
+        }
+        else if (!playerIn.canPlayerEdit(pos.offset(side), side, stack))
+        {
+            return false;
+        }
+        else
+        {
+            IBlockState iblockstate = worldIn.getBlockState(pos);
 			final int random = randomInt(0, MoChickens.eggNum);
+			Class type = MoChickens.egg[random];
+            
+            if (iblockstate.getBlock() == Blocks.mob_spawner)
+            {
+                TileEntity tileentity = worldIn.getTileEntity(pos);
+
+                if (tileentity instanceof TileEntityMobSpawner)
+                {
+                    MobSpawnerBaseLogic mobspawnerbaselogic = ((TileEntityMobSpawner)tileentity).getSpawnerBaseLogic();
+                    mobspawnerbaselogic.setEntityName(type.getName());
+                    tileentity.markDirty();
+                    worldIn.markBlockForUpdate(pos);
+
+                    if (!playerIn.capabilities.isCreativeMode)
+                    {
+                        --stack.stackSize;
+                    }
+
+                    return true;
+                }
+            }
+            
+			pos = pos.offset(side);
+			double d0 = 0.0D;
+
+            if (side == EnumFacing.UP && iblockstate instanceof BlockFence)
+            {
+                d0 = 0.5D;
+            }
+
+			if (!playerIn.capabilities.isCreativeMode) {
+				--stack.stackSize;
+			}
+
+			float look = -playerIn.rotationYaw;
 
 			if (MoChickens.egg[random] != null) {
-				Class type = MoChickens.egg[random];
 				Configuration configs = MoChickens.configs[random];
 				try {
 					EntityLiving newEntity = (EntityLiving) type
 							.getDeclaredConstructor(World.class).newInstance(
-									par2EntityPlayer.worldObj);
+									playerIn.worldObj);
 					//System.out.println(newEntity.toString());
 					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
 						// prevent tying to age bat
@@ -76,11 +110,9 @@ public class ItemRandomEgg extends Item {
 						((EntityMoChicken) newEntity).addVars(configs, type);
 					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
 					}
-					newEntity.setLocationAndAngles((double) par4 + 0.5D,
-							(double) par5 + d0, (double) par6 + 0.5D,
-							look, 0.0F);
+					newEntity.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getX() + d0, (double)pos.getZ() + 0.5D, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 					// newEntity.setTamed(true);
-					par2EntityPlayer.worldObj.spawnEntityInWorld(newEntity);
+					playerIn.worldObj.spawnEntityInWorld(newEntity);
 				} catch (InstantiationException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {

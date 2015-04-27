@@ -9,14 +9,17 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCaves;
@@ -34,8 +37,8 @@ import net.minecraft.world.gen.structure.MapGenVillage;
 import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.*;
 import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.*;
 import net.minecraftforge.common.*;
-import cpw.mods.fml.common.eventhandler.Event.*;
 import net.minecraftforge.event.terraingen.*;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class ChunkProviderChickenDimension implements IChunkProvider
 {
@@ -201,19 +204,20 @@ public class ChunkProviderChickenDimension implements IChunkProvider
 
     public void replaceBlocksForBiome(int chunkX, int chunkZ, Block[] blockArray, byte[] byteArray, BiomeGenBase[] biomesForGeneration)
     {
-        ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, chunkX, chunkZ, blockArray, byteArray, biomesForGeneration, this.worldObj);
+    	ChunkPrimer chunkprimer = new ChunkPrimer();
+        ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, chunkX, chunkZ, chunkprimer, this.worldObj);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) return;
 
         double d0 = 0.03125D;
         this.stoneNoise = this.noiseGen4.func_151599_a(this.stoneNoise, (double)(chunkX * 16), (double)(chunkZ * 16), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
-
+        
         for (int k = 0; k < 16; ++k)
         {
             for (int l = 0; l < 16; ++l)
             {
                 BiomeGenBase biomegenbase = biomesForGeneration[l + k * 16];
-                biomegenbase.genTerrainBlocks(this.worldObj, this.rand, blockArray, byteArray, chunkX * 16 + k, chunkZ * 16 + l, this.stoneNoise[l + k * 16]);
+                biomegenbase.genTerrainBlocks(this.worldObj, this.rand, chunkprimer, chunkX * 16 + k, chunkZ * 16 + l, this.stoneNoise[l + k * 16]);
             }
         }
     }
@@ -233,23 +237,24 @@ public class ChunkProviderChickenDimension implements IChunkProvider
     public Chunk provideChunk(int chunkX, int chunkZ)
     {
         this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
+        ChunkPrimer chunkprimer = new ChunkPrimer();
         Block[] ablock = new Block[65536];
         byte[] abyte = new byte[65536];
         this.generateTerrain(chunkX, chunkZ, ablock);
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
         this.replaceBlocksForBiome(chunkX, chunkZ, ablock, abyte, this.biomesForGeneration);
-        this.caveGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, ablock);
-        this.ravineGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, ablock);
+        this.caveGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
+        this.ravineGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
 
         if (this.mapFeaturesEnabled)
         {
-            this.mineshaftGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, ablock);
-            this.villageGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, ablock);
-            //this.strongholdGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, ablock);
-            this.scatteredFeatureGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, ablock);
+            this.mineshaftGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
+            this.villageGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
+            //this.strongholdGenerator.func_func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
+            this.scatteredFeatureGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
         }
 
-        Chunk chunk = new Chunk(this.worldObj, ablock, abyte, chunkX, chunkZ);
+        Chunk chunk = new Chunk(this.worldObj, chunkX, chunkZ);
         byte[] abyte1 = chunk.getBiomeArray();
 
         for (int k = 0; k < abyte1.length; ++k)
@@ -292,8 +297,8 @@ public class ChunkProviderChickenDimension implements IChunkProvider
                     for (int i2 = -b0; i2 <= b0; ++i2)
                     {
                         BiomeGenBase biomegenbase1 = this.biomesForGeneration[j1 + l1 + 2 + (k1 + i2 + 2) * 10];
-                        float f3 = biomegenbase1.rootHeight;
-                        float f4 = biomegenbase1.heightVariation;
+                        float f3 = (biomegenbase1.minHeight + biomegenbase1.maxHeight)/2;
+                        float f4 = biomegenbase1.maxHeight - biomegenbase1.minHeight;
 
                         if (this.worldType == WorldType.AMPLIFIED && f3 > 0.0F)
                         {
@@ -303,7 +308,7 @@ public class ChunkProviderChickenDimension implements IChunkProvider
 
                         float f5 = this.parabolicField[l1 + 2 + (i2 + 2) * 5] / (f3 + 2.0F);
 
-                        if (biomegenbase1.rootHeight > biomegenbase.rootHeight)
+                        if ((biomegenbase1.minHeight + biomegenbase1.maxHeight)/2 > (biomegenbase.minHeight + biomegenbase.maxHeight)/2)
                         {
                             f5 /= 2.0F;
                         }
@@ -399,21 +404,22 @@ public class ChunkProviderChickenDimension implements IChunkProvider
         BlockFalling.fallInstantly = true;
         int k = chunkX * 16;
         int l = chunkZ * 16;
-        BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(k + 16, l + 16);
+        BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(new BlockPos(k + 16, 0, l + 16));
         this.rand.setSeed(this.worldObj.getSeed());
         long i1 = this.rand.nextLong() / 2L * 2L + 1L;
         long j1 = this.rand.nextLong() / 2L * 2L + 1L;
         this.rand.setSeed((long)chunkX * i1 + (long)chunkZ * j1 ^ this.worldObj.getSeed());
         boolean flag = false;
+        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(chunkX, chunkZ);
 
         MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(chunkProvider, worldObj, rand, chunkX, chunkZ, flag));
 
         if (this.mapFeaturesEnabled)
         {
-            this.mineshaftGenerator.generateStructuresInChunk(this.worldObj, this.rand, chunkX, chunkZ);
-            flag = this.villageGenerator.generateStructuresInChunk(this.worldObj, this.rand, chunkX, chunkZ);
-            //this.strongholdGenerator.generateStructuresInChunk(this.worldObj, this.rand, chunkX, chunkZ);
-            this.scatteredFeatureGenerator.generateStructuresInChunk(this.worldObj, this.rand, chunkX, chunkZ);
+            this.mineshaftGenerator.func_175794_a(this.worldObj, this.rand, chunkcoordintpair);
+            flag = this.villageGenerator.func_175794_a(this.worldObj, this.rand, chunkcoordintpair);
+            //this.strongholdGenerator.func_175794_a(this.worldObj, this.rand, chunkcoordintpair);
+            this.scatteredFeatureGenerator.func_175794_a(this.worldObj, this.rand, chunkcoordintpair);
         }
         
         if (flag == true) {
@@ -432,7 +438,7 @@ public class ChunkProviderChickenDimension implements IChunkProvider
             k1 = k + this.rand.nextInt(16) + 8;
             l1 = this.rand.nextInt(256);
             i2 = l + this.rand.nextInt(16) + 8;
-            (new WorldGenLakes(Blocks.water)).generate(this.worldObj, this.rand, k1, l1, i2);
+            (new WorldGenLakes(Blocks.water)).generate(this.worldObj, this.rand, new BlockPos(k1, l1, i2));
         }
 
         if (TerrainGen.populate(chunkProvider, worldObj, rand, chunkX, chunkZ, flag, LAVA) && !flag && this.rand.nextInt(8) == 0)
@@ -443,7 +449,7 @@ public class ChunkProviderChickenDimension implements IChunkProvider
 
             if (l1 < 63 || this.rand.nextInt(10) == 0)
             {
-                (new WorldGenLakes(Blocks.lava)).generate(this.worldObj, this.rand, k1, l1, i2);
+                (new WorldGenLakes(Blocks.lava)).generate(this.worldObj, this.rand, new BlockPos(k1, l1, i2));
             }
         }
 
@@ -456,7 +462,7 @@ public class ChunkProviderChickenDimension implements IChunkProvider
             (new GenDungeons()).generate(this.worldObj, this.rand, l1, i2, j2);
         }
 
-        biomegenbase.decorate(this.worldObj, this.rand, k, l);
+        biomegenbase.decorate(this.worldObj, this.rand, new BlockPos(k, this.worldObj.getTopSolidOrLiquidBlock(new BlockPos(k, 0, l)).getY(), l));
         if (TerrainGen.populate(chunkProvider, worldObj, rand, chunkX, chunkZ, flag, ANIMALS))
         {
         SpawnerAnimals.performWorldGenSpawning(this.worldObj, biomegenbase, k + 8, l + 8, 16, 16, this.rand);
@@ -530,10 +536,10 @@ public class ChunkProviderChickenDimension implements IChunkProvider
     /**
      * Returns a list of creatures of the specified type that can spawn at the given location.
      */
-    public List getPossibleCreatures(EnumCreatureType enumCreatureType, int posX, int posY, int posZ)
+    public List getPossibleCreatures(EnumCreatureType enumCreatureType, BlockPos pos)
     {
-        BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(posX, posZ);
-        return enumCreatureType == EnumCreatureType.monster && this.scatteredFeatureGenerator.func_143030_a(posX, posY, posZ) ? this.scatteredFeatureGenerator.getScatteredFeatureSpawnList() : biomegenbase.getSpawnableList(enumCreatureType);
+        BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(pos);
+        return enumCreatureType == EnumCreatureType.MONSTER && this.scatteredFeatureGenerator.func_175798_a(pos) ? this.scatteredFeatureGenerator.getScatteredFeatureSpawnList() : biomegenbase.getSpawnableList(enumCreatureType);
     }
 
     public ChunkPosition func_147416_a(World world, String s, int chunkX, int y, int chunkZ)
@@ -547,15 +553,57 @@ public class ChunkProviderChickenDimension implements IChunkProvider
         return 0;
     }
 
-    public void recreateStructures(int chunkX, int chunkZ)
+    public void recreateStructures(Chunk chunk, int chunkX, int chunkZ)
     {
         if (this.mapFeaturesEnabled)
         {
-            this.mineshaftGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, (Block[])null);
-            this.villageGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, (Block[])null);
-            //this.strongholdGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, (Block[])null);
-            this.scatteredFeatureGenerator.func_151539_a(this, this.worldObj, chunkX, chunkZ, (Block[])null);
+            this.mineshaftGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, (ChunkPrimer)null);
+            this.villageGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, (ChunkPrimer)null);
+            //this.strongholdGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, (ChunkPrimer)null);
+            this.scatteredFeatureGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, (ChunkPrimer)null);
         }
+    }
+
+    public Chunk provideChunk(BlockPos blockPosIn)
+    {
+        return this.provideChunk(blockPosIn.getX() >> 4, blockPosIn.getZ() >> 4);
+    }
+
+    public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_)
+    {
+        boolean flag = false;
+
+        /*if (this.settings.useMonuments && this.mapFeaturesEnabled && p_177460_2_.getInhabitedTime() < 3600L)
+        {
+            flag |= this.oceanMonumentGenerator.func_175794_a(this.worldObj, this.rand, new ChunkCoordIntPair(p_177460_3_, p_177460_4_));
+        }*/
+
+        return flag;
+    }
+
+	public List func_177458_a(EnumCreatureType p_177458_1_, BlockPos p_177458_2_)
+    {
+        BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(p_177458_2_);
+
+        if (this.mapFeaturesEnabled)
+        {
+            if (p_177458_1_ == EnumCreatureType.MONSTER && this.scatteredFeatureGenerator.func_175798_a(p_177458_2_))
+            {
+                return this.scatteredFeatureGenerator.getScatteredFeatureSpawnList();
+            }
+
+            /*if (p_177458_1_ == EnumCreatureType.MONSTER && this.settings.useMonuments && this.oceanMonumentGenerator.func_175796_a(this.worldObj, p_177458_2_))
+            {
+                return this.oceanMonumentGenerator.func_175799_b();
+            }*/
+        }
+
+        return biomegenbase.getSpawnableList(p_177458_1_);
+    }
+
+	public BlockPos getStrongholdGen(World worldIn, String p_180513_2_, BlockPos p_180513_3_)
+    {
+        return null; //"Stronghold".equals(p_180513_2_) && this.strongholdGenerator != null ? this.strongholdGenerator.getClosestStrongholdPos(worldIn, p_180513_3_) : null;
     }
 
 }

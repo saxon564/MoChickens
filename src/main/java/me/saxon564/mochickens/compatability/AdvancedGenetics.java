@@ -22,14 +22,14 @@ import me.saxon564.mochickens.entities.mobs.EntityRedstoneChicken;
 import me.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import me.saxon564.mochickens.entities.mobs.EntitySnowChicken;
 
-import com.advGenetics.API.RegistrationHelper;
+//import com.advGenetics.API.RegistrationHelper;
 
 public class AdvancedGenetics {
 	
 	public static final String id = "advancedgenetics";
 
 	public static void addAbilities() {
-		RegistrationHelper.addEntityToAbility("nofall", EntityCoalChicken.class);
+		/*RegistrationHelper.addEntityToAbility("nofall", EntityCoalChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityIronChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityGoldChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityRedstoneChicken.class);
@@ -55,6 +55,6 @@ public class AdvancedGenetics {
 		RegistrationHelper.addEntityToAbility("nofall", EntityGlowingChicken.class);
 		RegistrationHelper.addEntityToAbility("lavaswim", EntityGlowingChicken.class);
 		RegistrationHelper.addEntityToAbility("nofall", EntityBlazingChicken.class);
-		RegistrationHelper.addEntityToAbility("lavaswim", EntityBlazingChicken.class);
+		RegistrationHelper.addEntityToAbility("lavaswim", EntityBlazingChicken.class);*/
 	}
 }

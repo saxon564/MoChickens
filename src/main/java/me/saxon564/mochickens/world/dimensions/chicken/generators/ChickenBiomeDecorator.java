@@ -2,10 +2,13 @@ package me.saxon564.mochickens.world.dimensions.chicken.generators;
 
 import java.util.Random;
 import net.minecraft.block.BlockFlower;
+import net.minecraft.block.BlockFlower.EnumFlowerType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.gen.GeneratorBushFeature;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenBigMushroom;
 import net.minecraft.world.gen.feature.WorldGenCactus;
@@ -32,9 +35,7 @@ public class ChickenBiomeDecorator
     /** The Biome Decorator's random number generator. */
     public Random randomGenerator;
     /** The X-coordinate of the chunk currently being decorated */
-    public int chunk_X;
-    /** The Z-coordinate of the chunk currently being decorated */
-    public int chunk_Z;
+    public BlockPos pos;
     /** The clay generator. */
     public WorldGenerator clayGen = new WorldGenClay(4);
     /** The sand generator. */
@@ -120,17 +121,17 @@ public class ChickenBiomeDecorator
     {
         this.sandGen = new WorldGenSand(Blocks.sand, 7);
         this.gravelAsSandGen = new WorldGenSand(Blocks.gravel, 6);
-        this.dirtGen = new WorldGenMinable(Blocks.dirt, 32);
-        this.gravelGen = new WorldGenMinable(Blocks.gravel, 32);
-        this.coalGen = new WorldGenMinable(Blocks.coal_ore, 16);
-        this.ironGen = new WorldGenMinable(Blocks.iron_ore, 8);
-        this.goldGen = new WorldGenMinable(Blocks.gold_ore, 8);
-        this.redstoneGen = new WorldGenMinable(Blocks.redstone_ore, 7);
-        this.diamondGen = new WorldGenMinable(Blocks.diamond_ore, 7);
-        this.lapisGen = new WorldGenMinable(Blocks.lapis_ore, 6);
-        this.yellowFlowerGen = new WorldGenFlowers(Blocks.yellow_flower);
-        this.mushroomBrownGen = new WorldGenFlowers(Blocks.brown_mushroom);
-        this.mushroomRedGen = new WorldGenFlowers(Blocks.red_mushroom);
+        this.dirtGen = new WorldGenMinable(Blocks.dirt.getDefaultState(), 32);
+        this.gravelGen = new WorldGenMinable(Blocks.gravel.getDefaultState(), 32);
+        this.coalGen = new WorldGenMinable(Blocks.coal_ore.getDefaultState(), 16);
+        this.ironGen = new WorldGenMinable(Blocks.iron_ore.getDefaultState(), 8);
+        this.goldGen = new WorldGenMinable(Blocks.gold_ore.getDefaultState(), 8);
+        this.redstoneGen = new WorldGenMinable(Blocks.redstone_ore.getDefaultState(), 7);
+        this.diamondGen = new WorldGenMinable(Blocks.diamond_ore.getDefaultState(), 7);
+        this.lapisGen = new WorldGenMinable(Blocks.lapis_ore.getDefaultState(), 6);
+        this.yellowFlowerGen = new WorldGenFlowers(Blocks.yellow_flower, EnumFlowerType.DANDELION);
+        this.mushroomBrownGen = new GeneratorBushFeature(Blocks.brown_mushroom);
+        this.mushroomRedGen = new GeneratorBushFeature(Blocks.red_mushroom);
         this.bigMushroomGen = new WorldGenBigMushroom();
         this.reedGen = new WorldGenReed();
         this.cactusGen = new WorldGenCactus();
@@ -143,7 +144,7 @@ public class ChickenBiomeDecorator
         this.generateLakes = true;
     }
 
-    public void decorateChunk(World p_150512_1_, Random p_150512_2_, BiomeGenBase p_150512_3_, int p_150512_4_, int p_150512_5_)
+    public void decorateChunk(World p_150512_1_, Random p_150512_2_, BiomeGenBase p_150512_3_, BlockPos pos)
     {
         if (this.currentWorld != null)
         {
@@ -153,220 +154,236 @@ public class ChickenBiomeDecorator
         {
             this.currentWorld = p_150512_1_;
             this.randomGenerator = p_150512_2_;
-            this.chunk_X = p_150512_4_;
-            this.chunk_Z = p_150512_5_;
-            this.genDecorations(p_150512_3_);
+            this.pos = pos;
+            this.genDecorations(p_150512_3_, pos);
             this.currentWorld = null;
             this.randomGenerator = null;
         }
     }
 
-    protected void genDecorations(BiomeGenBase p_150513_1_)
+    protected void genDecorations(BiomeGenBase p_150513_1_, BlockPos pos)
     {
-        MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(currentWorld, randomGenerator, chunk_X, chunk_Z));
+        MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(currentWorld, randomGenerator, pos));
         this.generateOres();
         int i;
-        int j;
-        int k;
+        int tx;
+        int ty;
+        int tz;
+        BlockPos tb;
 
-        boolean doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, SAND);
+        boolean doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, SAND);
         for (i = 0; doGen && i < this.sandPerChunk2; ++i)
         {
-            j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            this.sandGen.generate(this.currentWorld, this.randomGenerator, j, this.currentWorld.getTopSolidOrLiquidBlock(j, k), k);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = this.currentWorld.getTopSolidOrLiquidBlock(pos).getY();
+            tb = new BlockPos(tx, ty, tz);
+            this.sandGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, CLAY);
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, CLAY);
         for (i = 0; doGen && i < this.clayPerChunk; ++i)
         {
-            j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            this.clayGen.generate(this.currentWorld, this.randomGenerator, j, this.currentWorld.getTopSolidOrLiquidBlock(j, k), k);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = this.currentWorld.getTopSolidOrLiquidBlock(pos).getY();
+            tb = new BlockPos(tx, ty, tz);
+            this.clayGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, SAND_PASS2);
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, SAND_PASS2);
         for (i = 0; doGen && i < this.sandPerChunk; ++i)
         {
-            j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            this.gravelAsSandGen.generate(this.currentWorld, this.randomGenerator, j, this.currentWorld.getTopSolidOrLiquidBlock(j, k), k);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = this.currentWorld.getTopSolidOrLiquidBlock(pos).getY();
+            tb = new BlockPos(tx, ty, tz);
+            this.gravelAsSandGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        i = this.treesPerChunk;
+        int j = this.treesPerChunk;
 
         if (this.randomGenerator.nextInt(5) == 0)
         {
-            ++i;
+            ++j;
         }
 
-        int l;
-        int i1;
-
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, TREE);
-        for (j = 0; doGen && j < i; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, TREE);
+        for (i = 0; doGen && i < j; ++i)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = this.currentWorld.getHeightValue(k, l);
-            WorldGenAbstractTree worldgenabstracttree = p_150513_1_.func_150567_a(this.randomGenerator);
-            worldgenabstracttree.setScale(1.0D, 1.0D, 1.0D);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = this.currentWorld.getTopSolidOrLiquidBlock(pos).getY();
+            tb = new BlockPos(tx, ty, tz);
+            WorldGenAbstractTree worldgenabstracttree = p_150513_1_.genBigTreeChance(this.randomGenerator);
 
-            if (worldgenabstracttree.generate(this.currentWorld, this.randomGenerator, k, i1, l))
+            if (worldgenabstracttree.generate(this.currentWorld, this.randomGenerator, tb))
             {
-                worldgenabstracttree.func_150524_b(this.currentWorld, this.randomGenerator, k, i1, l);
+                worldgenabstracttree.func_180711_a(this.currentWorld, this.randomGenerator, tb);
             }
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, BIG_SHROOM);
-        for (j = 0; doGen && j < this.bigMushroomsPerChunk; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, BIG_SHROOM);
+        for (i = 0; doGen && i < this.bigMushroomsPerChunk; ++i)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            this.bigMushroomGen.generate(this.currentWorld, this.randomGenerator, k, this.currentWorld.getHeightValue(k, l), l);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = this.currentWorld.getTopSolidOrLiquidBlock(pos).getY();
+            tb = new BlockPos(tx, ty, tz);
+            this.bigMushroomGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, FLOWERS);
-        for (j = 0; doGen && j < this.flowersPerChunk; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, FLOWERS);
+        for (i = 0; doGen && i < this.flowersPerChunk; ++i)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = nextInt(this.currentWorld.getHeightValue(k, l) + 32);
-            String s = p_150513_1_.func_150572_a(this.randomGenerator, k, i1, l);
-            BlockFlower blockflower = BlockFlower.func_149857_e(s);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() + 32);
+            tb = new BlockPos(tx, ty, tz);
+            EnumFlowerType ft = p_150513_1_.pickRandomFlower(this.randomGenerator, tb);
+            BlockFlower blockflower = ft.getBlockType().getBlock();
 
             if (blockflower.getMaterial() != Material.air)
             {
-                this.yellowFlowerGen.func_150550_a(blockflower, BlockFlower.func_149856_f(s));
-                this.yellowFlowerGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+                this.yellowFlowerGen.setGeneratedBlock(blockflower, ft);
+                this.yellowFlowerGen.generate(this.currentWorld, this.randomGenerator, tb);
             }
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, GRASS);
-        for (j = 0; doGen && j < this.grassPerChunk; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, GRASS);
+        for (i = 0; doGen && i < this.grassPerChunk; ++i)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = nextInt(this.currentWorld.getHeightValue(k, l) * 2);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
             WorldGenerator worldgenerator = p_150513_1_.getRandomWorldGenForGrass(this.randomGenerator);
-            worldgenerator.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+            worldgenerator.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, DEAD_BUSH);
-        for (j = 0; doGen && j < this.deadBushPerChunk; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, DEAD_BUSH);
+        for (i = 0; doGen && i < this.deadBushPerChunk; ++i)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = nextInt(this.currentWorld.getHeightValue(k, l) * 2);
-            (new WorldGenDeadBush(Blocks.deadbush)).generate(this.currentWorld, this.randomGenerator, k, i1, l);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
+            (new WorldGenDeadBush()).generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, LILYPAD);
-        for (j = 0; doGen && j < this.waterlilyPerChunk; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, LILYPAD);
+        for (i = 0; doGen && i < this.waterlilyPerChunk; ++i)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
 
-            for (i1 = nextInt(this.currentWorld.getHeightValue(k, l) * 2); i1 > 0 && this.currentWorld.isAirBlock(k, i1 - 1, l); --i1)
-            {
-                ;
-            }
-
-            this.waterlilyGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+            this.waterlilyGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, SHROOM);
-        for (j = 0; doGen && j < this.mushroomsPerChunk; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, SHROOM);
+        for (i = 0; doGen && i < this.mushroomsPerChunk; ++i)
         {
             if (this.randomGenerator.nextInt(4) == 0)
             {
-                k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-                l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-                i1 = this.currentWorld.getHeightValue(k, l);
-                this.mushroomBrownGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+                tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+                tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+                ty = this.currentWorld.getTopSolidOrLiquidBlock(pos).getY();
+                tb = new BlockPos(tx, ty, tz);
+                this.mushroomBrownGen.generate(this.currentWorld, this.randomGenerator, tb);
             }
 
             if (this.randomGenerator.nextInt(8) == 0)
             {
-                k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-                l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-                i1 = nextInt(this.currentWorld.getHeightValue(k, l) * 2);
-                this.mushroomRedGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+                tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+                tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+                ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+                tb = new BlockPos(tx, ty, tz);
+                this.mushroomRedGen.generate(this.currentWorld, this.randomGenerator, tb);
             }
         }
 
         if (doGen && this.randomGenerator.nextInt(4) == 0)
         {
-            j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            l = nextInt(this.currentWorld.getHeightValue(j, k) * 2);
-            this.mushroomBrownGen.generate(this.currentWorld, this.randomGenerator, j, l, k);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
+            this.mushroomBrownGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
         if (doGen && this.randomGenerator.nextInt(8) == 0)
         {
-            j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            l = nextInt(this.currentWorld.getHeightValue(j, k) * 2);
-            this.mushroomRedGen.generate(this.currentWorld, this.randomGenerator, j, l, k);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
+            this.mushroomRedGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, REED);
-        for (j = 0; doGen && j < this.reedsPerChunk; ++j)
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, REED);
+        for (i = 0; doGen && i < this.reedsPerChunk; ++i)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = nextInt(this.currentWorld.getHeightValue(k, l) * 2);
-            this.reedGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
+            this.reedGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
         for (j = 0; doGen && j < 10; ++j)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = nextInt(this.currentWorld.getHeightValue(k, l) * 2);
-            this.reedGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty,tz);
+            this.reedGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, PUMPKIN);
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, PUMPKIN);
         if (doGen && this.randomGenerator.nextInt(32) == 0)
         {
-            j = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            k = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            l = nextInt(this.currentWorld.getHeightValue(j, k) * 2);
-            (new WorldGenPumpkin()).generate(this.currentWorld, this.randomGenerator, j, l, k);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
+            (new WorldGenPumpkin()).generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, CACTUS);
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, CACTUS);
         for (j = 0; doGen && j < this.cactiPerChunk; ++j)
         {
-            k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            l = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            i1 = nextInt(this.currentWorld.getHeightValue(k, l) * 2);
-            this.cactusGen.generate(this.currentWorld, this.randomGenerator, k, i1, l);
+            tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+            tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+            ty = nextInt(this.currentWorld.getTopSolidOrLiquidBlock(pos).getY() * 2);
+            tb = new BlockPos(tx, ty, tz);
+            this.cactusGen.generate(this.currentWorld, this.randomGenerator, tb);
         }
 
-        doGen = TerrainGen.decorate(currentWorld, randomGenerator, chunk_X, chunk_Z, LAKE);
+        doGen = TerrainGen.decorate(currentWorld, randomGenerator, pos, LAKE_WATER);
         if (doGen && this.generateLakes)
         {
             for (j = 0; j < 50; ++j)
             {
-                k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-                l = this.randomGenerator.nextInt(this.randomGenerator.nextInt(248) + 8);
-                i1 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-                (new WorldGenLiquids(Blocks.flowing_water)).generate(this.currentWorld, this.randomGenerator, k, l, i1);
+                tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+                ty = this.randomGenerator.nextInt(this.randomGenerator.nextInt(248) + 8);
+                tz = this.pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+                tb = new BlockPos(tx, ty, tz);
+                (new WorldGenLiquids(Blocks.flowing_water)).generate(this.currentWorld, this.randomGenerator, tb);
             }
 
             for (j = 0; j < 20; ++j)
             {
-                k = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-                l = this.randomGenerator.nextInt(this.randomGenerator.nextInt(this.randomGenerator.nextInt(240) + 8) + 8);
-                i1 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-                (new WorldGenLiquids(Blocks.flowing_lava)).generate(this.currentWorld, this.randomGenerator, k, l, i1);
+                tx = pos.getX() + this.randomGenerator.nextInt(16) + 8;
+                ty = this.randomGenerator.nextInt(this.randomGenerator.nextInt(this.randomGenerator.nextInt(240) + 8) + 8);
+                tz = pos.getZ() + this.randomGenerator.nextInt(16) + 8;
+                tb = new BlockPos(tx, ty, tz);
+                (new WorldGenLiquids(Blocks.flowing_lava)).generate(this.currentWorld, this.randomGenerator, tb);
             }
         }
 
-        MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(currentWorld, randomGenerator, chunk_X, chunk_Z));
+        MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(currentWorld, randomGenerator, pos));
     }
 
     /**
@@ -376,10 +393,11 @@ public class ChickenBiomeDecorator
     {
         for (int l = 0; l < p_76795_1_; ++l)
         {
-            int i1 = this.chunk_X + this.randomGenerator.nextInt(16);
-            int j1 = this.randomGenerator.nextInt(p_76795_4_ - p_76795_3_) + p_76795_3_;
-            int k1 = this.chunk_Z + this.randomGenerator.nextInt(16);
-            p_76795_2_.generate(this.currentWorld, this.randomGenerator, i1, j1, k1);
+            int tx = pos.getX() + this.randomGenerator.nextInt(16);
+            int ty = this.randomGenerator.nextInt(p_76795_4_ - p_76795_3_) + p_76795_3_;
+            int tz = pos.getZ() + this.randomGenerator.nextInt(16);
+            BlockPos tb = new BlockPos(tx, ty, tz);
+            p_76795_2_.generate(this.currentWorld, this.randomGenerator, tb);
         }
     }
 
@@ -390,10 +408,11 @@ public class ChickenBiomeDecorator
     {
         for (int l = 0; l < p_76793_1_; ++l)
         {
-            int i1 = this.chunk_X + this.randomGenerator.nextInt(16);
-            int j1 = this.randomGenerator.nextInt(p_76793_4_) + this.randomGenerator.nextInt(p_76793_4_) + (p_76793_3_ - p_76793_4_);
-            int k1 = this.chunk_Z + this.randomGenerator.nextInt(16);
-            p_76793_2_.generate(this.currentWorld, this.randomGenerator, i1, j1, k1);
+            int tx = pos.getX() + this.randomGenerator.nextInt(16);
+            int ty = this.randomGenerator.nextInt(p_76793_4_) + this.randomGenerator.nextInt(p_76793_4_) + (p_76793_3_ - p_76793_4_);
+            int tz = pos.getZ() + this.randomGenerator.nextInt(16);
+            BlockPos tb = new BlockPos(tx, ty, tz);
+            p_76793_2_.generate(this.currentWorld, this.randomGenerator, tb);
         }
     }
 
@@ -402,16 +421,16 @@ public class ChickenBiomeDecorator
      */
     protected void generateOres()
     {
-        MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Pre(currentWorld, randomGenerator, chunk_X, chunk_Z));
-        if (TerrainGen.generateOre(currentWorld, randomGenerator, dirtGen, chunk_X, chunk_Z, DIRT))
+        MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Pre(currentWorld, randomGenerator, pos));
+        if (TerrainGen.generateOre(currentWorld, randomGenerator, dirtGen, pos, DIRT))
         this.genStandardOre1(20, this.dirtGen, 0, 256);
-        if (TerrainGen.generateOre(currentWorld, randomGenerator, gravelGen, chunk_X, chunk_Z, GRAVEL))
+        if (TerrainGen.generateOre(currentWorld, randomGenerator, gravelGen, pos, GRAVEL))
         this.genStandardOre1(10, this.gravelGen, 0, 256);
-        if (TerrainGen.generateOre(currentWorld, randomGenerator, coalGen, chunk_X, chunk_Z, COAL))
+        if (TerrainGen.generateOre(currentWorld, randomGenerator, coalGen, pos, COAL))
         this.genStandardOre1(20, this.coalGen, 0, 128);
-        if (TerrainGen.generateOre(currentWorld, randomGenerator, ironGen, chunk_X, chunk_Z, IRON))
+        if (TerrainGen.generateOre(currentWorld, randomGenerator, ironGen, pos, IRON))
         this.genStandardOre1(20, this.ironGen, 0, 64);
-        MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(currentWorld, randomGenerator, chunk_X, chunk_Z));
+        MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(currentWorld, randomGenerator, pos));
     }
 
     private int nextInt(int i) {

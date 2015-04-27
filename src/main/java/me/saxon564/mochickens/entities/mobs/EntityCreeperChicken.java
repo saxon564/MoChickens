@@ -1,6 +1,7 @@
 package me.saxon564.mochickens.entities.mobs;
 
 import me.saxon564.mochickens.configs.chickens.CreeperChickenConfig;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -20,25 +21,25 @@ public class EntityCreeperChicken extends EntityMoChicken
     
     protected boolean isValidLightLevel()
     {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.boundingBox.minY);
+    	int i = MathHelper.floor_double(this.posX);
+        int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
 
-        if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > this.rand
+        if (this.worldObj.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
                 .nextInt(32))
         {
             return false;
         }
         else
         {
-            int l = this.worldObj.getBlockLightValue(i, j, k);
+            float l = this.worldObj.getLightBrightness(new BlockPos(i, j, k));
 
             if (this.worldObj.isThundering())
             {
-                int i1 = this.worldObj.skylightSubtracted;
-                this.worldObj.skylightSubtracted = 10;
-                l = this.worldObj.getBlockLightValue(i, j, k);
-                this.worldObj.skylightSubtracted = i1;
+                int i1 = this.worldObj.getSkylightSubtracted();
+                this.worldObj.setSkylightSubtracted(10);
+                l = this.worldObj.getLight(new BlockPos(i, j, k));
+                this.worldObj.setSkylightSubtracted(i1);
             }
 
             return l <= 7;
@@ -49,7 +50,7 @@ public class EntityCreeperChicken extends EntityMoChicken
     public boolean getCanSpawnHere()
     {
     		//System.out.println("Chicken: Creeper X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
-        	return this.worldObj.difficultySetting.toString() != "PEACEFUL" && this.isValidLightLevel();
+        	return this.worldObj.getDifficulty().toString() != "PEACEFUL" && this.isValidLightLevel();
     }
 
     /**

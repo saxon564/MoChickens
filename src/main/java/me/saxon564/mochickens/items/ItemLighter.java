@@ -4,8 +4,11 @@ import me.saxon564.mochickens.MoChickens;
 import me.saxon564.mochickens.MoChickensReference;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class ItemLighter extends Item {
@@ -13,58 +16,33 @@ public class ItemLighter extends Item {
 	public ItemLighter()
     {
         super();
-        setMaxStackSize(64);
         setCreativeTab(MoChickens.moChickensTab);
         setUnlocalizedName("lighter");
-        setTextureName(MoChickensReference.MODID + ":"
-				+ getUnlocalizedName().substring(5));
+        //setTextureName(MoChickensReference.MODID + ":"
+		//		+ getUnlocalizedName().substring(5));
         this.maxStackSize = 1;
         this.setMaxDamage(56);
     }
 	
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10) {
-		if (side == 0) {
-			y--;
-		}
-		
-		if (side == 1) {
-			y++;
-		}
-		
-		if (side == 2) {
-			z--;
-		}
-		
-		if (side == 3) {
-			z++;
-		}
-		
-		if (side == 4) {
-			x--;
-		}
-		
-		if (side == 5) {
-			x++;
-		}
-		
-		if (!player.canPlayerEdit(x, y, z, side, itemStack)) {
-			return false;
-		} else {
-			if (world.isAirBlock(x, y, z)) {
-				world.playSound((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "fire.ignite", 1F, itemRand.nextFloat() * 0.4F + 0.8F, true);
-				world.setBlock(x, y, z, MoChickens.blockChickenFire);
-				
-			}
-			itemStack.damageItem(1, player);
-		}
-		
-		return false;
-	}
-
-    @Override
-    public void registerIcons(IIconRegister iconRegister)
+	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        itemIcon = iconRegister.registerIcon("mochickens:lighter");
+        pos = pos.offset(side);
+
+        if (!playerIn.canPlayerEdit(pos, side, stack))
+        {
+            return false;
+        }
+        else
+        {
+            if (worldIn.isAirBlock(pos))
+            {
+                worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+                worldIn.setBlockState(pos, MoChickens.blockChickenFire.getDefaultState());
+            }
+
+            stack.damageItem(1, playerIn);
+            return true;
+        }
     }
 	
 }

@@ -2,16 +2,16 @@ package me.saxon564.mochickens.compatability;
 
 import me.saxon564.mochickens.MoChickens;
 import net.minecraft.item.ItemStack;
-import thaumcraft.api.ThaumcraftApi;
+/*import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.aspects.AspectList;*/
 
 public class Thaumcraft {
 	public static final String id = "Thaumcraft";
 	
 	public static void addAspects() {
 		//Chickens
-		ThaumcraftApi.registerEntityTag("mochickens.CoalChicken", (new AspectList()).add(Aspect.AIR, 1).add(Aspect.BEAST, 2).add(Aspect.FLIGHT, 2).add(Aspect.FIRE, 2).add(Aspect.ENERGY, 2));
+		/*ThaumcraftApi.registerEntityTag("mochickens.CoalChicken", (new AspectList()).add(Aspect.AIR, 1).add(Aspect.BEAST, 2).add(Aspect.FLIGHT, 2).add(Aspect.FIRE, 2).add(Aspect.ENERGY, 2));
 		ThaumcraftApi.registerEntityTag("mochickens.IronChicken", (new AspectList()).add(Aspect.AIR, 1).add(Aspect.BEAST, 2).add(Aspect.FLIGHT, 2).add(Aspect.METAL, 6));
 		ThaumcraftApi.registerEntityTag("mochickens.GoldChicken", (new AspectList()).add(Aspect.AIR, 1).add(Aspect.BEAST, 2).add(Aspect.FLIGHT, 2).add(Aspect.GREED, 2).add(Aspect.METAL, 3));
 		ThaumcraftApi.registerEntityTag("mochickens.LapisChicken", (new AspectList()).add(Aspect.AIR, 1).add(Aspect.BEAST, 2).add(Aspect.FLIGHT, 2).add(Aspect.SENSES, 1));
@@ -47,6 +47,6 @@ public class Thaumcraft {
 		ThaumcraftApi.registerObjectTag(new ItemStack(MoChickens.quartzStick), (new AspectList()).add(Aspect.ENERGY, 2).add(Aspect.CRYSTAL, 2));
 		ThaumcraftApi.registerObjectTag(new ItemStack(MoChickens.innerTamingDisc), (new AspectList()).add(Aspect.MECHANISM, 2).add(Aspect.ENERGY, 4).add(Aspect.METAL, 8).add(Aspect.GREED, 10).add(Aspect.CRYSTAL, 10));
 		ThaumcraftApi.registerObjectTag(new ItemStack(MoChickens.innerTamingDisc), (new AspectList()).add(Aspect.MECHANISM, 2).add(Aspect.ENERGY, 10).add(Aspect.METAL, 14).add(Aspect.GREED, 10).add(Aspect.CRYSTAL, 10).add(Aspect.FIRE, 2).add(Aspect.SENSES, 2));
-		ThaumcraftApi.registerObjectTag(new ItemStack(MoChickens.randomEgg), (new AspectList()).add(Aspect.MAGIC, 2).add(Aspect.LIFE, 1).add(Aspect.ELDRITCH, 2));
+		ThaumcraftApi.registerObjectTag(new ItemStack(MoChickens.randomEgg), (new AspectList()).add(Aspect.MAGIC, 2).add(Aspect.LIFE, 1).add(Aspect.ELDRITCH, 2));*/
 	}
 }

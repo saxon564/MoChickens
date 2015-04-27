@@ -14,7 +14,7 @@ public class ItemInnerTamingDisc extends Item
         setMaxStackSize(16);
         setCreativeTab(MoChickens.moChickensTab);
         setUnlocalizedName("inner_taming_disc");
-        setTextureName(MoChickensReference.MODID + ":"
-				+ getUnlocalizedName().substring(5));
+        //setTextureName(MoChickensReference.MODID + ":"
+		//		+ getUnlocalizedName().substring(5));
     }
 }

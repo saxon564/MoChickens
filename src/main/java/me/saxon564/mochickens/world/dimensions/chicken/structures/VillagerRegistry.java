@@ -20,7 +20,9 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.EntityVillager.*;
 import net.minecraft.item.Item;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.village.MerchantRecipeList;
@@ -86,7 +88,7 @@ public class VillagerRegistry
          * @param p5
          */
         Object buildComponent(VillageBuildings.PieceWeight villagePiece, VillageBuildings.Start startPiece, @SuppressWarnings("rawtypes") List pieces, Random random, int p1,
-                int p2, int p3, int p4, int p5);
+                int p2, int p3, EnumFacing p4, int p5);
     }
 
     /**
@@ -214,18 +216,18 @@ public class VillagerRegistry
     }
 
     public static Object getVillageComponent(VillageBuildings.PieceWeight villagePiece, VillageBuildings.Start startPiece, @SuppressWarnings("rawtypes") List pieces, Random random,
-            int p1, int p2, int p3, int p4, int p5)
+            int p1, int p2, int p3, EnumFacing p4, int p5)
     {
         return instance().villageCreationHandlers.get(villagePiece.villagePieceClass).buildComponent(villagePiece, startPiece, pieces, random, p1, p2, p3, p4, p5);
     }
 
 
-    @SuppressWarnings("unchecked")
+    /*@SuppressWarnings("unchecked")
     public static void addEmeraldBuyRecipe(EntityVillager villager, MerchantRecipeList list, Random random, Item item, float chance, int min, int max)
     {
         if (min > 0 && max > 0)
         {
-            EntityVillager.villagersSellingList.put(item, new Tuple(min, max));
+            EntityVillager.ListItemForEmeralds(item, new PriceInfo(min, max));
         }
         EntityVillager.func_146091_a(list, item, random, chance);
     }
@@ -238,7 +240,7 @@ public class VillagerRegistry
             EntityVillager.blacksmithSellingList.put(item, new Tuple(min, max));
         }
         EntityVillager.func_146089_b(list, item, random, chance);
-    }
+    }*/
 
     public static void applyRandomTrade(EntityVillager villager, Random rand)
     {

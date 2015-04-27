@@ -51,9 +51,11 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PreYggdrasilConverter;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
@@ -69,6 +71,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private static AttributeModifier attackingSpeedBoostModifier;
 
 	private int stareTimer;
+	private Entity entityToAttack;
 	private Entity lastEntityToAttack;
 	private boolean isAggressive;
 	private int teleportDelay;
@@ -79,7 +82,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	public float field_70884_g;
 	public float field_70888_h;
 	public float field_70889_i = 1.0F;
-	private EnumDifficulty checked = this.worldObj.difficultySetting;
+	private EnumDifficulty checked = this.worldObj.getDifficulty();
 	private boolean despawn;
 	private int ran;
 	private Configuration config;
@@ -172,7 +175,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 		if (s.length() > 0) {
 			this.setTamed(true);
-			this.func_152115_b(s);
+			this.setOwnerId(s);
 		}
 	}
 
@@ -245,7 +248,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 						EntityPlayer.class, 1.0D, false));
 			}
 			this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(
-					this, EntityPlayer.class, 0, true));
+					this, EntityPlayer.class, 0, true, par1, null));
 			this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 & -5)));
 			despawn = config.getCategory("entity data").get("Despawn Untamed")
 					.getBoolean();
@@ -258,7 +261,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			this.canDespawn();
 		}
 
-		if (this.worldObj.difficultySetting.toString().equalsIgnoreCase(
+		if (this.worldObj.getDifficulty().toString().equalsIgnoreCase(
 				"peaceful")) {
 			this.difficultyChange();
 		}
@@ -270,24 +273,24 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     protected boolean isValidLightLevel()
     {
         int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.boundingBox.minY);
+        int j = MathHelper.floor_double(this.getBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
 
-        if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > this.rand
+        if (this.worldObj.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
                 .nextInt(32))
         {
             return false;
         }
         else
         {
-            int l = this.worldObj.getBlockLightValue(i, j, k);
+            int l = this.worldObj.getLight(new BlockPos(i, j, k));
 
             if (this.worldObj.isThundering())
             {
-                int i1 = this.worldObj.skylightSubtracted;
-                this.worldObj.skylightSubtracted = 10;
-                l = this.worldObj.getBlockLightValue(i, j, k);
-                this.worldObj.skylightSubtracted = i1;
+                int i1 = this.worldObj.getSkylightSubtracted();
+                this.worldObj.setSkylightSubtracted(10);
+                l = this.worldObj.getLight(new BlockPos(i, j, k));
+                this.worldObj.setSkylightSubtracted(i1);
             }
 
             return l <= this.rand.nextInt(8);
@@ -298,7 +301,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     public boolean getCanSpawnHere()
     {
 		super.getCanSpawnHere();
-		if (!this.worldObj.getBlock((int) this.posX, (int) this.posY, (int) this.posZ).isOpaqueCube() && (this.worldObj.getLightBrightness((int) this.posX, (int) this.posY, (int) this.posZ) >= 7)) {
+		if (!this.worldObj.getBlockState(new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ)).getBlock().isOpaqueCube() && (this.worldObj.getLightBrightness(new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ)) >= 7)) {
 			//System.out.println("Chicken:" + this.chicken.toString() + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
 			return true;
 		} else {
@@ -307,7 +310,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     }
 
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-		if (this.isEntityInvulnerable()) {
+		if (this.isEntityInvulnerable(par1DamageSource)) {
 			return false;
 		} else if (config.getCategory("entity data").get("Allow Teleporting")
 				.getBoolean()) {
@@ -344,7 +347,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				&& (!config.getCategory("attack data").get("Can Blow Up")
 						.getBoolean())) {
 			EntityPlayer entityplayer = this.worldObj
-					.getClosestVulnerablePlayerToEntity(
+					.getClosestPlayerToEntity(
 							this,
 							config.getCategory("attack data")
 									.get("Attack Tracking Range").getDouble());
@@ -353,10 +356,9 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			int i = 0;
 
 			if (entityplayer instanceof EntityLivingBase) {
-				f += EnchantmentHelper.getEnchantmentModifierLiving(this,
-						(EntityLivingBase) entityplayer);
-				i += EnchantmentHelper.getKnockbackModifier(this,
-						(EntityLivingBase) entityplayer);
+				f += EnchantmentHelper.func_152377_a(this.getHeldItem(),
+						((EntityLivingBase)par1Entity).getCreatureAttribute());
+				i += EnchantmentHelper.getKnockbackModifier(this);
 				addEffects(entityplayer);
 				if (config.getCategory("attack data").get("Set Target On Fire")
 						.getBoolean()) {
@@ -427,26 +429,26 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	}
 
 	private void addLight() {
-		this.worldObj.setLightValue(EnumSkyBlock.Block, (int) this.posX,
-				(int) this.posY, (int) this.posZ,
+		this.worldObj.setLightFor(EnumSkyBlock.BLOCK, new BlockPos((int) this.posX,
+				(int) this.posY, (int) this.posZ),
 				config.getCategory("entity data").get("Light Level Emited")
 						.getInt());
 		this.worldObj.markBlockRangeForRenderUpdate((int) this.posX,
 				(int) this.posY, (int) this.posX, 12, 12, 12);
-		this.worldObj.markBlockForUpdate((int) this.posX, (int) this.posY,
-				(int) this.posZ);
-		this.worldObj.updateLightByType(EnumSkyBlock.Block, (int) this.posX,
-				(int) this.posY + 1, (int) this.posZ);
-		this.worldObj.updateLightByType(EnumSkyBlock.Block, (int) this.posX,
-				(int) this.posY - 1, (int) this.posZ);
-		this.worldObj.updateLightByType(EnumSkyBlock.Block,
-				(int) this.posX + 1, (int) this.posY, (int) this.posZ);
-		this.worldObj.updateLightByType(EnumSkyBlock.Block,
-				(int) this.posX - 1, (int) this.posY, (int) this.posZ);
-		this.worldObj.updateLightByType(EnumSkyBlock.Block, (int) this.posX,
-				(int) this.posY, (int) this.posZ + 1);
-		this.worldObj.updateLightByType(EnumSkyBlock.Block, (int) this.posX,
-				(int) this.posY, (int) this.posZ - 1);
+		this.worldObj.markBlockForUpdate(new BlockPos((int) this.posX, (int) this.posY,
+				(int) this.posZ));
+		this.worldObj.checkLightFor(EnumSkyBlock.BLOCK, new BlockPos((int) this.posX,
+				(int) this.posY + 1, (int) this.posZ));
+		this.worldObj.checkLightFor(EnumSkyBlock.BLOCK, new BlockPos((int) this.posX,
+				(int) this.posY - 1, (int) this.posZ));
+		this.worldObj.checkLightFor(EnumSkyBlock.BLOCK, new BlockPos(
+				(int) this.posX + 1, (int) this.posY, (int) this.posZ));
+		this.worldObj.checkLightFor(EnumSkyBlock.BLOCK, new BlockPos(
+				(int) this.posX - 1, (int) this.posY, (int) this.posZ));
+		this.worldObj.checkLightFor(EnumSkyBlock.BLOCK, new BlockPos(
+				(int) this.posX, (int) this.posY, (int) this.posZ + 1));
+		this.worldObj.checkLightFor(EnumSkyBlock.BLOCK, new BlockPos(
+				(int) this.posX, (int) this.posY, (int) this.posZ - 1));
 	}
 
 	/**
@@ -469,10 +471,10 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 			if (f > 0.5F
 					&& this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
-					&& this.worldObj.canBlockSeeTheSky(
+					&& this.worldObj.canBlockSeeSky(new BlockPos(
 							MathHelper.floor_double(this.posX),
 							MathHelper.floor_double(this.posY),
-							MathHelper.floor_double(this.posZ))) {
+							MathHelper.floor_double(this.posZ)))) {
 				boolean flag = true;
 
 				if (flag) {
@@ -499,10 +501,10 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				float f = this.getBrightness(1.0F);
 
 				if (f > 0.5F
-						&& this.worldObj.canBlockSeeTheSky(
+						&& this.worldObj.canBlockSeeSky(new BlockPos(
 								MathHelper.floor_double(this.posX),
 								MathHelper.floor_double(this.posY),
-								MathHelper.floor_double(this.posZ))
+								MathHelper.floor_double(this.posZ)))
 						&& this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F) {
 					this.entityToAttack = null;
 					this.setScreaming(false);
@@ -575,7 +577,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 					if (!this.worldObj.isRemote) {
 						EntityPlayer entityplayer = this.worldObj
-								.getClosestVulnerablePlayerToEntity(this, 5.0D);
+								.getClosestPlayerToEntity(this, 5.0D);
 						boolean flag = this.worldObj.getGameRules()
 								.getGameRuleBooleanValue("mobGriefing");
 						this.worldObj
@@ -618,8 +620,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				.getBoolean()) {
 			for (int i = 0; i < config.getCategory("entity data")
 					.get("Particles Per Tick").getInt(); ++i) {
-				this.worldObj.spawnParticle(config.getCategory("entity data")
-						.get("Particle Type").getString(),
+				this.worldObj.spawnParticle(EnumParticleTypes.valueOf(config.getCategory("entity data")
+						.get("Particle Type").getString()),
 						this.posX + (this.rand.nextDouble() - 0.5D)
 								* (double) this.width,
 						this.posY + this.rand.nextDouble()
@@ -649,9 +651,9 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 		this.field_70886_e += this.field_70889_i * 2.0F;
 
-		if (this.worldObj.difficultySetting != checked) {
+		if (this.worldObj.getDifficulty() != checked) {
 			this.difficultyChange();
-			checked = this.worldObj.difficultySetting;
+			checked = this.worldObj.getDifficulty();
 		}
 
 		if (!this.isChild() && !this.worldObj.isRemote
@@ -722,8 +724,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		}
 
 		if (this.isDead) {
-			this.worldObj.updateLightByType(EnumSkyBlock.Block,
-					(int) this.posX, (int) this.posY, (int) this.posZ);
+			this.worldObj.checkLightFor(EnumSkyBlock.BLOCK,
+					new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ));
 		}
 	}
 
@@ -748,21 +750,21 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	}
 
 	private void difficultyChange() {
-		if (this.worldObj.difficultySetting.toString().equalsIgnoreCase(
+		if (this.worldObj.getDifficulty().toString().equalsIgnoreCase(
 				"peaceful")) {
-			this.setPathToEntity((PathEntity) null);
+			this.navigator.clearPathEntity();
 			this.setAttackTarget((EntityLivingBase) null);
-			this.setTarget(null);
+			this.setAttackTarget(null);
 			this.tasks.removeTask(new EntityAIAttackOnCollide(this,
 					EntityPlayer.class, 1.0D, false));
 			this.targetTasks.taskEntries.clear();
 		} else {
 			if (this.getOwner() != null) {
-				EntityLivingBase s = this.getOwner();
+				EntityLivingBase s = (EntityLivingBase) this.getOwner();
 
 				if (s.getUniqueID().toString().length() > 0) {
 					this.setTamed(true);
-					this.func_152115_b(s.toString());
+					this.setOwnerId(s.toString());
 				}
 			} else {
 				this.setTamed(false);
@@ -821,11 +823,10 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 						if (this.rand.nextInt(config.getCategory("taming")
 								.get("Taming Chance").getInt()) == 0) {
 							this.setTamed(true);
-							this.setPathToEntity((PathEntity) null);
+							this.navigator.clearPathEntity();
 							this.setAttackTarget((EntityLivingBase) null);
-							this.setTarget(null);
-							this.func_152115_b(par1EntityPlayer.getUniqueID()
-									.toString());
+							this.setAttackTarget(null);
+							this.setOwnerId(par1EntityPlayer.getUniqueID().toString());
 							this.playTameEffect(true);
 						} else {
 							this.playTameEffect(false);
@@ -850,10 +851,10 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 					if (this.rand.nextInt(config.getCategory("taming")
 							.get("Taming Chance").getInt()) == 0) {
 						this.setTamed(true);
-						this.setPathToEntity((PathEntity) null);
+						this.navigator.clearPathEntity();
 						this.setAttackTarget((EntityLivingBase) null);
-						this.setTarget(null);
-						this.func_152115_b(par1EntityPlayer.getUniqueID()
+						this.setAttackTarget(null);
+						this.setOwnerId(par1EntityPlayer.getUniqueID()
 								.toString());
 						this.playTameEffect(true);
 					} else {
@@ -878,10 +879,10 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 					.getDeclaredConstructor(World.class).newInstance(
 							par1EntityAgeable.worldObj);
 
-			EntityLivingBase s = this.getOwner();
+			EntityLivingBase s = (EntityLivingBase) this.getOwner();
 
 			if (s != null && s.getUniqueID().toString().length() > 0) {
-				((EntityMoChicken) newEntity).func_152115_b(s.getUniqueID()
+				((EntityMoChicken) newEntity).setOwnerId(s.getUniqueID()
 						.toString());
 				((EntityMoChicken) newEntity).addVars(config, chicken);
 				((EntityMoChicken) newEntity).setTamed(true);
@@ -889,22 +890,16 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 			return (EntityMoChicken) newEntity;
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -954,8 +949,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	}
 
 	protected boolean teleportToEntity(Entity par1Entity) {
-		Vec3 vec3 = Vec3.createVectorHelper(this.posX - par1Entity.posX,
-				this.boundingBox.minY + (double) (this.height / 1.5F)
+		Vec3 vec3 = new Vec3(this.posX - par1Entity.posX,
+				this.getBoundingBox().minY + (double) (this.height / 1.5F)
 						- par1Entity.posY + (double) par1Entity.getEyeHeight(),
 				this.posZ - par1Entity.posZ);
 		vec3 = vec3.normalize();
@@ -986,11 +981,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		int j = MathHelper.floor_double(this.posY);
 		int k = MathHelper.floor_double(this.posZ);
 
-		if (this.worldObj.blockExists(i, j, k)) {
+		if (this.worldObj.isBlockLoaded(new BlockPos(i, j, k))) {
 			boolean flag1 = false;
 
 			while (!flag1 && j > 0) {
-				Block block = this.worldObj.getBlock(i, j - 1, k);
+				Block block = this.worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock();
 
 				if (block.getMaterial().blocksMovement()) {
 					flag1 = true;
@@ -1004,8 +999,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				this.setPosition(this.posX, this.posY, this.posZ);
 
 				if (this.worldObj.getCollidingBoundingBoxes(this,
-						this.boundingBox).isEmpty()
-						&& !this.worldObj.isAnyLiquid(this.boundingBox)) {
+						this.getBoundingBox()).isEmpty()
+						&& !this.worldObj.isAnyLiquid(this.getBoundingBox())) {
 					flag = true;
 				}
 			}
@@ -1030,7 +1025,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				double d9 = d5 + (this.posZ - d5) * d6
 						+ (this.rand.nextDouble() - 0.5D) * (double) this.width
 						* 2.0D;
-				this.worldObj.spawnParticle("portal", d7, d8, d9, (double) f,
+				this.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, (double) f,
 						(double) f1, (double) f2);
 			}
 
@@ -1049,11 +1044,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				this,
 				entitylivingbase,
 				1.6F,
-				(float) (14 - this.worldObj.difficultySetting.getDifficultyId() * 4));
+				(float) (14 - this.worldObj.getDifficulty().getDifficultyId() * 4));
 		entityarrow.setDamage((double) (f * 2.0F)
 				+ this.rand.nextGaussian()
 				* 0.25D
-				+ (double) ((float) this.worldObj.difficultySetting
+				+ (double) ((float) this.worldObj.getDifficulty()
 						.getDifficultyId() * 0.11F));
 		this.playSound("random.bow", 1.0F,
 				1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));

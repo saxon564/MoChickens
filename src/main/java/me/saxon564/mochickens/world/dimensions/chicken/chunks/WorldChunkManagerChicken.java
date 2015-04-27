@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import me.saxon564.mochickens.MoChickens;
 import me.saxon564.mochickens.world.dimensions.chicken.layer.GenLayerChicken;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -44,7 +45,7 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 
 	public WorldChunkManagerChicken(World world)
 	{
-		this(world.getSeed(), world.provider.terrainType);
+		this(world.getSeed(), world.getWorldInfo().getTerrainType());
 	}
 
 	/**
@@ -56,18 +57,12 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 	}
 
 	/**
-	 * Returns the BiomeGenBase related to the x, z position on the world.
-	 */
-	public BiomeGenBase getBiomeGenAt(int x, int z)
-	{
-		BiomeGenBase biome = this.myBiomeCache.getBiomeGenAt(x, z);
-		if (biome == null)
-		{
-			return null;//MoChickens.biomeChickenForest;
-		}
-
-		return biome;
-	}
+     * Returns the biome generator
+     */
+    public BiomeGenBase getBiomeGenerator(BlockPos p_180631_1_)
+    {
+        return this.func_180300_a(p_180631_1_, (BiomeGenBase)null);
+    }
 
 	/**
 	 * Returns a list of rainfall values for the specified blocks. Args:
@@ -201,31 +196,34 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 	 * biomes. Searches {par1,par2} +-par3 blocks. Strongly favors positive y
 	 * positions.
 	 */
-	public ChunkPosition findBiomePosition(int par1, int par2, int par3, List par4List, Random par5Random) {
-		IntCache.resetIntCache();
-		int l = par1 - par3 >> 2;
-		int i1 = par2 - par3 >> 2;
-		int j1 = par1 + par3 >> 2;
-		int k1 = par2 + par3 >> 2;
-		int l1 = j1 - l + 1;
-		int i2 = k1 - i1 + 1;
-		int[] aint = this.myGenBiomes.getInts(l, i1, l1, i2);
-		ChunkPosition chunkposition = null;
-		int j2 = 0;
+	public BlockPos findBiomePosition(int x, int z, int range, List biomes, Random random)
+    {
+        IntCache.resetIntCache();
+        int l = x - range >> 2;
+        int i1 = z - range >> 2;
+        int j1 = x + range >> 2;
+        int k1 = z + range >> 2;
+        int l1 = j1 - l + 1;
+        int i2 = k1 - i1 + 1;
+        int[] aint = this.myGenBiomes.getInts(l, i1, l1, i2);
+        BlockPos blockpos = null;
+        int j2 = 0;
 
-		for (int k2 = 0; k2 < l1 * i2; ++k2) {
-			int l2 = l + k2 % l1 << 2;
-			int i3 = i1 + k2 / l1 << 2;
-			BiomeGenBase biomegenbase = BiomeGenBase.getBiome(aint[k2]);
+        for (int k2 = 0; k2 < l1 * i2; ++k2)
+        {
+            int l2 = l + k2 % l1 << 2;
+            int i3 = i1 + k2 / l1 << 2;
+            BiomeGenBase biomegenbase = BiomeGenBase.getBiome(aint[k2]);
 
-			if (par4List.contains(biomegenbase) && (chunkposition == null || par5Random.nextInt(j2 + 1) == 0)) {
-				chunkposition = new ChunkPosition(l2, 0, i3);
-				++j2;
-			}
-		}
+            if (biomes.contains(biomegenbase) && (blockpos == null || random.nextInt(j2 + 1) == 0))
+            {
+                blockpos = new BlockPos(l2, 0, i3);
+                ++j2;
+            }
+        }
 
-		return chunkposition;
-	}
+        return blockpos;
+    }
 
 	/**
 	 * Calls the WorldChunkManager's biomeCache.cleanupCache()

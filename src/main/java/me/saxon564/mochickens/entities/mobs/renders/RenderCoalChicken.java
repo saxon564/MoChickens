@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import me.saxon564.mochickens.entities.mobs.EntityCoalChicken;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,9 +19,9 @@ public class RenderCoalChicken extends RenderLiving
 {
     private static final ResourceLocation chickenCTextures = new ResourceLocation("mochickens:textures/mobs/coalChicken.png");
 
-    public RenderCoalChicken(ModelBase par1ModelBase, float par2)
+    public RenderCoalChicken(RenderManager renderManager, ModelBase modelBase, float f1)
     {
-        super(par1ModelBase, par2);
+        super(renderManager, modelBase, f1);
     }
 
     public void renderCoalChicken(EntityCoalChicken par1EntityCoalChicken, double par2, double par4, double par6, float par8, float par9)

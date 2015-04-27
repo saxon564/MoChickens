@@ -14,6 +14,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.material.Material;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class BlockChickenFireBlock extends BlockFire {
@@ -39,12 +41,12 @@ public class BlockChickenFireBlock extends BlockFire {
 	
 	private boolean canNeighborBurn(World world, int x, int y, int z)
     {
-        return this.canCatchFire(world, x + 1, y, z, WEST ) ||
-               this.canCatchFire(world, x - 1, y, z, EAST ) ||
-               this.canCatchFire(world, x, y - 1, z, UP   ) ||
-               this.canCatchFire(world, x, y + 1, z, DOWN ) ||
-               this.canCatchFire(world, x, y, z - 1, SOUTH) ||
-               this.canCatchFire(world, x, y, z + 1, NORTH);
+        return this.canCatchFire(world, new BlockPos(x + 1, y, z), EnumFacing.WEST ) ||
+               this.canCatchFire(world, new BlockPos(x - 1, y, z), EnumFacing.EAST ) ||
+               this.canCatchFire(world, new BlockPos(x, y - 1, z), EnumFacing.UP   ) ||
+               this.canCatchFire(world, new BlockPos(x, y + 1, z), EnumFacing.DOWN ) ||
+               this.canCatchFire(world, new BlockPos(x, y, z - 1), EnumFacing.SOUTH) ||
+               this.canCatchFire(world, new BlockPos(x, y, z + 1), EnumFacing.NORTH);
     }
 
 }

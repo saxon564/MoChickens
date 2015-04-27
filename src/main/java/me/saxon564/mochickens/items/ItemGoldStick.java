@@ -14,7 +14,7 @@ public class ItemGoldStick extends Item
         setMaxStackSize(64);
         setCreativeTab(MoChickens.moChickensTab);
         setUnlocalizedName("gold_stick");
-        setTextureName(MoChickensReference.MODID + ":"
-				+ getUnlocalizedName().substring(5));
+        //setTextureName(MoChickensReference.MODID + ":"
+		//		+ getUnlocalizedName().substring(5));
     }
 }
