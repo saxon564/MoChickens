@@ -2,39 +2,31 @@ package com.saxon564.mochickens.items;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.MoChickensReference;
-import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
-
-import cpw.mods.fml.common.registry.EntityRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
+
+import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
 
 public class ItemRandomEgg extends Item {
 	
@@ -49,13 +41,15 @@ public class ItemRandomEgg extends Item {
 	}
 
 	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-
+		//System.out.println("Item Used");
 		if (worldIn.isRemote)
         {
+			//System.out.println("Server");
             return true;
         }
         else if (!playerIn.canPlayerEdit(pos.offset(side), side, stack))
         {
+        	//System.out.println("Cant Edit");
             return false;
         }
         else
@@ -97,13 +91,13 @@ public class ItemRandomEgg extends Item {
 			}
 
 			float look = -playerIn.rotationYaw;
-
+			//System.out.println(MoChickens.egg[random]);
 			if (MoChickens.egg[random] != null) {
 				Configuration configs = MoChickens.configs[random];
 				try {
 					EntityLiving newEntity = (EntityLiving) type
 							.getDeclaredConstructor(World.class).newInstance(
-									playerIn.worldObj);
+									worldIn);
 					//System.out.println(newEntity.toString());
 					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
 						// prevent tying to age bat
@@ -111,9 +105,10 @@ public class ItemRandomEgg extends Item {
 						((EntityMoChicken) newEntity).addVars(configs, type);
 					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
 					}
-					newEntity.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getX() + d0, (double)pos.getZ() + 0.5D, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+					newEntity.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY() + d0, (double)pos.getZ() + 0.5D, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+					//System.out.println(newEntity.toString());
 					// newEntity.setTamed(true);
-					playerIn.worldObj.spawnEntityInWorld(newEntity);
+					worldIn.spawnEntityInWorld(newEntity);
 				} catch (InstantiationException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
@@ -132,6 +127,87 @@ public class ItemRandomEgg extends Item {
 
 		return false;
 	}
+	
+	public ItemStack onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player)
+    {
+        if (worldIn.isRemote)
+        {
+            return stack;
+        }
+        else
+        {
+            MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(worldIn, player, true);
+
+            if (movingobjectposition == null)
+            {
+                return stack;
+            }
+            else
+            {
+                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+                {
+                    BlockPos blockpos = movingobjectposition.getBlockPos();
+
+                    if (!worldIn.isBlockModifiable(player, blockpos))
+                    {
+                        return stack;
+                    }
+
+                    if (!player.canPlayerEdit(blockpos, movingobjectposition.sideHit, stack))
+                    {
+                        return stack;
+                    }
+
+                    if (worldIn.getBlockState(blockpos).getBlock() instanceof BlockLiquid)
+                    {
+            			double d0 = 0.0D;
+
+            			if (!player.capabilities.isCreativeMode) {
+            				--stack.stackSize;
+            			}
+
+            			float look = -player.rotationYaw;
+            			final int random = randomInt(0, MoChickens.eggNum);
+            			Class type = MoChickens.egg[random];
+            			//System.out.println(MoChickens.egg[random]);
+            			if (MoChickens.egg[random] != null) {
+            				Configuration configs = MoChickens.configs[random];
+            				try {
+            					EntityLiving newEntity = (EntityLiving) type
+            							.getDeclaredConstructor(World.class).newInstance(
+            									worldIn);
+            					//System.out.println(newEntity.toString());
+            					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
+            						// prevent tying to age bat
+            					} else {
+            						((EntityMoChicken) newEntity).addVars(configs, type);
+            					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
+            					}
+            					newEntity.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + d0, (double)blockpos.getZ() + 0.5D, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+            					//System.out.println(newEntity.toString());
+            					// newEntity.setTamed(true);
+            					worldIn.spawnEntityInWorld(newEntity);
+            				} catch (InstantiationException e) {
+            					e.printStackTrace();
+            				} catch (IllegalAccessException e) {
+            					e.printStackTrace();
+            				} catch (IllegalArgumentException e) {
+            					e.printStackTrace();
+            				} catch (InvocationTargetException e) {
+            					e.printStackTrace();
+            				} catch (NoSuchMethodException e) {
+            					e.printStackTrace();
+            				} catch (SecurityException e) {
+            					e.printStackTrace();
+            				}
+            			}
+                    }
+                }
+
+                return stack;
+            }
+        }
+    }
 
 	public static int randomInt(int low, int high) {
 		int result = (int) (Math.random() * (high - low + 1)) + low;

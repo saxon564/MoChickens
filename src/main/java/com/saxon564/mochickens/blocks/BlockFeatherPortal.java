@@ -2,12 +2,6 @@ package com.saxon564.mochickens.blocks;
 
 import java.util.Random;
 
-import org.apache.logging.log4j.LogManager;
-
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.MoChickensReference;
-import com.saxon564.mochickens.world.dimensions.chicken.teleporters.ChickenTeleporter;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.material.Material;
@@ -15,7 +9,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -27,12 +20,15 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.configs.DimensionConfigs;
+import com.saxon564.mochickens.world.dimensions.chicken.teleporters.ChickenTeleporter;
 
 public class BlockFeatherPortal extends BlockPortal
 {
@@ -213,9 +209,9 @@ public class BlockFeatherPortal extends BlockPortal
         	
             if (player.timeUntilPortal > 0) {
             	player.timeUntilPortal = 10;
-            } else if (player.dimension != MoChickens.chickenDimensionId) {
+            } else if (player.dimension != DimensionConfigs.chickenDimId) {
             	player.timeUntilPortal = 10;
-            	player.mcServer.getConfigurationManager().transferPlayerToDimension(player, MoChickens.chickenDimensionId, new ChickenTeleporter(server.worldServerForDimension(MoChickens.chickenDimensionId)));
+            	player.mcServer.getConfigurationManager().transferPlayerToDimension(player, DimensionConfigs.chickenDimId, new ChickenTeleporter(server.worldServerForDimension(DimensionConfigs.chickenDimId)));
             } else {
             	player.timeUntilPortal = 10;
             	player.mcServer.getConfigurationManager().transferPlayerToDimension(player, 0, new ChickenTeleporter(server.worldServerForDimension(0)));
@@ -299,7 +295,6 @@ public class BlockFeatherPortal extends BlockPortal
             private BlockPos field_150861_f;
             private int field_150862_g;
             private int field_150868_h;
-            private static final String __OBFID = "CL_00000285";
 
             public Size(World worldIn, BlockPos p_i45694_2_, EnumFacing.Axis p_i45694_3_)
             {

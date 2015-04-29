@@ -1,18 +1,10 @@
 package com.saxon564.mochickens.world.dimensions.chicken.chunks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.world.dimensions.chicken.layer.GenLayerChicken;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeCache;
@@ -20,6 +12,13 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.terraingen.WorldTypeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.world.dimensions.chicken.layer.GenLayerChicken;
 
 public class WorldChunkManagerChicken extends WorldChunkManager
 {
@@ -32,11 +31,11 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 	{
 		this.myBiomeCache = new BiomeCache(this);
 		this.myBiomesToSpawnIn = new ArrayList<BiomeGenBase>();
-		//this.myBiomesToSpawnIn.add(MoChickens.biomeChickenForest);
-		//this.myBiomesToSpawnIn.add(MoChickens.biomeChickenPlains);
+		this.myBiomesToSpawnIn.add(MoChickens.biomeChickenForest);
+		this.myBiomesToSpawnIn.add(MoChickens.biomeChickenPlains);
 	}
 
-	public WorldChunkManagerChicken(long seed, WorldType worldtype)
+	public WorldChunkManagerChicken(long seed, WorldType worldtype, String p_i45744_4_)
 	{
 		this();
 		GenLayer[] agenlayer = GenLayerChicken.makeTheWorld(seed);
@@ -46,7 +45,7 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 
 	public WorldChunkManagerChicken(World world)
 	{
-		this(world.getSeed(), world.getWorldInfo().getTerrainType());
+		this(world.getSeed(), world.getWorldInfo().getTerrainType(), world.getWorldInfo().getGeneratorOptions());
 	}
 
 	/**
@@ -63,6 +62,11 @@ public class WorldChunkManagerChicken extends WorldChunkManager
     public BiomeGenBase getBiomeGenerator(BlockPos p_180631_1_)
     {
         return this.func_180300_a(p_180631_1_, (BiomeGenBase)null);
+    }
+    
+    public BiomeGenBase func_180300_a(BlockPos p_180300_1_, BiomeGenBase p_180300_2_)
+    {
+        return this.myBiomeCache.func_180284_a(p_180300_1_.getX(), p_180300_1_.getZ(), p_180300_2_);
     }
 
 	/**
@@ -141,32 +145,33 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 	 * y, width, length, cacheFlag (if false, don't check biomeCache to avoid
 	 * infinite loop in BiomeCacheBlock)
 	 */
-	public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] par1ArrayOfBiomeGenBase, int x, int y, int width, int length, boolean cacheFlag) {
-		IntCache.resetIntCache();
+	public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] listToReuse, int x, int z, int width, int length, boolean cacheFlag)
+    {
+        IntCache.resetIntCache();
 
-		if (par1ArrayOfBiomeGenBase == null || par1ArrayOfBiomeGenBase.length < width * length) {
-			par1ArrayOfBiomeGenBase = new BiomeGenBase[width * length];
-		}
+        if (listToReuse == null || listToReuse.length < width * length)
+        {
+            listToReuse = new BiomeGenBase[width * length];
+        }
 
-		if (cacheFlag && width == 16 && length == 16 && (x & 15) == 0 && (y & 15) == 0) {
-			BiomeGenBase[] abiomegenbase1 = this.myBiomeCache.getCachedBiomes(x, y);
-			System.arraycopy(abiomegenbase1, 0, par1ArrayOfBiomeGenBase, 0, width * length);
-			return par1ArrayOfBiomeGenBase;
-		} else {
-			int[] aint = this.myBiomeIndexLayer.getInts(x, y, width, length);
+        if (cacheFlag && width == 16 && length == 16 && (x & 15) == 0 && (z & 15) == 0)
+        {
+            BiomeGenBase[] abiomegenbase1 = this.myBiomeCache.getCachedBiomes(x, z);
+            System.arraycopy(abiomegenbase1, 0, listToReuse, 0, width * length);
+            return listToReuse;
+        }
+        else
+        {
+            int[] aint = this.myBiomeIndexLayer.getInts(x, z, width, length);
 
-			for (int i = 0; i < width * length; ++i) {
-				if (aint[i] >= 0) {
-					par1ArrayOfBiomeGenBase[i] = BiomeGenBase.getBiome(aint[i]);
-				} else {
-					//Change this to a biome
-					//par1ArrayOfBiomeGenBase[i] = MoChickens.biomeChickenForest;
-				}
-			}
+            for (int i1 = 0; i1 < width * length; ++i1)
+            {
+                listToReuse[i1] = BiomeGenBase.getBiomeFromBiomeList(aint[i1], BiomeGenBase.field_180279_ad);
+            }
 
-			return par1ArrayOfBiomeGenBase;
-		}
-	}
+            return listToReuse;
+        }
+    }
 
 	/**
 	 * checks given Chunk's Biomes against List of allowed ones

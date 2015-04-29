@@ -1,12 +1,10 @@
 package com.saxon564.mochickens.recipes;
 
-import com.saxon564.mochickens.MoChickens;
-
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import com.saxon564.mochickens.MoChickens;
 
 public class CraftingRecipes
 {

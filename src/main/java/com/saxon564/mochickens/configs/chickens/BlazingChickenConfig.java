@@ -2,15 +2,14 @@ package com.saxon564.mochickens.configs.chickens;
 
 import java.io.File;
 
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.configs.ConfigComments;
 import com.saxon564.mochickens.configs.FileManager;
-
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 public class BlazingChickenConfig {
 
@@ -143,7 +142,7 @@ public class BlazingChickenConfig {
 		waterDamage = config.get("entity data", "Gets Hurt by Water", true).getBoolean(true);
 		damageByWater = config.get("entity data", "Damage From Water", 2.0D).getDouble(2.0F);
 		emitsParticles = config.get("entity data", "Emits Particles", true).getBoolean(true);
-		particleType = config.get("entity data", "Particle Type", "largesmoke").getString();
+		particleType = config.get("entity data", "Particle Type", "smoke_large").getString();
 		particleFrequency = config.get("entity data", "Particles Per Tick", 2).getInt(2);
 	}
 		

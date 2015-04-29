@@ -3,30 +3,18 @@ package com.saxon564.mochickens.world.dimensions.chicken.biomes;
 import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.FLOWERS;
 import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.GRASS;
 import static net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.TREE;
-import static net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType.*;
+import static net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType.COAL;
+import static net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable.EventType.IRON;
 
 import java.util.Random;
 
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
-import com.saxon564.mochickens.entities.mobs.EntityCoalChicken;
-import com.saxon564.mochickens.entities.mobs.EntityNuuwChicken;
-import com.saxon564.mochickens.world.dimensions.chicken.generators.ChickenBiomeDecorator;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockFlower;
-import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockFlower.EnumFlowerType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenClay;
@@ -35,6 +23,14 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenSand;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.event.terraingen.TerrainGen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
+import com.saxon564.mochickens.entities.mobs.EntityCoalChicken;
+import com.saxon564.mochickens.entities.mobs.EntityNuuwChicken;
+import com.saxon564.mochickens.world.dimensions.chicken.generators.ChickenBiomeDecorator;
 
 public class BiomeGenChickenPlains extends BiomeGenBase {
 	

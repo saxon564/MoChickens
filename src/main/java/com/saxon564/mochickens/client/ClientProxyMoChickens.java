@@ -1,5 +1,11 @@
 package com.saxon564.mochickens.client;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+
+import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
 import com.saxon564.mochickens.entities.mobs.EntityBlazingChicken;
 import com.saxon564.mochickens.entities.mobs.EntityClayChicken;
@@ -50,24 +56,45 @@ import com.saxon564.mochickens.entities.mobs.renders.RenderRedstoneChicken;
 import com.saxon564.mochickens.entities.mobs.renders.RenderSkeletonChicken;
 import com.saxon564.mochickens.entities.mobs.renders.RenderSnowChicken;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
+import com.saxon564.mochickens.registers.RegisterHelper;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.network.IGuiHandler;
+
 
 public class ClientProxyMoChickens extends CommonProxyMoChickens
 {
+	private RenderManager manager;
+	
     public void registerRenders()
     {
-    	RenderManager manager = Minecraft.getMinecraft().getRenderManager();
-        RenderingRegistry.registerEntityRenderingHandler(EntityDiamondChicken.class, new RenderDiamondChicken(manager, new ModelEnderChicken(), 0.3F));
+    	manager = Minecraft.getMinecraft().getRenderManager();
+    	chickens();
+    	items();
+        
+    }
+
+	private void items() {
+		//Items
+		RegisterHelper.registerItemRenders(MoChickens.coalStick, 0, "coal_stick");
+		RegisterHelper.registerItemRenders(MoChickens.ironStick, 0, "iron_stick");
+		RegisterHelper.registerItemRenders(MoChickens.goldStick, 0, "gold_stick");
+		RegisterHelper.registerItemRenders(MoChickens.redstoneStick, 0, "redstone_stick");
+		RegisterHelper.registerItemRenders(MoChickens.lapisStick, 0, "lapis_stick");
+		RegisterHelper.registerItemRenders(MoChickens.diamondStick, 0, "diamond_stick");
+		RegisterHelper.registerItemRenders(MoChickens.emeraldStick, 0, "emerald_stick");
+		RegisterHelper.registerItemRenders(MoChickens.quartzStick, 0, "quartz_stick");
+		RegisterHelper.registerItemRenders(MoChickens.innerTamingDisc, 0, "inner_taming_disc");
+		RegisterHelper.registerItemRenders(MoChickens.tamingDisc, 0, "taming_disc");
+		RegisterHelper.registerItemRenders(MoChickens.randomEgg, 0, "random_egg");
+		RegisterHelper.registerItemRenders(MoChickens.chickenSteel, 0, "chicken_steel");
+		
+		//Blocks
+		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.blockFeatherBlock), 0, "feather_block");
+		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.blockCoalGemOreBlock), 0, "coal_gem_ore");
+		
+	}
+
+	private void chickens() {
+		RenderingRegistry.registerEntityRenderingHandler(EntityDiamondChicken.class, new RenderDiamondChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityCoalChicken.class, new RenderCoalChicken(manager, new ModelCChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityIronChicken.class, new RenderIronChicken(manager, new ModelCChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityGoldChicken.class, new RenderGoldChicken(manager, new ModelGoldChicken(), 0.3F));
@@ -88,5 +115,5 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
         RenderingRegistry.registerEntityRenderingHandler(EntityBlazingChicken.class, new RenderBlazingChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityEnchantedChicken.class, new RenderEnchantedChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityNuuwChicken.class, new RenderNuuwChicken(manager, new ModelEnderChicken(), 0.3F));
-    }
+	}
 }

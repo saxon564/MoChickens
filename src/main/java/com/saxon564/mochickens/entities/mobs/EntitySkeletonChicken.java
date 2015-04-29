@@ -26,7 +26,7 @@ public class EntitySkeletonChicken extends EntityMoChicken
     protected boolean isValidLightLevel()
     {
         int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.getBoundingBox().minY);
+        int j = MathHelper.floor_double(this.getEntityBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
 
         if (this.worldObj.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
@@ -36,7 +36,7 @@ public class EntitySkeletonChicken extends EntityMoChicken
         }
         else
         {
-            float l = this.worldObj.getLightBrightness(new BlockPos(i, j, k));
+        	int l = this.worldObj.getLightFromNeighbors(new BlockPos(i, j, k));
 
             if (this.worldObj.isThundering())
             {

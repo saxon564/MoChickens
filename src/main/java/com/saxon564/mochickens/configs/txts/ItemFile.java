@@ -6,13 +6,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameData;
+
 import com.saxon564.mochickens.MoChickens;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
-
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.registry.GameData;
 
 public class ItemFile {
 

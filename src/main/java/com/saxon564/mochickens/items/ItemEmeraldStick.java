@@ -1,11 +1,8 @@
 package com.saxon564.mochickens.items;
 
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.MoChickensReference;
-
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+
+import com.saxon564.mochickens.MoChickens;
 
 public class ItemEmeraldStick extends Item
 {

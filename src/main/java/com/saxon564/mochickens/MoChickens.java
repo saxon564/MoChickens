@@ -1,7 +1,22 @@
 package com.saxon564.mochickens;
 
-import com.saxon564.mochickens.compatability.AdvancedGenetics;
-import com.saxon564.mochickens.compatability.Thaumcraft;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraft.world.gen.structure.MapGenVillage;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
 import com.saxon564.mochickens.configs.FileManager;
 import com.saxon564.mochickens.configs.GeneralConfig;
 import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
@@ -57,28 +72,12 @@ import com.saxon564.mochickens.registers.RegisterEggs;
 import com.saxon564.mochickens.registers.RegisterItems;
 import com.saxon564.mochickens.registers.RegisterOreDict;
 import com.saxon564.mochickens.registers.RegisterSpawns;
-
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import com.saxon564.mochickens.world.dimensions.chicken.structures.MapGenChickenVillage;
 
 
 @Mod(modid = MoChickensReference.MODID, name = MoChickensReference.MODNAME, version = MoChickensReference.VERSION)
 public class MoChickens {
-	@SidedProxy(clientSide = "me.saxon564.mochickens.client.ClientProxyMoChickens", serverSide = "me.saxon564.mochickens.proxies.CommonProxyMoChickens")
+	@SidedProxy(clientSide = "com.saxon564.mochickens.client.ClientProxyMoChickens", serverSide = "com.saxon564.mochickens.proxies.CommonProxyMoChickens")
 	public static CommonProxyMoChickens proxy;
 
 	@Instance("mochickens")
@@ -109,7 +108,7 @@ public class MoChickens {
 	public static Item itemEmeraldFeather;
 	public static Item itemQuartzFeather;
 	public static Item itemEnchantedFeather;
-	public static Item itemLighter;
+	public static Item chickenSteel;
 	
 	// Initialize Blocks
 	public static Block blockFeatherPortal;
@@ -130,13 +129,13 @@ public class MoChickens {
 	public static String path;
 	
 	//Dimensions
-	public static int chickenDimensionId;
+	//public static int chickenDimensionId;
 	
 	//Biomes
 	public static BiomeGenBase biomeChickenForest;
 	public static BiomeGenBase biomeChickenPlains;
-	public static int biomeChickenForestId;
-	public static int biomeChickenPlainsId;
+	//public static int biomeChickenForestId;
+	//public static int biomeChickenPlainsId;
 
 	public static int startEntityId = 300;
 	
@@ -159,6 +158,7 @@ public class MoChickens {
 		RegisterEggs.EggRegisters();
 		RegisterDimensions.dimensionRegisters();
 		RegisterBiomes.biomeRegisters();
+		MapGenStructureIO.registerStructure(MapGenChickenVillage.Start.class, "Chicken_Village");
 		
 		/*if (Loader.isModLoaded(Thaumcraft.id)) {
 			loadThaumcraft();

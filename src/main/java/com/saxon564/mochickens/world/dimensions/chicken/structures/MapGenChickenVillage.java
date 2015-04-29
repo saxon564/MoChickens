@@ -15,18 +15,19 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.MapGenStructure;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureStart;
+import net.minecraft.world.gen.structure.StructureVillagePieces;
 
 public class MapGenChickenVillage extends MapGenStructure
 {
     /** A list of all the biomes villages can spawn in. */
-    public static List villageSpawnBiomes;// = Arrays.asList(new BiomeGenBase[] {BiomeGenBase.plains, BiomeGenBase.desert, BiomeGenBase.savanna, MoChickens.biomeChickenPlains});
+    public static List villageSpawnBiomes = Arrays.asList(new BiomeGenBase[] {BiomeGenBase.plains, BiomeGenBase.desert, BiomeGenBase.savanna, MoChickens.biomeChickenPlains});
     /** World terrain type, 0 for normal, 1 for flat map */
     private int terrainType;
     private int field_82665_g;
     private int field_82666_h;
-    private static final String __OBFID = "CL_00000514";
 
     public MapGenChickenVillage()
     {
@@ -54,9 +55,10 @@ public class MapGenChickenVillage extends MapGenStructure
         }
     }
 
-    public String func_143025_a()
+	@Override
+	public String getStructureName()
     {
-        return "Village";
+        return "Chicken_Village";
     }
 
     protected boolean canSpawnStructureAtCoords(int p_75047_1_, int p_75047_2_)
@@ -102,81 +104,75 @@ public class MapGenChickenVillage extends MapGenStructure
 
     public static class Start extends StructureStart
         {
-            /** well ... thats what it does */
-            private boolean hasMoreThanTwoComponents;
-            private static final String __OBFID = "CL_00000515";
+        /** well ... thats what it does */
+        private boolean hasMoreThanTwoComponents;
 
-            public Start() {}
+        public Start() {}
 
-            public Start(World p_i2092_1_, Random p_i2092_2_, int p_i2092_3_, int p_i2092_4_, int p_i2092_5_)
+        public Start(World worldIn, Random p_i2092_2_, int p_i2092_3_, int p_i2092_4_, int p_i2092_5_)
+        {
+            super(p_i2092_3_, p_i2092_4_);
+            List list = StructureVillagePieces.getStructureVillageWeightedPieceList(p_i2092_2_, p_i2092_5_);
+            StructureVillagePieces.Start start = new StructureVillagePieces.Start(worldIn.getWorldChunkManager(), 0, p_i2092_2_, (p_i2092_3_ << 4) + 2, (p_i2092_4_ << 4) + 2, list, p_i2092_5_);
+            this.components.add(start);
+            start.buildComponent(start, this.components, p_i2092_2_);
+            List list1 = start.field_74930_j;
+            List list2 = start.field_74932_i;
+            int l;
+
+            while (!list1.isEmpty() || !list2.isEmpty())
             {
-                super(p_i2092_3_, p_i2092_4_);
-                List list = VillageBuildings.getStructureVillageWeightedPieceList(p_i2092_2_, p_i2092_5_);
-                VillageBuildings.Start start = new VillageBuildings.Start(p_i2092_1_.getWorldChunkManager(), 0, p_i2092_2_, (p_i2092_3_ << 4) + 2, (p_i2092_4_ << 4) + 2, list, p_i2092_5_);
-                this.components.add(start);
-                start.buildComponent(start, this.components, p_i2092_2_);
-                List list1 = start.field_74930_j;
-                List list2 = start.field_74932_i;
-                int l;
+                StructureComponent structurecomponent;
 
-                while (!list1.isEmpty() || !list2.isEmpty())
+                if (list1.isEmpty())
                 {
-                    StructureComponent structurecomponent;
-
-                    if (list1.isEmpty())
-                    {
-                        l = p_i2092_2_.nextInt(list2.size());
-                        structurecomponent = (StructureComponent)list2.remove(l);
-                        structurecomponent.buildComponent(start, this.components, p_i2092_2_);
-                    }
-                    else
-                    {
-                        l = p_i2092_2_.nextInt(list1.size());
-                        structurecomponent = (StructureComponent)list1.remove(l);
-                        structurecomponent.buildComponent(start, this.components, p_i2092_2_);
-                    }
+                    l = p_i2092_2_.nextInt(list2.size());
+                    structurecomponent = (StructureComponent)list2.remove(l);
+                    structurecomponent.buildComponent(start, this.components, p_i2092_2_);
                 }
-
-                this.updateBoundingBox();
-                l = 0;
-                Iterator iterator = this.components.iterator();
-
-                while (iterator.hasNext())
+                else
                 {
-                    StructureComponent structurecomponent1 = (StructureComponent)iterator.next();
-
-                    if (!(structurecomponent1 instanceof VillageBuildings.Road))
-                    {
-                        ++l;
-                    }
+                    l = p_i2092_2_.nextInt(list1.size());
+                    structurecomponent = (StructureComponent)list1.remove(l);
+                    structurecomponent.buildComponent(start, this.components, p_i2092_2_);
                 }
-
-                this.hasMoreThanTwoComponents = l > 2;
             }
 
-            /**
-             * currently only defined for Villages, returns true if Village has more than 2 non-road components
-             */
-            public boolean isSizeableStructure()
+            this.updateBoundingBox();
+            l = 0;
+            Iterator iterator = this.components.iterator();
+
+            while (iterator.hasNext())
             {
-                return this.hasMoreThanTwoComponents;
+                StructureComponent structurecomponent1 = (StructureComponent)iterator.next();
+
+                if (!(structurecomponent1 instanceof StructureVillagePieces.Road))
+                {
+                    ++l;
+                }
             }
 
-            public void func_143022_a(NBTTagCompound p_143022_1_)
-            {
-                super.func_143022_a(p_143022_1_);
-                p_143022_1_.setBoolean("Valid", this.hasMoreThanTwoComponents);
-            }
-
-            public void func_143017_b(NBTTagCompound p_143017_1_)
-            {
-                super.func_143017_b(p_143017_1_);
-                this.hasMoreThanTwoComponents = p_143017_1_.getBoolean("Valid");
-            }
+            this.hasMoreThanTwoComponents = l > 2;
         }
 
-	@Override
-	public String getStructureName() {
-		return null;
-	}
+        /**
+         * currently only defined for Villages, returns true if Village has more than 2 non-road components
+         */
+        public boolean isSizeableStructure()
+        {
+            return this.hasMoreThanTwoComponents;
+        }
+
+        public void func_143022_a(NBTTagCompound p_143022_1_)
+        {
+            super.func_143022_a(p_143022_1_);
+            p_143022_1_.setBoolean("Valid", this.hasMoreThanTwoComponents);
+        }
+
+        public void func_143017_b(NBTTagCompound p_143017_1_)
+        {
+            super.func_143017_b(p_143017_1_);
+            this.hasMoreThanTwoComponents = p_143017_1_.getBoolean("Valid");
+        }
+   }
 }

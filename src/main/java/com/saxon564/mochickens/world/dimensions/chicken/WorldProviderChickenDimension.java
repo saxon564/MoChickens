@@ -1,6 +1,7 @@
 package com.saxon564.mochickens.world.dimensions.chicken;
 
 import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.configs.DimensionConfigs;
 import com.saxon564.mochickens.world.dimensions.chicken.chunks.ChunkProviderChickenDimension;
 import com.saxon564.mochickens.world.dimensions.chicken.chunks.WorldChunkManagerChicken;
 
@@ -14,8 +15,8 @@ public class WorldProviderChickenDimension extends WorldProvider {
 
 	public void registerWorldChunkManager() {
 		WorldType terrainType = worldObj.getWorldInfo().getTerrainType();
-		this.worldChunkMgr = new WorldChunkManagerChicken(worldObj.getSeed(), terrainType);
-		//this.dimensionId = MoChickens.chickenDimensionId;
+		this.worldChunkMgr = new WorldChunkManagerChicken(worldObj.getSeed(), terrainType, worldObj.getWorldInfo().getGeneratorOptions());
+		this.dimensionId = DimensionConfigs.chickenDimId;
 	}
 	
 	public IChunkProvider createChunkGenerator() {

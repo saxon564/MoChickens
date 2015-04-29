@@ -1,9 +1,5 @@
 package com.saxon564.mochickens.items;
 
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.MoChickensReference;
-
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -12,15 +8,15 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import com.saxon564.mochickens.MoChickens;
+
 public class ItemLighter extends Item {
 	
 	public ItemLighter()
     {
         super();
         setCreativeTab(MoChickens.moChickensTab);
-        setUnlocalizedName("lighter");
-        //setTextureName(MoChickensReference.MODID + ":"
-		//		+ getUnlocalizedName().substring(5));
+        setUnlocalizedName("chicken_steel");
         this.maxStackSize = 1;
         this.setMaxDamage(56);
     }
@@ -45,5 +41,4 @@ public class ItemLighter extends Item {
             return true;
         }
     }
-	
 }

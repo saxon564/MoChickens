@@ -3,11 +3,13 @@ package com.saxon564.mochickens.registers;
 import com.saxon564.mochickens.MoChickensReference;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.DimensionManager;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class RegisterHelper {
 
@@ -31,6 +33,10 @@ public class RegisterHelper {
 	
 	public static void registerVillageBiome(BiomeGenBase biome, boolean canSpawn) {
 		BiomeManager.addVillageBiome(biome, canSpawn);
+	}
+	
+	public static void registerItemRenders(Item item, int meta, String name) {
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(MoChickensReference.MODID + ":" + name, "inventory"));	
 	}
 	
 }

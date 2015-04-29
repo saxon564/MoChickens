@@ -13,11 +13,6 @@ public class EntityEnderChicken extends EntityMoChicken {
 		super(par1World);
 	}
 
-	/*protected void entityInit() {
-		super.entityInit();
-		this.dataWatcher.addObject(18, new Byte((byte) 0));
-	}*/
-
 	public void applyEntityAttributes() {
 		super.applyEntityAttributes(EnderChickenConfig.config, this.getClass());
 	}
@@ -25,7 +20,7 @@ public class EntityEnderChicken extends EntityMoChicken {
     protected boolean isValidLightLevel()
     {
     	int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.getBoundingBox().minY);
+        int j = MathHelper.floor_double(this.getEntityBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
 
         if (this.worldObj.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
@@ -35,7 +30,7 @@ public class EntityEnderChicken extends EntityMoChicken {
         }
         else
         {
-            float l = this.worldObj.getLightBrightness(new BlockPos(i, j, k));
+        	int l = this.worldObj.getLightFromNeighbors(new BlockPos(i, j, k));
 
             if (this.worldObj.isThundering())
             {

@@ -8,7 +8,7 @@ import net.minecraft.world.gen.layer.IntCache;
 
 public class GenLayerBiomesChicken extends GenLayer {
 
-	protected BiomeGenBase[] allowedBiomes;// = {MoChickens.biomeChickenForest, MoChickens.biomeChickenPlains};
+	protected BiomeGenBase[] allowedBiomes = {MoChickens.biomeChickenForest, MoChickens.biomeChickenPlains};
 
 	public GenLayerBiomesChicken(long seed, GenLayer genlayer) {
 		super(seed);

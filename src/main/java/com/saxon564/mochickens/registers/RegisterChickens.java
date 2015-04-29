@@ -1,5 +1,8 @@
 package com.saxon564.mochickens.registers;
 
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
 import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
@@ -43,9 +46,6 @@ import com.saxon564.mochickens.entities.mobs.EntityRainbowChicken;
 import com.saxon564.mochickens.entities.mobs.EntityRedstoneChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySnowChicken;
-
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.registry.EntityRegistry;
 
 public class RegisterChickens {
 

@@ -24,7 +24,7 @@ public class EntityQuartzChicken extends EntityMoChicken
     public boolean getCanSpawnHere()
     {
     	int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.getBoundingBox().minY);
+        int j = MathHelper.floor_double(this.getEntityBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
 
         if ((this.worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock() != Blocks.lava) && (this.worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock() != Blocks.flowing_lava))

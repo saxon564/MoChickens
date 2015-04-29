@@ -5,6 +5,7 @@ import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
 public class EntityBeefyChicken extends EntityMoChicken
@@ -23,9 +24,9 @@ public class EntityBeefyChicken extends EntityMoChicken
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.getBoundingBox().minY);
+        int j = MathHelper.floor_double(this.getEntityBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
-        return this.worldObj.getBlockState(new BlockPos(i, j - 1, k)) == Blocks.grass && this.worldObj.getLightBrightness(new BlockPos(i, j, k)) > 8 && super.getCanSpawnHere();
+        return this.worldObj.getBlockState(new BlockPos(i, j - 1, k)) == Blocks.grass && this.worldObj.getLight(new BlockPos(i, j, k)) > 8 && super.getCanSpawnHere();
     }
 
     /**

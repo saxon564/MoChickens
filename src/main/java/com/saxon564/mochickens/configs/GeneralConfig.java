@@ -2,12 +2,10 @@ package com.saxon564.mochickens.configs;
 
 import java.io.File;
 
-import com.saxon564.mochickens.MoChickens;
-
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+
+import com.saxon564.mochickens.MoChickens;
 
 public class GeneralConfig {
 	

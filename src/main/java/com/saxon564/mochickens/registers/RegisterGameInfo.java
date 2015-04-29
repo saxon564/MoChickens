@@ -1,8 +1,8 @@
 package com.saxon564.mochickens.registers;
 
-import com.saxon564.mochickens.MoChickens;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import com.saxon564.mochickens.MoChickens;
 
 public class RegisterGameInfo {
 

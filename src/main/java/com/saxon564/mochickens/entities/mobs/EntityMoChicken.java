@@ -1,24 +1,13 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.UUID;
-import java.util.logging.Logger;
-
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.*;
-import com.saxon564.mochickens.entities.mobs.ai.*;
-
-import cpw.mods.fml.common.registry.GameData;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
-import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentThorns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -29,28 +18,19 @@ import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
@@ -65,6 +45,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import net.minecraftforge.fml.common.registry.GameData;
+
+import com.saxon564.mochickens.entities.mobs.ai.ChickAISwell;
+import com.saxon564.mochickens.entities.mobs.ai.ChickAITempt;
+import com.saxon564.mochickens.entities.mobs.ai.ChickAITemptDye;
 
 public class EntityMoChicken extends EntityTameable implements IRangedAttackMob {
 	private static final UUID attackingSpeedBoostModifierUUID = UUID
@@ -274,7 +259,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     protected boolean isValidLightLevel()
     {
         int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.getBoundingBox().minY);
+        int j = MathHelper.floor_double(this.getEntityBoundingBox().minY);
         int k = MathHelper.floor_double(this.posZ);
 
         if (this.worldObj.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
@@ -302,7 +287,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     public boolean getCanSpawnHere()
     {
 		super.getCanSpawnHere();
-		if (!this.worldObj.getBlockState(new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ)).getBlock().isOpaqueCube() && (this.worldObj.getLightBrightness(new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ)) >= 7)) {
+		if (!this.worldObj.getBlockState(new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ)).getBlock().isOpaqueCube() && (this.worldObj.getLight(new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ)) >= 7)) {
 			//System.out.println("Chicken:" + this.chicken.toString() + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
 			return true;
 		} else {
@@ -622,7 +607,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			for (int i = 0; i < config.getCategory("entity data")
 					.get("Particles Per Tick").getInt(); ++i) {
 				this.worldObj.spawnParticle(EnumParticleTypes.valueOf(config.getCategory("entity data")
-						.get("Particle Type").getString()),
+						.get("Particle Type").getString().toUpperCase()),
 						this.posX + (this.rand.nextDouble() - 0.5D)
 								* (double) this.width,
 						this.posY + this.rand.nextDouble()
@@ -951,7 +936,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	protected boolean teleportToEntity(Entity par1Entity) {
 		Vec3 vec3 = new Vec3(this.posX - par1Entity.posX,
-				this.getBoundingBox().minY + (double) (this.height / 1.5F)
+				this.getEntityBoundingBox().minY + (double) (this.height / 1.5F)
 						- par1Entity.posY + (double) par1Entity.getEyeHeight(),
 				this.posZ - par1Entity.posZ);
 		vec3 = vec3.normalize();
@@ -1000,8 +985,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				this.setPosition(this.posX, this.posY, this.posZ);
 
 				if (this.worldObj.getCollidingBoundingBoxes(this,
-						this.getBoundingBox()).isEmpty()
-						&& !this.worldObj.isAnyLiquid(this.getBoundingBox())) {
+						this.getEntityBoundingBox()).isEmpty()
+						&& !this.worldObj.isAnyLiquid(this.getEntityBoundingBox())) {
 					flag = true;
 				}
 			}

@@ -1,10 +1,17 @@
 package com.saxon564.mochickens.world.dimensions.chicken.chunks;
 
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE;
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.MINESHAFT;
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.RAVINE;
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.SCATTERED_FEATURE;
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.VILLAGE;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.ANIMALS;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.DUNGEON;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAKE;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.LAVA;
+
 import java.util.List;
 import java.util.Random;
-
-import com.saxon564.mochickens.world.dimensions.chicken.generators.GenDungeons;
-import com.saxon564.mochickens.world.dimensions.chicken.structures.MapGenChickenVillage;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -14,7 +21,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -28,18 +34,17 @@ import net.minecraft.world.gen.MapGenRavine;
 import net.minecraft.world.gen.NoiseGenerator;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
-import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraft.world.gen.structure.MapGenMineshaft;
 import net.minecraft.world.gen.structure.MapGenScatteredFeature;
-import net.minecraft.world.gen.structure.MapGenStronghold;
-import net.minecraft.world.gen.structure.MapGenVillage;
-
-import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.*;
-import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.*;
-import net.minecraftforge.common.*;
-import net.minecraftforge.event.terraingen.*;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.terraingen.ChunkProviderEvent;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.terraingen.TerrainGen;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import com.saxon564.mochickens.world.dimensions.chicken.generators.GenDungeons;
+import com.saxon564.mochickens.world.dimensions.chicken.structures.MapGenChickenVillage;
 
 public class ChunkProviderChickenDimension implements IChunkProvider
 {
@@ -79,7 +84,6 @@ public class ChunkProviderChickenDimension implements IChunkProvider
     double[] noise3;
     double[] noise4;
     int[][] field = new int[32][32];
-    private static final String __OBFID = "CL_00000396";
 
     {
         caveGenerator = TerrainGen.getModdedMapGen(caveGenerator, CAVE);
@@ -126,7 +130,7 @@ public class ChunkProviderChickenDimension implements IChunkProvider
         this.mobSpawnerNoise = (NoiseGeneratorOctaves)noiseGens[6];
     }
 
-    public void generateTerrain(int chunkX, int chunkZ, Block[] blockArray)
+    public void setBlocksInChunk(int chunkX, int chunkZ, ChunkPrimer p_180518_3_)
     {
         byte b0 = 63;
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, 10, 10);
@@ -166,26 +170,19 @@ public class ChunkProviderChickenDimension implements IChunkProvider
 
                         for (int i3 = 0; i3 < 4; ++i3)
                         {
-                            int j3 = i3 + k * 4 << 12 | 0 + j1 * 4 << 8 | k2 * 8 + l2;
-                            short short1 = 256;
-                            j3 -= short1;
                             double d14 = 0.25D;
                             double d16 = (d11 - d10) * d14;
                             double d15 = d10 - d16;
 
-                            for (int k3 = 0; k3 < 4; ++k3)
+                            for (int j3 = 0; j3 < 4; ++j3)
                             {
                                 if ((d15 += d16) > 0.0D)
                                 {
-                                    blockArray[j3 += short1] = Blocks.stone;
+                                    p_180518_3_.setBlockState(k * 4 + i3, k2 * 8 + l2, j1 * 4 + j3, Blocks.stone.getDefaultState());
                                 }
                                 else if (k2 * 8 + l2 < b0)
                                 {
-                                    blockArray[j3 += short1] = Blocks.water;
-                                }
-                                else
-                                {
-                                    blockArray[j3 += short1] = null;
+                                    p_180518_3_.setBlockState(k * 4 + i3, k2 * 8 + l2, j1 * 4 + j3, Blocks.water.getDefaultState());
                                 }
                             }
 
@@ -203,10 +200,9 @@ public class ChunkProviderChickenDimension implements IChunkProvider
         }
     }
 
-    public void replaceBlocksForBiome(int chunkX, int chunkZ, Block[] blockArray, byte[] byteArray, BiomeGenBase[] biomesForGeneration)
+    public void func_180517_a(int chunkX, int chunkZ, ChunkPrimer chunkPrimer, BiomeGenBase[] biomesForGeneration)
     {
-    	ChunkPrimer chunkprimer = new ChunkPrimer();
-        ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, chunkX, chunkZ, chunkprimer, this.worldObj);
+    	ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, chunkX, chunkZ, chunkPrimer, this.worldObj);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Result.DENY) return;
 
@@ -218,7 +214,7 @@ public class ChunkProviderChickenDimension implements IChunkProvider
             for (int l = 0; l < 16; ++l)
             {
                 BiomeGenBase biomegenbase = biomesForGeneration[l + k * 16];
-                biomegenbase.genTerrainBlocks(this.worldObj, this.rand, chunkprimer, chunkX * 16 + k, chunkZ * 16 + l, this.stoneNoise[l + k * 16]);
+                biomegenbase.genTerrainBlocks(this.worldObj, this.rand, chunkPrimer, chunkX * 16 + k, chunkZ * 16 + l, this.stoneNoise[l + k * 16]);
             }
         }
     }
@@ -239,11 +235,9 @@ public class ChunkProviderChickenDimension implements IChunkProvider
     {
         this.rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
-        Block[] ablock = new Block[65536];
-        byte[] abyte = new byte[65536];
-        this.generateTerrain(chunkX, chunkZ, ablock);
+        this.setBlocksInChunk(chunkX, chunkZ, chunkprimer);
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
-        this.replaceBlocksForBiome(chunkX, chunkZ, ablock, abyte, this.biomesForGeneration);
+        this.func_180517_a(chunkX, chunkZ, chunkprimer, this.biomesForGeneration);
         this.caveGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
         this.ravineGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
 
@@ -255,7 +249,7 @@ public class ChunkProviderChickenDimension implements IChunkProvider
             this.scatteredFeatureGenerator.func_175792_a(this, this.worldObj, chunkX, chunkZ, chunkprimer);
         }
 
-        Chunk chunk = new Chunk(this.worldObj, chunkX, chunkZ);
+        Chunk chunk = new Chunk(this.worldObj, chunkprimer, chunkX, chunkZ);
         byte[] abyte1 = chunk.getBiomeArray();
 
         for (int k = 0; k < abyte1.length; ++k)
@@ -423,11 +417,11 @@ public class ChunkProviderChickenDimension implements IChunkProvider
             this.scatteredFeatureGenerator.func_175794_a(this.worldObj, this.rand, chunkcoordintpair);
         }
         
-        if (flag == true) {
+        /*if (flag == true) {
         	
         	System.out.println("Village " + chunkX*16 + "  " + chunkZ*16);
         	
-        }
+        }*/
 
         int k1;
         int l1;
@@ -541,12 +535,6 @@ public class ChunkProviderChickenDimension implements IChunkProvider
     {
         BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(pos);
         return enumCreatureType == EnumCreatureType.MONSTER && this.scatteredFeatureGenerator.func_175798_a(pos) ? this.scatteredFeatureGenerator.getScatteredFeatureSpawnList() : biomegenbase.getSpawnableList(enumCreatureType);
-    }
-
-    public ChunkPosition func_147416_a(World world, String s, int chunkX, int y, int chunkZ)
-    {
-        //return "Stronghold".equals(s) && this.strongholdGenerator != null ? this.strongholdGenerator.func_151545_a(world, chunkX, y, chunkZ) : null;
-    	return null;
     }
 
     public int getLoadedChunkCount()

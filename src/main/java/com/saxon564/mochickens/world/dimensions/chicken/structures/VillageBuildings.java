@@ -1479,7 +1479,6 @@ public class VillageBuildings {
             public final int villagePieceWeight;
             public int villagePiecesSpawned;
             public int villagePiecesLimit;
-            private static final String __OBFID = "CL_00000521";
 
             public PieceWeight(Class p_i2098_1_, int p_i2098_2_, int p_i2098_3_)
             {

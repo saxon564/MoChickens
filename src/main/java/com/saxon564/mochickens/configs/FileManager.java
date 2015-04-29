@@ -1,19 +1,33 @@
 package com.saxon564.mochickens.configs;
 
-import java.io.File;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.*;
-import com.saxon564.mochickens.configs.txts.ItemFile;
-
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
+import com.saxon564.mochickens.configs.biomes.ChickenForestConfig;
+import com.saxon564.mochickens.configs.biomes.ChickenPlainsConfig;
+import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
+import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
+import com.saxon564.mochickens.configs.chickens.ClayChickenConfig;
+import com.saxon564.mochickens.configs.chickens.CoalChickenConfig;
+import com.saxon564.mochickens.configs.chickens.CookieChickenConfig;
+import com.saxon564.mochickens.configs.chickens.CreeperChickenConfig;
+import com.saxon564.mochickens.configs.chickens.DiamondChickenConfig;
+import com.saxon564.mochickens.configs.chickens.EmeraldChickenConfig;
+import com.saxon564.mochickens.configs.chickens.EnchantedChickenConfig;
+import com.saxon564.mochickens.configs.chickens.EnderChickenConfig;
+import com.saxon564.mochickens.configs.chickens.GiantChickenConfig;
+import com.saxon564.mochickens.configs.chickens.GlowingChickenConfig;
+import com.saxon564.mochickens.configs.chickens.GoldChickenConfig;
+import com.saxon564.mochickens.configs.chickens.IronChickenConfig;
+import com.saxon564.mochickens.configs.chickens.LapisChickenConfig;
+import com.saxon564.mochickens.configs.chickens.NuuwChickenConfig;
+import com.saxon564.mochickens.configs.chickens.QuartzChickenConfig;
+import com.saxon564.mochickens.configs.chickens.RainbowChickenConfig;
+import com.saxon564.mochickens.configs.chickens.RedstoneChickenConfig;
+import com.saxon564.mochickens.configs.chickens.SkeletonChickenConfig;
+import com.saxon564.mochickens.configs.chickens.SnowChickenConfig;
 
 public class FileManager {
 
@@ -25,6 +39,9 @@ public class FileManager {
 	public static int[] allowedEnd = {9};
 	
 	public static void PreInit(FMLPreInitializationEvent event) {
+		DimensionConfigs.setId(event);
+		ChickenPlainsConfig.setId(event);
+		ChickenForestConfig.setId(event);
 		CoalChickenConfig.setId(event);
 		IronChickenConfig.setId(event);
 		GoldChickenConfig.setId(event);
@@ -83,14 +100,6 @@ public class FileManager {
 		BlazingChickenConfig.setConfigs(event);
 		EnchantedChickenConfig.setConfigs(event);
 		NuuwChickenConfig.setConfigs(event);
-
-		// dimension IDs
-		// MoChickens.chickenDimensionId = config.get("Dimension IDs",
-		// "Chicken Dimension", 20).getInt(20);
-
-		// biome IDs
-		// MoChickens.biomeChickenForestId = config.get("Biome IDs",
-		// "Chicken Forest Biome", 50).getInt(50);
 	}
 
 	public static int[] generateBlackLists(int[] allowed, String type) {

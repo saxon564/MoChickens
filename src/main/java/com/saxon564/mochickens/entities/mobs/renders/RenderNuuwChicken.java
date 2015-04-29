@@ -1,20 +1,16 @@
 package com.saxon564.mochickens.entities.mobs.renders;
 
-import com.saxon564.mochickens.entities.mobs.EntityNuuwChicken;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.saxon564.mochickens.entities.mobs.EntityNuuwChicken;
 
 @SideOnly(Side.CLIENT)
 public class RenderNuuwChicken extends RenderLiving

@@ -1,16 +1,53 @@
 package com.saxon564.mochickens.registers;
 
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.GeneralConfig;
-import com.saxon564.mochickens.configs.chickens.*;
-import com.saxon564.mochickens.entities.mobs.*;
-
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+
+import com.saxon564.mochickens.configs.GeneralConfig;
+import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
+import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
+import com.saxon564.mochickens.configs.chickens.ClayChickenConfig;
+import com.saxon564.mochickens.configs.chickens.CoalChickenConfig;
+import com.saxon564.mochickens.configs.chickens.CookieChickenConfig;
+import com.saxon564.mochickens.configs.chickens.CreeperChickenConfig;
+import com.saxon564.mochickens.configs.chickens.DiamondChickenConfig;
+import com.saxon564.mochickens.configs.chickens.EmeraldChickenConfig;
+import com.saxon564.mochickens.configs.chickens.EnchantedChickenConfig;
+import com.saxon564.mochickens.configs.chickens.EnderChickenConfig;
+import com.saxon564.mochickens.configs.chickens.GiantChickenConfig;
+import com.saxon564.mochickens.configs.chickens.GlowingChickenConfig;
+import com.saxon564.mochickens.configs.chickens.GoldChickenConfig;
+import com.saxon564.mochickens.configs.chickens.IronChickenConfig;
+import com.saxon564.mochickens.configs.chickens.LapisChickenConfig;
+import com.saxon564.mochickens.configs.chickens.NuuwChickenConfig;
+import com.saxon564.mochickens.configs.chickens.QuartzChickenConfig;
+import com.saxon564.mochickens.configs.chickens.RainbowChickenConfig;
+import com.saxon564.mochickens.configs.chickens.RedstoneChickenConfig;
+import com.saxon564.mochickens.configs.chickens.SkeletonChickenConfig;
+import com.saxon564.mochickens.configs.chickens.SnowChickenConfig;
+import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
+import com.saxon564.mochickens.entities.mobs.EntityBlazingChicken;
+import com.saxon564.mochickens.entities.mobs.EntityClayChicken;
+import com.saxon564.mochickens.entities.mobs.EntityCoalChicken;
+import com.saxon564.mochickens.entities.mobs.EntityCookieChicken;
+import com.saxon564.mochickens.entities.mobs.EntityCreeperChicken;
+import com.saxon564.mochickens.entities.mobs.EntityDiamondChicken;
+import com.saxon564.mochickens.entities.mobs.EntityEmeraldChicken;
+import com.saxon564.mochickens.entities.mobs.EntityEnchantedChicken;
+import com.saxon564.mochickens.entities.mobs.EntityEnderChicken;
+import com.saxon564.mochickens.entities.mobs.EntityGiantChicken;
+import com.saxon564.mochickens.entities.mobs.EntityGlowingChicken;
+import com.saxon564.mochickens.entities.mobs.EntityGoldChicken;
+import com.saxon564.mochickens.entities.mobs.EntityIronChicken;
+import com.saxon564.mochickens.entities.mobs.EntityLapisChicken;
+import com.saxon564.mochickens.entities.mobs.EntityNuuwChicken;
+import com.saxon564.mochickens.entities.mobs.EntityQuartzChicken;
+import com.saxon564.mochickens.entities.mobs.EntityRainbowChicken;
+import com.saxon564.mochickens.entities.mobs.EntityRedstoneChicken;
+import com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
+import com.saxon564.mochickens.entities.mobs.EntitySnowChicken;
 
 public class RegisterSpawns {
 	public static int ran;
