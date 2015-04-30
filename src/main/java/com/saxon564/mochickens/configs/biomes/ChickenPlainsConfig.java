@@ -14,7 +14,7 @@ public class ChickenPlainsConfig {
 	public static int id;
 	
 	public static void setId(FMLPreInitializationEvent event) {
-		configFile = new File(MoChickens.path, "Dimensions.cfg");
+		configFile = new File(MoChickens.path, "ChickenPlains.cfg");
 		config = new Configuration(configFile);
 
 		id = config.get("Biome Data", "ID", 50).getInt(50);

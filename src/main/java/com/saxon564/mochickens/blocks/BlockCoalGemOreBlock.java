@@ -12,11 +12,9 @@ import net.minecraft.item.Item;
 public class BlockCoalGemOreBlock extends Block {
 	
 	public BlockCoalGemOreBlock() {
-		
 		super(Material.rock);
-		//setCreativeTab(MoChickens.moChickensTab);
+		setCreativeTab(MoChickens.moChickensTab);
 		setUnlocalizedName("coal_gem_ore");
-		//setBlockTextureName(MoChickensReference.MODID + ":" + getUnlocalizedName().substring(5));
 		setStepSound(soundTypeStone);
 		setHardness(4.0F);
 		setHarvestLevel("pickaxe", 3);

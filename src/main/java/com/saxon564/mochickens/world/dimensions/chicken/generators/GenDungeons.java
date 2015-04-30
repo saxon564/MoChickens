@@ -135,7 +135,7 @@ public class GenDungeons
                                     {
                                         WeightedRandomChestContent.generateChestContents(rand, ChestGenHooks.getItems(DUNGEON_CHEST, rand), tileentitychest, ChestGenHooks.getCount(DUNGEON_CHEST, rand));
                                     }
-
+                                    //System.out.println("Dungeon " + i2 + " " + y + " " + j3);
                                     break label101;
                                 }
                             }

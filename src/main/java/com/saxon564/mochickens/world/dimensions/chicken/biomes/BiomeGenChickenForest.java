@@ -81,14 +81,14 @@ public class BiomeGenChickenForest extends BiomeGenBase {
 	
 	public void decorate(World world, Random rand, BlockPos pos)
     {
-		System.out.println("Forest Generated");
+		//System.out.println("Forest Generated");
 		this.currentWorld = world;
 		this.RNG = rand;
 		if (TerrainGen.generateOre(currentWorld, RNG, coalGen, pos, COAL))
-			this.genStandardOre1(20, this.coalGen, 0, 128, pos.getX()/16, pos.getZ()/16);
+			this.genStandardOre1(20, this.coalGen, 0, 128, pos.getX(), pos.getZ());
 	    if (TerrainGen.generateOre(currentWorld, RNG, ironGen, pos, IRON))
-	        this.genStandardOre1(20, this.ironGen, 0, 64, pos.getX()/16, pos.getZ()/16);
-	    this.genStandardOre1(20, this.coalGemGen, 0, 40, pos.getX()/16, pos.getZ()/16);
+	        this.genStandardOre1(20, this.ironGen, 0, 64, pos.getX(), pos.getZ());
+	    this.genStandardOre2(20, this.coalGemGen, 0, 40, pos.getX(), pos.getZ());
 	    
 	    /*TREE GENERATOR*/
 	    int i = this.treesPerChunk;
@@ -158,7 +158,20 @@ public class BiomeGenChickenForest extends BiomeGenBase {
         {
             int i1 = chunkX + this.RNG.nextInt(16);
             int j1 = this.RNG.nextInt(p_76795_4_ - p_76795_3_) + p_76795_3_;
-            int k1 = chunk_Z + this.RNG.nextInt(16);
+            int k1 = chunkZ + this.RNG.nextInt(16);
+            p_76795_2_.generate(this.currentWorld, this.RNG, new BlockPos(i1, j1, k1));
+        }
+    }
+	
+	protected void genStandardOre2(int p_76795_1_, WorldGenerator p_76795_2_, int p_76795_3_, int p_76795_4_, int chunkX, int chunkZ)
+    {
+        for (int l = 0; l < p_76795_1_; ++l)
+        {
+            int i1 = chunkX + this.RNG.nextInt(16);
+            int j1 = this.RNG.nextInt(p_76795_4_ - p_76795_3_) + p_76795_3_;
+            int k1 = chunkZ + this.RNG.nextInt(16);
+            //System.out.println("ChunkZ: " + chunkZ);
+            //System.out.println("Ore " + i1 + " " + j1 + " " + k1);
             p_76795_2_.generate(this.currentWorld, this.RNG, new BlockPos(i1, j1, k1));
         }
     }

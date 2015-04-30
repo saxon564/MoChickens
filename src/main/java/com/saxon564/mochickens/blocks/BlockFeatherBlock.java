@@ -13,7 +13,6 @@ public class BlockFeatherBlock extends Block {
 		super(Material.cloth);
 		setCreativeTab(MoChickens.moChickensTab);
 		setUnlocalizedName("feather_block");
-		//setBlockTextureName(MoChickensReference.MODID + ":" + getUnlocalizedName().substring(5));
 		setStepSound(soundTypeCloth);
 	}
 

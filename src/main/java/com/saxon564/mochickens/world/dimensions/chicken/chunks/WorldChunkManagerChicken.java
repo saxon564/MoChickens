@@ -35,7 +35,7 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 		this.myBiomesToSpawnIn.add(MoChickens.biomeChickenPlains);
 	}
 
-	public WorldChunkManagerChicken(long seed, WorldType worldtype, String p_i45744_4_)
+	public WorldChunkManagerChicken(long seed, WorldType worldtype, String s)
 	{
 		this();
 		GenLayer[] agenlayer = GenLayerChicken.makeTheWorld(seed);
@@ -59,14 +59,14 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 	/**
      * Returns the biome generator
      */
-    public BiomeGenBase getBiomeGenerator(BlockPos p_180631_1_)
+    public BiomeGenBase getBiomeGenerator(BlockPos pos)
     {
-        return this.func_180300_a(p_180631_1_, (BiomeGenBase)null);
+        return this.func_180300_a(pos, (BiomeGenBase)null);
     }
     
-    public BiomeGenBase func_180300_a(BlockPos p_180300_1_, BiomeGenBase p_180300_2_)
+    public BiomeGenBase func_180300_a(BlockPos pos, BiomeGenBase generator)
     {
-        return this.myBiomeCache.func_180284_a(p_180300_1_.getX(), p_180300_1_.getZ(), p_180300_2_);
+        return this.myBiomeCache.func_180284_a(pos.getX(), pos.getZ(), generator);
     }
 
 	/**
@@ -124,7 +124,7 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 				par1ArrayOfBiomeGenBase[i] = BiomeGenBase.getBiome(aint[i]);
 			} else {
 				//Change this to a biome
-				//par1ArrayOfBiomeGenBase[i] = MoChickens.biomeChickenForest;
+				par1ArrayOfBiomeGenBase[i] = MoChickens.biomeChickenForest;
 			}
 		}
 
