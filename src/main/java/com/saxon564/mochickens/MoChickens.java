@@ -158,6 +158,7 @@ public class MoChickens {
 		RegisterEggs.EggRegisters();
 		RegisterDimensions.dimensionRegisters();
 		RegisterBiomes.biomeRegisters();
+		proxy.modelExceptions();
 		MapGenStructureIO.registerStructure(MapGenChickenVillage.Start.class, "Chicken_Village");
 		
 		/*if (Loader.isModLoaded(Thaumcraft.id)) {

@@ -1,11 +1,14 @@
 package com.saxon564.mochickens.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.blocks.BlockChickenFireBlock;
 import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
 import com.saxon564.mochickens.entities.mobs.EntityBlazingChicken;
 import com.saxon564.mochickens.entities.mobs.EntityClayChicken;
@@ -70,6 +73,10 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
     	chickens();
     	items();
         
+    }
+    
+    public void modelExceptions() {
+    	ModelLoader.setCustomStateMapper(MoChickens.blockChickenFire, (new StateMap.Builder()).addPropertiesToIgnore(BlockChickenFireBlock.AGE).build());
     }
 
 	private void items() {

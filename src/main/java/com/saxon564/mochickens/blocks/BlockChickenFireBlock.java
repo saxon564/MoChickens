@@ -10,13 +10,22 @@ import com.saxon564.mochickens.configs.DimensionConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockTNT;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockChickenFireBlock extends BlockFire {
 	
@@ -28,29 +37,127 @@ public class BlockChickenFireBlock extends BlockFire {
     public static final PropertyBool SOUTH = PropertyBool.create("south");
     public static final PropertyBool WEST = PropertyBool.create("west");
     public static final PropertyInteger UPPER = PropertyInteger.create("upper", 0, 2);
+    private final Map encouragements = Maps.newIdentityHashMap();
+    private final Map flammabilities = Maps.newIdentityHashMap();
 
 	boolean portal = false;
+	
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    {
+        int i = pos.getX();
+        int j = pos.getY();
+        int k = pos.getZ();
+
+        if (!World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && !((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.down(), EnumFacing.UP))
+        {
+            boolean flag = (i + j + k & 1) == 1;
+            boolean flag1 = (i / 2 + j / 2 + k / 2 & 1) == 1;
+            int l = 0;
+
+            if (this.canCatchFire(worldIn, pos.up(), EnumFacing.DOWN))
+            {
+                l = flag ? 1 : 2;
+            }
+
+            return state.withProperty(NORTH, Boolean.valueOf(this.canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH)))
+                        .withProperty(EAST, Boolean.valueOf(this.canCatchFire(worldIn, pos.east(),  EnumFacing.EAST )))
+                        .withProperty(SOUTH, Boolean.valueOf(this.canCatchFire(worldIn, pos.south(), EnumFacing.NORTH)))
+                        .withProperty(WEST, Boolean.valueOf(this.canCatchFire(worldIn, pos.west(),  EnumFacing.EAST )))
+                        .withProperty(UPPER, Integer.valueOf(l))
+                        .withProperty(FLIP, Boolean.valueOf(flag1))
+                        .withProperty(ALT, Boolean.valueOf(flag));
+        }
+        else
+        {
+            return this.getDefaultState();
+        }
+    }
 	
 	public BlockChickenFireBlock() {
 		super();
 		setUnlocalizedName("chicken_fire");
 		setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)).withProperty(FLIP, Boolean.valueOf(false)).withProperty(ALT, Boolean.valueOf(false)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(UPPER, Integer.valueOf(0)));
+		setTickRandomly(true);
 	}
 	
-	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+	public static void init()
+    {
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.planks, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.double_wooden_slab, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.wooden_slab, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.oak_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.spruce_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.birch_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.jungle_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.dark_oak_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.acacia_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.oak_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.spruce_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.birch_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.jungle_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.dark_oak_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.acacia_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.oak_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.birch_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.spruce_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.jungle_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.log, 5, 5);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.log2, 5, 5);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.leaves, 30, 60);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.leaves2, 30, 60);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.bookshelf, 30, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.tnt, 15, 100);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.tallgrass, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.double_plant, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.yellow_flower, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.red_flower, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.deadbush, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.wool, 30, 60);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.vine, 15, 100);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.coal_block, 5, 5);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.hay_block, 60, 20);
+        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.carpet, 60, 20);
+    }
 	
-		if (!(world.provider.getDimensionId() == 0 || world.provider.getDimensionId() == DimensionConfigs.chickenDimId) || world.getBlockState(pos).getBlock() != MoChickens.blockFeatherBlock) {
-			if (!world.doesBlockHaveSolidTopSurface(world, pos.down()) && !this.canNeighborCatchFire(world, pos)) {
-				world.setBlockToAir(pos);
-			} else {
-				world.scheduleUpdate(pos, this, this.tickRate(world) + world.rand.nextInt(10));
-				((BlockFeatherPortal)MoChickens.blockFeatherPortal).func_176548_d(world, pos);
-			}
-			
-		}
-	}
+	public void setFireInfo(Block blockIn, int encouragement, int flammability)
+    {
+        if (blockIn == Blocks.air) throw new IllegalArgumentException("Tried to set air on fire... This is bad.");
+        this.encouragements.put(blockIn, Integer.valueOf(encouragement));
+        this.flammabilities.put(blockIn, Integer.valueOf(flammability));
+    }
 	
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    {
+        return null;
+    }
+
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
+
+    public boolean isFullCube()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random random)
+    {
+        return 0;
+    }
+
+    /**
+     * How many world ticks before ticking
+     */
+    public int tickRate(World worldIn)
+    {
+        return 30;
+    }
+    
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
         if (worldIn.getGameRules().getGameRuleBooleanValue("doFireTick"))
         {
@@ -158,18 +265,15 @@ public class BlockChickenFireBlock extends BlockFire {
             }
         }
     }
-	
-	public IBlockState getStateFromMeta(int meta)
+
+    protected boolean canDie(World worldIn, BlockPos pos)
     {
-        return this.getDefaultState().withProperty(AGE, Integer.valueOf(meta));
+        return worldIn.canLightningStrike(pos) || worldIn.canLightningStrike(pos.west()) || worldIn.canLightningStrike(pos.east()) || worldIn.canLightningStrike(pos.north()) || worldIn.canLightningStrike(pos.south());
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
-    public int getMetaFromState(IBlockState state)
+    public boolean requiresUpdates()
     {
-        return ((Integer)state.getValue(AGE)).intValue();
+        return false;
     }
 	
 	private void tryCatchFire(World worldIn, BlockPos pos, int chance, Random random, int age, EnumFacing face)
@@ -241,5 +345,158 @@ public class BlockChickenFireBlock extends BlockFire {
 
             return i;
         }
+    }
+	
+	public boolean isCollidable()
+    {
+        return false;
+    }
+
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
+    {
+        return World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) || this.canNeighborCatchFire(worldIn, pos);
+    }
+
+    /**
+     * Called when a neighboring block changes.
+     */
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+    {
+        if (!World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && !this.canNeighborCatchFire(worldIn, pos))
+        {
+            worldIn.setBlockToAir(pos);
+        }
+    }
+    
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+	
+		if (!(world.provider.getDimensionId() == 0 || world.provider.getDimensionId() == DimensionConfigs.chickenDimId) || world.getBlockState(pos).getBlock() != MoChickens.blockFeatherBlock) {
+			if (!world.doesBlockHaveSolidTopSurface(world, pos.down()) && !this.canNeighborCatchFire(world, pos)) {
+				world.setBlockToAir(pos);
+			} else {
+				world.scheduleUpdate(pos, this, this.tickRate(world) + world.rand.nextInt(10));
+				((BlockFeatherPortal)MoChickens.blockFeatherPortal).func_176548_d(world, pos);
+			}
+			
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+    public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+    {
+        if (rand.nextInt(24) == 0)
+        {
+            worldIn.playSound((double)((float)pos.getX() + 0.5F), (double)((float)pos.getY() + 0.5F), (double)((float)pos.getZ() + 0.5F), "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+        }
+
+        int i;
+        double d0;
+        double d1;
+        double d2;
+
+        if (!World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && !((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.down(), EnumFacing.UP))
+        {
+            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.west(), EnumFacing.EAST))
+            {
+                for (i = 0; i < 2; ++i)
+                {
+                    d0 = (double)pos.getX() + rand.nextDouble() * 0.10000000149011612D;
+                    d1 = (double)pos.getY() + rand.nextDouble();
+                    d2 = (double)pos.getZ() + rand.nextDouble();
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+                }
+            }
+
+            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.east(), EnumFacing.WEST))
+            {
+                for (i = 0; i < 2; ++i)
+                {
+                    d0 = (double)(pos.getX() + 1) - rand.nextDouble() * 0.10000000149011612D;
+                    d1 = (double)pos.getY() + rand.nextDouble();
+                    d2 = (double)pos.getZ() + rand.nextDouble();
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+                }
+            }
+
+            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH))
+            {
+                for (i = 0; i < 2; ++i)
+                {
+                    d0 = (double)pos.getX() + rand.nextDouble();
+                    d1 = (double)pos.getY() + rand.nextDouble();
+                    d2 = (double)pos.getZ() + rand.nextDouble() * 0.10000000149011612D;
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+                }
+            }
+
+            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.south(), EnumFacing.NORTH))
+            {
+                for (i = 0; i < 2; ++i)
+                {
+                    d0 = (double)pos.getX() + rand.nextDouble();
+                    d1 = (double)pos.getY() + rand.nextDouble();
+                    d2 = (double)(pos.getZ() + 1) - rand.nextDouble() * 0.10000000149011612D;
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+                }
+            }
+
+            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.up(), EnumFacing.DOWN))
+            {
+                for (i = 0; i < 2; ++i)
+                {
+                    d0 = (double)pos.getX() + rand.nextDouble();
+                    d1 = (double)(pos.getY() + 1) - rand.nextDouble() * 0.10000000149011612D;
+                    d2 = (double)pos.getZ() + rand.nextDouble();
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < 3; ++i)
+            {
+                d0 = (double)pos.getX() + rand.nextDouble();
+                d1 = (double)pos.getY() + rand.nextDouble() * 0.5D + 0.5D;
+                d2 = (double)pos.getZ() + rand.nextDouble();
+                worldIn.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
+            }
+        }
+    }
+
+    /**
+     * Get the MapColor for this Block and the given BlockState
+     */
+    public MapColor getMapColor(IBlockState state)
+    {
+        return MapColor.tntColor;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.CUTOUT;
+    }
+	
+	public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(AGE, Integer.valueOf(meta));
+    }
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((Integer)state.getValue(AGE)).intValue();
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {AGE, NORTH, EAST, SOUTH, WEST, UPPER, FLIP, ALT});
+    }
+
+    public boolean canCatchFire(IBlockAccess world, BlockPos pos, EnumFacing face)
+    {
+        return world.getBlockState(pos).getBlock().isFlammable(world, pos, face);
     }
 }

@@ -10,4 +10,8 @@ public class CommonProxyMoChickens
     public void registerSounds()
     {
     }
+    
+    public void modelExceptions()
+    {
+    }
 }
