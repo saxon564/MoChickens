@@ -54,7 +54,7 @@ public class BlockFeatherPortal extends BlockPortal
                 ;
             }
 
-            if (i > 0 && !worldIn.getBlockState(blockpos1.up()).getBlock().isNormalCube())
+            /*if (i > 0 && !worldIn.getBlockState(blockpos1.up()).getBlock().isNormalCube())
             {
                 Entity entity = ItemMonsterPlacer.spawnCreature(worldIn, 57, (double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 1.1D, (double)blockpos1.getZ() + 0.5D);
 
@@ -62,7 +62,7 @@ public class BlockFeatherPortal extends BlockPortal
                 {
                     entity.timeUntilPortal = entity.getPortalCooldown();
                 }
-            }
+            }*/
         }
     }
 

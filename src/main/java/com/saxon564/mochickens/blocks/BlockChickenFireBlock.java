@@ -78,6 +78,7 @@ public class BlockChickenFireBlock extends BlockFire {
 		setUnlocalizedName("chicken_fire");
 		setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)).withProperty(FLIP, Boolean.valueOf(false)).withProperty(ALT, Boolean.valueOf(false)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(UPPER, Integer.valueOf(0)));
 		setTickRandomly(true);
+		setLightLevel(0.8F);
 	}
 	
 	public static void init()
