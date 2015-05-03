@@ -1,5 +1,8 @@
 package com.saxon564.mochickens;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntityBat;
@@ -8,7 +11,9 @@ import net.minecraft.item.Item;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -62,6 +67,7 @@ import com.saxon564.mochickens.entities.mobs.EntityRainbowChicken;
 import com.saxon564.mochickens.entities.mobs.EntityRedstoneChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySnowChicken;
+import com.saxon564.mochickens.events.PlayerEventHandler;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import com.saxon564.mochickens.recipes.CraftingRecipes;
 import com.saxon564.mochickens.registers.RegisterBiomes;
@@ -86,6 +92,7 @@ public class MoChickens {
 	public static Class[] egg = new Class[500];
 	public static int eggNum = 0;
 	public static Configuration[] configs = new Configuration[500];
+	public static Logger logger;
 	
 	// Initialize Items
 	public static Item tamingDisc;
@@ -149,6 +156,7 @@ public class MoChickens {
 	public void preInit(FMLPreInitializationEvent event) {
 		
 		path = event.getModConfigurationDirectory().toString() + "\\MoChickens";
+		logger = LogManager.getLogger("Mo' Chickens");
 		 
 		FileManager.PreInit(event);
 
@@ -159,6 +167,12 @@ public class MoChickens {
 		RegisterDimensions.dimensionRegisters();
 		RegisterBiomes.biomeRegisters();
 		proxy.modelExceptions();
+		
+		//Events
+		MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+		FMLCommonHandler.instance().bus().register(new PlayerEventHandler());
+		
+		//Structures
 		MapGenStructureIO.registerStructure(MapGenChickenVillage.Start.class, "Chicken_Village");
 		
 		/*if (Loader.isModLoaded(Thaumcraft.id)) {
