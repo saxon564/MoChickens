@@ -140,14 +140,9 @@ public class MoChickens {
 	
 	public static String path;
 	
-	//Dimensions
-	//public static int chickenDimensionId;
-	
 	//Biomes
 	public static BiomeGenBase biomeChickenForest;
 	public static BiomeGenBase biomeChickenPlains;
-	//public static int biomeChickenForestId;
-	//public static int biomeChickenPlainsId;
 
 	public static int startEntityId = 300;
 	

@@ -33,22 +33,6 @@ public class PlayerEventHandler {
 			}
 		}
 	}
-
-	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.action == Action.LEFT_CLICK_BLOCK) {
-			EntityPlayer player = event.entityPlayer;
-			World world = player.worldObj;
-
-			EnumFacing face = event.face;
-			BlockPos pos = event.pos;
-			Block block = world.getBlockState(pos).getBlock();
-			
-			if (block != null) {
-				//this.extinguishServerFire(player, pos, face, world, event);
-			}
-		}
-	}
 	
 	@SubscribeEvent
 	public void onPlayerMovement(PlayerTickEvent event) {
@@ -59,18 +43,6 @@ public class PlayerEventHandler {
 		if (((block == MoChickens.blockChickenFire) || (world.getBlockState(pos.up()).getBlock() == MoChickens.blockChickenFire)) && (!player.capabilities.isCreativeMode)) {
 			player.setFire(8);
 		}
-	}
-
-	private void extinguishServerFire(EntityPlayer player, BlockPos pos, EnumFacing face, World world, PlayerInteractEvent event) {
-		 pos = pos.offset(face);
-
-	     if (world.getBlockState(pos).getBlock() == MoChickens.blockChickenFire)
-	     {
-	        world.playSoundEffect(player.posX, player.posY, player.posZ, "random.fizz", 1.0F, 1.0F);
-	        world.setBlockToAir(pos);
-	        event.setCanceled(true);
-	     }
-		
 	}
 	
 	private void extinguishFire(EntityPlayer player, BlockPos pos, EnumFacing face, World world, MouseEvent event) {
