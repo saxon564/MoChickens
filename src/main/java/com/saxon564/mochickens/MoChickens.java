@@ -21,6 +21,9 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 import com.saxon564.mochickens.configs.FileManager;
 import com.saxon564.mochickens.configs.GeneralConfig;
@@ -68,6 +71,7 @@ import com.saxon564.mochickens.entities.mobs.EntityRedstoneChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySnowChicken;
 import com.saxon564.mochickens.events.PlayerEventHandler;
+import com.saxon564.mochickens.network.FireMessage;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import com.saxon564.mochickens.recipes.CraftingRecipes;
 import com.saxon564.mochickens.registers.RegisterBiomes;
@@ -93,6 +97,7 @@ public class MoChickens {
 	public static int eggNum = 0;
 	public static Configuration[] configs = new Configuration[500];
 	public static Logger logger;
+	public static SimpleNetworkWrapper network;
 	
 	// Initialize Items
 	public static Item tamingDisc;
@@ -157,6 +162,8 @@ public class MoChickens {
 		
 		path = event.getModConfigurationDirectory().toString() + "\\MoChickens";
 		logger = LogManager.getLogger("Mo' Chickens");
+		network = NetworkRegistry.INSTANCE.newSimpleChannel("moChickens");
+		network.registerMessage(FireMessage.Handler.class, FireMessage.class, 0, Side.SERVER);
 		 
 		FileManager.PreInit(event);
 
