@@ -15,28 +15,36 @@ public class FireMessage implements IMessage {
     private String text;
     private String player;
     private int face;
-    private int pos;
+    private int x;
+    private int y;
+    private int z;
 
     public FireMessage() { }
 
     public FireMessage(EntityPlayer playerIn, EnumFacing faceIn, BlockPos posIn) {
-        player = playerIn.toString();
+        player = playerIn.getName().toString();
         face = faceIn.getIndex();
-        pos = (int) posIn.toLong();
+        x = posIn.getX();
+        y = posIn.getY();
+        z = posIn.getZ();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         player = ByteBufUtils.readUTF8String(buf);
         face = ByteBufUtils.readVarInt(buf, 5);
-        pos = ByteBufUtils.readVarInt(buf, 5);
+        x = ByteBufUtils.readVarInt(buf, 5);
+        y = ByteBufUtils.readVarInt(buf, 5);
+        z = ByteBufUtils.readVarInt(buf, 5);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, player);
         ByteBufUtils.writeVarInt(buf, face, 5);
-        ByteBufUtils.writeVarInt(buf, pos, 5);
+        ByteBufUtils.writeVarInt(buf, x, 5);
+        ByteBufUtils.writeVarInt(buf, y, 5);
+        ByteBufUtils.writeVarInt(buf, z, 5);
     }
 
     public static class Handler implements IMessageHandler<FireMessage, IMessage> {
@@ -47,7 +55,7 @@ public class FireMessage implements IMessage {
             EnumFacing face = EnumFacing.getFront(message.face);
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             World world = player.worldObj;
-    		BlockPos pos = BlockPos.fromLong(message.pos);
+    		BlockPos pos = new BlockPos(message.x, message.y, message.z);
     		
     		world.playSoundEffect(player.posX, player.posY, player.posZ, "random.fizz", 1.0F, 1.0F);
         	world.setBlockToAir(pos);
