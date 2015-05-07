@@ -1,59 +1,121 @@
 package com.saxon564.mochickens.events;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.network.FireMessage;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 public class PlayerEventHandler {
 
 	@SubscribeEvent
 	public void onMouseEvent(MouseEvent event) {
-		int button = event.button;
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		World world = Minecraft.getMinecraft().theWorld;
+		int button = event.button - 100;
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayer player = mc.thePlayer;
+		World world = mc.theWorld;
+		int key = mc.gameSettings.keyBindAttack.getKeyCode();
 		
-		BlockPos pos = Minecraft.getMinecraft().objectMouseOver.getBlockPos();
-		EnumFacing face = Minecraft.getMinecraft().objectMouseOver.sideHit;
+		BlockPos pos = mc.objectMouseOver.getBlockPos();
+		EnumFacing face = mc.objectMouseOver.sideHit;
 		
-		if (button == 0) {
+		if ((button == key) && (Mouse.isButtonDown(button + 100))) {
+			
+			MoChickens.logger.info("Mouse Event");
 			if (world.getBlockState(pos).getBlock()!= null) {
-				this.extinguishFire(player, pos, face, world, event);
+				this.extinguishFire(player, pos, face, world, event, button);
 			}
 		}
 	}
 	
 	@SubscribeEvent
-	public void onPlayerMovement(PlayerTickEvent event) {
-		EntityPlayer player = event.player;
-		BlockPos pos = player.getPosition();
-		World world = player.worldObj;
-		Block block = world.getBlockState(pos).getBlock();
-		if (((block == MoChickens.blockChickenFire) || (world.getBlockState(pos.up()).getBlock() == MoChickens.blockChickenFire)) && (!player.capabilities.isCreativeMode)) {
-			player.setFire(8);
+	public void onInputEvent(KeyInputEvent event) {
+		int key = Keyboard.getEventKey();
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayer player = mc.thePlayer;
+		World world = mc.theWorld;
+		int bind = mc.gameSettings.keyBindAttack.getKeyCode();
+		
+		BlockPos pos = mc.objectMouseOver.getBlockPos();
+		EnumFacing face = mc.objectMouseOver.sideHit;
+		
+		if ((key == bind) && (Keyboard.isKeyDown(key))) {
+			
+			MoChickens.logger.info("Key Input Event");
+			if (world.getBlockState(pos).getBlock() != null) {
+				this.extinguishFire(player, pos, face, world, event, key);
+			}
 		}
 	}
 	
-	private void extinguishFire(EntityPlayer player, BlockPos pos, EnumFacing face, World world, MouseEvent event) {
-		 pos = pos.offset(face);
+	/*@SubscribeEvent
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Action action = event.action;
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayer player = event.entityPlayer;
+		World world = event.world;
+		
+		BlockPos pos = event.pos;
+		EnumFacing face = event.face;
+		
+		MoChickens.logger.info("Player Interact Event");
+		
+		if (action == Action.LEFT_CLICK_BLOCK) {
+			if (world.getBlockState(pos).getBlock()!= null) {
+				this.extinguishFire(player, pos, face, world, event/*, button/);
+			}
+		}
+	}*/
+	
+	@SubscribeEvent
+	public void onPlayerMovement(LivingEvent event) {
+		Entity player = event.entity;
+		BlockPos pos = player.getPosition();
+		World world = player.worldObj;
+		Block block = world.getBlockState(pos).getBlock();
+		if ((block == MoChickens.blockChickenFire) || (world.getBlockState(pos.up()).getBlock() == MoChickens.blockChickenFire)) {
+			if (player.isImmuneToFire()) {
+				
+			} else if ((player instanceof EntityPlayer) && (((EntityPlayer)player).capabilities.isCreativeMode)) {
+					
+			} else {
+				player.setFire(8);
+			}
+		}
+	}
+	
+	private void extinguishFire(EntityPlayer player, BlockPos posIn, EnumFacing face, World world, Event event, int key) {
+		 BlockPos pos = posIn.offset(face);
 
 	        if (world.getBlockState(pos).getBlock() == MoChickens.blockChickenFire)
 	        {
 	        	world.playSoundEffect(player.posX, player.posY, player.posZ, "random.fizz", 1.0F, 1.0F);
 	        	world.setBlockToAir(pos);
-	        	MoChickens.network.sendToServer(new FireMessage(player, face));
-	        	event.setCanceled(true);
+	        	//MoChickens.network.sendToServer(new FireMessage(player, face, pos));
+	        	if ((event instanceof MouseEvent) || (event instanceof PlayerInteractEvent)) {
+	        		event.setCanceled(true);
+	        	} else if(event instanceof KeyInputEvent) {
+					KeyBinding.setKeyBindState(key, false);
+	        		MoChickens.logger.info("I am a KeyInputEvent result.");
+	        	}
 	        }
 		
 	}
