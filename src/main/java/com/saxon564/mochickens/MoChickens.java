@@ -70,7 +70,7 @@ import com.saxon564.mochickens.entities.mobs.EntityRainbowChicken;
 import com.saxon564.mochickens.entities.mobs.EntityRedstoneChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySnowChicken;
-import com.saxon564.mochickens.events.PlayerEventHandler;
+import com.saxon564.mochickens.events.FireEventHandler;
 import com.saxon564.mochickens.network.FireMessage;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import com.saxon564.mochickens.recipes.CraftingRecipes;
@@ -171,8 +171,8 @@ public class MoChickens {
 		proxy.modelExceptions();
 		
 		//Events
-		MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
-		FMLCommonHandler.instance().bus().register(new PlayerEventHandler());
+		MinecraftForge.EVENT_BUS.register(new FireEventHandler());
+		FMLCommonHandler.instance().bus().register(new FireEventHandler());
 		
 		//Structures
 		MapGenStructureIO.registerStructure(MapGenChickenVillage.Start.class, "Chicken_Village");
