@@ -83,6 +83,7 @@ import com.saxon564.mochickens.registers.RegisterItems;
 import com.saxon564.mochickens.registers.RegisterOreDict;
 import com.saxon564.mochickens.registers.RegisterSpawns;
 import com.saxon564.mochickens.world.dimensions.chicken.structures.MapGenChickenVillage;
+import com.saxon564.mochickens.world.dimensions.chicken.structures.VillageBuildings;
 
 
 @Mod(modid = MoChickensReference.MODID, name = MoChickensReference.MODNAME, version = MoChickensReference.VERSION)
@@ -176,6 +177,7 @@ public class MoChickens {
 		
 		//Structures
 		MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");
+		VillageBuildings.registerVillagePieces();
 		
 		/*if (Loader.isModLoaded(Thaumcraft.id)) {
 			loadThaumcraft();

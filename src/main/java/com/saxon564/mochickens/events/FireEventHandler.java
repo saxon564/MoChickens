@@ -43,8 +43,10 @@ public class FireEventHandler {
 		EnumFacing face = mc.objectMouseOver.sideHit;
 		
 		if ((button == key) && (Mouse.isButtonDown(button + 100))) {
-			if (world.getBlockState(pos).getBlock()!= null) {
-				this.extinguishFire(player, pos, face, world, event, button);
+			if (pos != null) {
+			    if (world.getBlockState(pos).getBlock() != null) {
+				    this.extinguishFire(player, pos, face, world, event, button);
+			    }
 			}
 		}
 	}

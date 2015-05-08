@@ -1822,16 +1822,16 @@ public class VillageBuildings {
             {
                 super(p_i2109_1_, p_i2109_2_);
                 this.coordBaseMode = EnumFacing.Plane.HORIZONTAL.random(p_i2109_3_);
-
-                switch (VillageBuildings.SwitchEnumFacing.field_176064_a[this.coordBaseMode.ordinal()])
+                StructureBoundingBox structureboundingbox = StructureBoundingBox.func_175897_a(p_i2109_2_, p_i2109_4_, p_i2109_5_, 0, 0, 0, 8, 14, 12, this.coordBaseMode);
+                /*switch (VillageBuildings.SwitchEnumFacing.field_176064_a[this.coordBaseMode.ordinal()])
                 {
                     case 1:
                     case 2:
-                        this.boundingBox = new StructureBoundingBox(p_i2109_4_, 64, p_i2109_5_, p_i2109_4_ + 6 - 1, 78, p_i2109_5_ + 6 - 1);
+                        this.boundingBox = new StructureBoundingBox(p_i2109_4_, 64, p_i2109_5_, p_i2109_4_ + 8 - 1, 78, p_i2109_5_ + 12 - 1);
                         break;
                     default:
-                        this.boundingBox = new StructureBoundingBox(p_i2109_4_, 64, p_i2109_5_, p_i2109_4_ + 6 - 1, 78, p_i2109_5_ + 6 - 1);
-                }
+                        this.boundingBox = new StructureBoundingBox(p_i2109_4_, 64, p_i2109_5_, p_i2109_4_ + 8 - 1, 78, p_i2109_5_ + 12 - 1);
+                }*/
             }
 
             /**
@@ -1839,10 +1839,10 @@ public class VillageBuildings {
              */
             public void buildComponent(StructureComponent p_74861_1_, List p_74861_2_, Random p_74861_3_)
             {
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX - 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.WEST, this.getComponentType());
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.maxX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.EAST, this.getComponentType());
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType());
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX - 1, this.boundingBox.maxY + 1, this.boundingBox.minZ + 1, EnumFacing.WEST, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.maxX + 1, this.boundingBox.maxY + 1, this.boundingBox.minZ + 1, EnumFacing.EAST, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY + 1, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY + 1, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType());
             }
             
             public void setBlock(World world, int x, int y, int z, Block block, int metadata)
@@ -1870,7 +1870,7 @@ public class VillageBuildings {
                         return true;
                     }
 
-                    this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 3, 0);
+                    this.boundingBox.offset(0, this.field_143015_k, 0);
                 }
                 MoChickens.logger.info("Village being constructed!!!");
                 
