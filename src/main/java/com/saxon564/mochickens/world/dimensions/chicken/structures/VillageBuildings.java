@@ -43,19 +43,19 @@ public class VillageBuildings {
 
     public static void registerVillagePieces()
     {
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.House1.class, "ViBH");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Field1.class, "ViDF");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Field2.class, "ViF");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Torch.class, "ViL");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Hall.class, "ViPH");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.House4Garden.class, "ViSH");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.WoodHut.class, "ViSmH");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Church.class, "ViST");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.House2.class, "ViS");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Start.class, "ViStart");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Path.class, "ViSR");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.House3.class, "ViTRH");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Well.class, "ViW");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.House1.class, "CViBH");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Field1.class, "CViDF");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Field2.class, "CViF");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Torch.class, "CViL");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Hall.class, "CViPH");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.House4Garden.class, "CViSH");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.WoodHut.class, "CViSmH");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Church.class, "CViST");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.House2.class, "CViS");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Start.class, "CViStart");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Path.class, "CViSR");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.House3.class, "CViTRH");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Well.class, "CViW");
     }
 
     public static List getStructureVillageWeightedPieceList(Random p_75084_0_, int p_75084_1_)
@@ -285,7 +285,6 @@ public class VillageBuildings {
 
     public static class Church extends VillageBuildings.Village
         {
-            private static final String __OBFID = "CL_00000525";
 
             public Church() {}
 
@@ -412,7 +411,6 @@ public class VillageBuildings {
             private Block cropTypeC;
             /** Fourth crop type for this field. */
             private Block cropTypeD;
-            private static final String __OBFID = "CL_00000518";
 
             public Field1() {}
 
@@ -533,7 +531,6 @@ public class VillageBuildings {
             private Block cropTypeA;
             /** Second crop type for this field. */
             private Block cropTypeB;
-            private static final String __OBFID = "CL_00000519";
 
             public Field2() {}
 
@@ -636,7 +633,6 @@ public class VillageBuildings {
 
     public static class Hall extends VillageBuildings.Village
         {
-            private static final String __OBFID = "CL_00000522";
 
             public Hall() {}
 
@@ -762,7 +758,6 @@ public class VillageBuildings {
 
     public static class House1 extends VillageBuildings.Village
         {
-            private static final String __OBFID = "CL_00000517";
 
             public House1() {}
 
@@ -894,7 +889,6 @@ public class VillageBuildings {
             /** List of items that Village's Blacksmith chest can contain. */
             private static final List villageBlacksmithChestContents = Lists.newArrayList(new WeightedRandomChestContent[] {new WeightedRandomChestContent(Items.diamond, 0, 1, 3, 3), new WeightedRandomChestContent(Items.iron_ingot, 0, 1, 5, 10), new WeightedRandomChestContent(Items.gold_ingot, 0, 1, 3, 5), new WeightedRandomChestContent(Items.bread, 0, 1, 3, 15), new WeightedRandomChestContent(Items.apple, 0, 1, 3, 15), new WeightedRandomChestContent(Items.iron_pickaxe, 0, 1, 1, 5), new WeightedRandomChestContent(Items.iron_sword, 0, 1, 1, 5), new WeightedRandomChestContent(Items.iron_chestplate, 0, 1, 1, 5), new WeightedRandomChestContent(Items.iron_helmet, 0, 1, 1, 5), new WeightedRandomChestContent(Items.iron_leggings, 0, 1, 1, 5), new WeightedRandomChestContent(Items.iron_boots, 0, 1, 1, 5), new WeightedRandomChestContent(Item.getItemFromBlock(Blocks.obsidian), 0, 3, 7, 5), new WeightedRandomChestContent(Item.getItemFromBlock(Blocks.sapling), 0, 3, 7, 5), new WeightedRandomChestContent(Items.saddle, 0, 1, 1, 3), new WeightedRandomChestContent(Items.iron_horse_armor, 0, 1, 1, 1), new WeightedRandomChestContent(Items.golden_horse_armor, 0, 1, 1, 1), new WeightedRandomChestContent(Items.diamond_horse_armor, 0, 1, 1, 1)});
             private boolean hasMadeChest;
-            private static final String __OBFID = "CL_00000526";
 
             public House2() {}
 
@@ -1025,7 +1019,6 @@ public class VillageBuildings {
 
     public static class House3 extends VillageBuildings.Village
         {
-            private static final String __OBFID = "CL_00000530";
 
             public House3() {}
 
@@ -1191,7 +1184,6 @@ public class VillageBuildings {
     public static class House4Garden extends VillageBuildings.Village
         {
             private boolean isRoofAccessible;
-            private static final String __OBFID = "CL_00000523";
 
             public House4Garden() {}
 
@@ -1331,7 +1323,6 @@ public class VillageBuildings {
     public static class Path extends VillageBuildings.Road
         {
             private int averageGroundLevel;
-            private static final String __OBFID = "CL_00000528";
 
             public Path() {}
 
@@ -1500,7 +1491,6 @@ public class VillageBuildings {
 
     public abstract static class Road extends VillageBuildings.Village
         {
-            private static final String __OBFID = "CL_00000532";
 
             public Road() {}
 
@@ -1525,7 +1515,6 @@ public class VillageBuildings {
             public List structureVillageWeightedPieceList;
             public List field_74932_i = Lists.newArrayList();
             public List field_74930_j = Lists.newArrayList();
-            private static final String __OBFID = "CL_00000527";
             public BiomeGenBase biome;
 
             public Start() {}
@@ -1550,7 +1539,6 @@ public class VillageBuildings {
 
     public static class Torch extends VillageBuildings.Village
         {
-            private static final String __OBFID = "CL_00000520";
 
             public Torch() {}
 
@@ -1605,7 +1593,6 @@ public class VillageBuildings {
             /** The number of villagers that have been spawned in this component. */
             private int villagersSpawned;
             private boolean field_143014_b;
-            private static final String __OBFID = "CL_00000531";
             private VillageBuildings.Start startPiece;
 
             public Village() {}
@@ -1828,7 +1815,6 @@ public class VillageBuildings {
 
     public static class Well extends VillageBuildings.Village
         {
-            private static final String __OBFID = "CL_00000533";
 
             public Well() {}
 
@@ -1886,6 +1872,7 @@ public class VillageBuildings {
 
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 3, 0);
                 }
+                MoChickens.logger.info("Village being constructed!!!");
                 
 
                 this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
@@ -2360,7 +2347,6 @@ public class VillageBuildings {
         {
             private boolean isTallHouse;
             private int tablePosition;
-            private static final String __OBFID = "CL_00000524";
 
             public WoodHut() {}
 
@@ -2477,7 +2463,6 @@ public class VillageBuildings {
     static final class SwitchEnumFacing
     {
         static final int[] field_176064_a = new int[EnumFacing.values().length];
-        private static final String __OBFID = "CL_00001968";
 
         static
         {

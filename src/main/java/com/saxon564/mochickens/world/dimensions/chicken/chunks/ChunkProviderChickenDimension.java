@@ -43,6 +43,7 @@ import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
+import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.world.dimensions.chicken.generators.GenDungeons;
 import com.saxon564.mochickens.world.dimensions.chicken.structures.MapGenChickenVillage;
 
@@ -417,11 +418,11 @@ public class ChunkProviderChickenDimension implements IChunkProvider
             this.scatteredFeatureGenerator.func_175794_a(this.worldObj, this.rand, chunkcoordintpair);
         }
         
-        /*if (flag == true) {
+        if (flag == true) {
         	
-        	System.out.println("Village " + chunkX*16 + "  " + chunkZ*16);
+        	MoChickens.logger.info("Village " + chunkX*16 + "  " + chunkZ*16);
         	
-        }*/
+        }
 
         int k1;
         int l1;

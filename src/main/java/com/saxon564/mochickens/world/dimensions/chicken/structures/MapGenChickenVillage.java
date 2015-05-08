@@ -99,21 +99,21 @@ public class MapGenChickenVillage extends MapGenStructure
 
     protected StructureStart getStructureStart(int p_75049_1_, int p_75049_2_)
     {
-        return new MapGenChickenVillage.Start(this.worldObj, this.rand, p_75049_1_, p_75049_2_, this.terrainType);
+        return new MapGenChickenVillage.ChickenStart(this.worldObj, this.rand, p_75049_1_, p_75049_2_, this.terrainType);
     }
 
-    public static class Start extends StructureStart
-        {
+    public static class ChickenStart extends StructureStart
+    {
         /** well ... thats what it does */
         private boolean hasMoreThanTwoComponents;
 
-        public Start() {}
+        public ChickenStart() {}
 
-        public Start(World worldIn, Random p_i2092_2_, int p_i2092_3_, int p_i2092_4_, int p_i2092_5_)
+        public ChickenStart(World worldIn, Random p_i2092_2_, int p_i2092_3_, int p_i2092_4_, int p_i2092_5_)
         {
             super(p_i2092_3_, p_i2092_4_);
-            List list = StructureVillagePieces.getStructureVillageWeightedPieceList(p_i2092_2_, p_i2092_5_);
-            StructureVillagePieces.Start start = new StructureVillagePieces.Start(worldIn.getWorldChunkManager(), 0, p_i2092_2_, (p_i2092_3_ << 4) + 2, (p_i2092_4_ << 4) + 2, list, p_i2092_5_);
+            List list = VillageBuildings.getStructureVillageWeightedPieceList(p_i2092_2_, p_i2092_5_);
+            VillageBuildings.Start start = new VillageBuildings.Start(worldIn.getWorldChunkManager(), 0, p_i2092_2_, (p_i2092_3_ << 4) + 2, (p_i2092_4_ << 4) + 2, list, p_i2092_5_);
             this.components.add(start);
             start.buildComponent(start, this.components, p_i2092_2_);
             List list1 = start.field_74930_j;
@@ -174,5 +174,5 @@ public class MapGenChickenVillage extends MapGenStructure
             super.func_143017_b(p_143017_1_);
             this.hasMoreThanTwoComponents = p_143017_1_.getBoolean("Valid");
         }
-   }
+    }
 }

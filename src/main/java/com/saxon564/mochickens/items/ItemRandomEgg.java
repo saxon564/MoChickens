@@ -36,20 +36,15 @@ public class ItemRandomEgg extends Item {
 		setMaxStackSize(64);
 		setCreativeTab(MoChickens.moChickensTab);
 		setUnlocalizedName("random_egg");
-		//setTextureName(MoChickensReference.MODID + ":"
-		//		+ getUnlocalizedName().substring(5));
 	}
 
 	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-		//System.out.println("Item Used");
 		if (worldIn.isRemote)
         {
-			//System.out.println("Server");
             return true;
         }
         else if (!playerIn.canPlayerEdit(pos.offset(side), side, stack))
         {
-        	//System.out.println("Cant Edit");
             return false;
         }
         else
@@ -91,14 +86,12 @@ public class ItemRandomEgg extends Item {
 			}
 
 			float look = -playerIn.rotationYaw;
-			//System.out.println(MoChickens.egg[random]);
 			if (MoChickens.egg[random] != null) {
 				Configuration configs = MoChickens.configs[random];
 				try {
 					EntityLiving newEntity = (EntityLiving) type
 							.getDeclaredConstructor(World.class).newInstance(
 									worldIn);
-					//System.out.println(newEntity.toString());
 					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
 						// prevent tying to age bat
 					} else {
@@ -106,7 +99,6 @@ public class ItemRandomEgg extends Item {
 					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
 					}
 					newEntity.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY() + d0, (double)pos.getZ() + 0.5D, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
-					//System.out.println(newEntity.toString());
 					// newEntity.setTamed(true);
 					worldIn.spawnEntityInWorld(newEntity);
 				} catch (InstantiationException e) {
@@ -169,14 +161,12 @@ public class ItemRandomEgg extends Item {
             			float look = -player.rotationYaw;
             			final int random = randomInt(0, MoChickens.eggNum);
             			Class type = MoChickens.egg[random];
-            			//System.out.println(MoChickens.egg[random]);
             			if (MoChickens.egg[random] != null) {
             				Configuration configs = MoChickens.configs[random];
             				try {
             					EntityLiving newEntity = (EntityLiving) type
             							.getDeclaredConstructor(World.class).newInstance(
             									worldIn);
-            					//System.out.println(newEntity.toString());
             					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
             						// prevent tying to age bat
             					} else {
@@ -184,7 +174,6 @@ public class ItemRandomEgg extends Item {
             					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
             					}
             					newEntity.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + d0, (double)blockpos.getZ() + 0.5D, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
-            					//System.out.println(newEntity.toString());
             					// newEntity.setTamed(true);
             					worldIn.spawnEntityInWorld(newEntity);
             				} catch (InstantiationException e) {

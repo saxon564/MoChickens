@@ -43,8 +43,6 @@ public class FireEventHandler {
 		EnumFacing face = mc.objectMouseOver.sideHit;
 		
 		if ((button == key) && (Mouse.isButtonDown(button + 100))) {
-			
-			//MoChickens.logger.info("Mouse Event");
 			if (world.getBlockState(pos).getBlock()!= null) {
 				this.extinguishFire(player, pos, face, world, event, button);
 			}
@@ -63,8 +61,6 @@ public class FireEventHandler {
 		EnumFacing face = mc.objectMouseOver.sideHit;
 		
 		if ((key == bind) && (Keyboard.isKeyDown(key))) {
-			
-			//MoChickens.logger.info("Key Input Event");
 			if (world.getBlockState(pos).getBlock() != null) {
 				this.extinguishFire(player, pos, face, world, event, key);
 			}
@@ -113,14 +109,11 @@ public class FireEventHandler {
 	        if (world.getBlockState(pos).getBlock() == MoChickens.blockChickenFire)
 	        {
 	        	if ((event instanceof MouseEvent) || (event instanceof PlayerInteractEvent)) {
-		        	//world.playSoundEffect(player.posX, player.posY, player.posZ, "random.fizz", 1.0F, 1.0F);
-		        	//world.setBlockToAir(pos);
 		        	MoChickens.network.sendToServer(new FireMessage(player, face, pos));
 	        		event.setCanceled(true);
 	        	} else if(event instanceof KeyInputEvent) {
 					//KeyBinding.setKeyBindState(key, false);
 	        		player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "Please contact saxon564 if you are trying to put out a fire " + EnumChatFormatting.RED +  "using a key on your keyboard as your attack key."));
-	        		//MoChickens.logger.info("I am a KeyInputEvent result.");
 	        	}
 	        }
 		

@@ -175,7 +175,7 @@ public class MoChickens {
 		FMLCommonHandler.instance().bus().register(new FireEventHandler());
 		
 		//Structures
-		MapGenStructureIO.registerStructure(MapGenChickenVillage.Start.class, "Chicken_Village");
+		MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");
 		
 		/*if (Loader.isModLoaded(Thaumcraft.id)) {
 			loadThaumcraft();
