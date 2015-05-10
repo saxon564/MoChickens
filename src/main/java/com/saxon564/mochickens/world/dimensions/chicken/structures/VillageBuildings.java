@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockSandStone;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTorch;
@@ -55,7 +56,7 @@ public class VillageBuildings {
         MapGenStructureIO.registerStructureComponent(VillageBuildings.Start.class, "CViStart");
         MapGenStructureIO.registerStructureComponent(VillageBuildings.Path.class, "CViSR");
         MapGenStructureIO.registerStructureComponent(VillageBuildings.House3.class, "CViTRH");
-        MapGenStructureIO.registerStructureComponent(VillageBuildings.Well.class, "CViW");
+        MapGenStructureIO.registerStructureComponent(VillageBuildings.Chicken.class, "CViW");
     }
 
     public static List getStructureVillageWeightedPieceList(Random p_75084_0_, int p_75084_1_)
@@ -305,11 +306,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -319,79 +320,79 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 12 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 1, 3, 3, 7, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 5, 1, 3, 9, 3, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 0, 3, 0, 8, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 0, 3, 10, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 1, 0, 10, 3, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 4, 1, 1, 4, 10, 3, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 4, 0, 4, 7, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 4, 0, 4, 4, 4, 7, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 8, 3, 4, 8, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 5, 4, 3, 10, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 5, 5, 3, 5, 7, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 9, 0, 4, 9, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 4, 0, 4, 4, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 11, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 11, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 2, 11, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 2, 11, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 1, 1, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 1, 1, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 2, 1, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 3, 1, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 3, 1, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 1, 1, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 1, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 3, 1, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 1)), 1, 2, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 0)), 3, 2, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 3, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 6, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 7, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 6, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 7, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 6, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 7, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 6, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 7, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 3, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 3, 8, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 2, 4, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateY()), 1, 4, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateYCCW()), 3, 4, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 4, 5, p_74875_3_);
+                this.func_175804_a(worldIn, box, 1, 1, 1, 3, 3, 7, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 5, 1, 3, 9, 3, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 0, 3, 0, 8, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 0, 3, 10, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 1, 0, 10, 3, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 4, 1, 1, 4, 10, 3, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 4, 0, 4, 7, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 4, 0, 4, 4, 4, 7, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 8, 3, 4, 8, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 5, 4, 3, 10, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 5, 5, 3, 5, 7, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 9, 0, 4, 9, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 4, 0, 4, 4, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 11, 2, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 11, 2, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 2, 11, 0, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 2, 11, 4, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 1, 1, 6, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 1, 1, 7, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 2, 1, 7, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 3, 1, 6, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 3, 1, 7, box);
+                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 1, 1, 5, box);
+                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 1, 6, box);
+                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 3, 1, 5, box);
+                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 1)), 1, 2, 7, box);
+                this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 0)), 3, 2, 7, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 3, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 6, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 7, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 6, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 7, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 6, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 7, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 6, 4, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 7, 4, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 6, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 3, 6, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 3, 8, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 2, 4, 7, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateY()), 1, 4, 6, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateYCCW()), 3, 4, 6, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 4, 5, box);
                 int i = this.getMetadataWithOffset(Blocks.ladder, 4);
                 int j;
 
                 for (j = 1; j <= 9; ++j)
                 {
-                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, j, 3, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, j, 3, box);
                 }
 
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 2, 0, p_74875_3_);
-                this.func_175810_a(worldIn, p_74875_3_, p_74875_2_, 2, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 2, 0, box);
+                this.func_175810_a(worldIn, box, rand, 2, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
 
-                if (this.func_175807_a(worldIn, 2, 0, -1, p_74875_3_).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, p_74875_3_).getBlock().getMaterial() != Material.air)
+                if (this.func_175807_a(worldIn, 2, 0, -1, box).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, box).getBlock().getMaterial() != Material.air)
                 {
-                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, box);
                 }
 
                 for (j = 0; j < 9; ++j)
                 {
                     for (int k = 0; k < 5; ++k)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, k, 12, j, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), k, -1, j, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, k, 12, j, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), k, -1, j, box);
                     }
                 }
 
-                this.spawnVillagers(worldIn, p_74875_3_, 2, 1, 2, 1);
+                this.spawnVillagers(worldIn, box, 2, 1, 2, 1);
                 return true;
             }
 
@@ -472,11 +473,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -486,38 +487,38 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 4 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 0, 12, 4, 8, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 1, 2, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 4, 0, 1, 5, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 7, 0, 1, 8, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 10, 0, 1, 11, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 0, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 6, 0, 0, 6, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 12, 0, 0, 12, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 0, 11, 0, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 8, 11, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 3, 0, 1, 3, 0, 7, Blocks.water.getDefaultState(), Blocks.water.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 9, 0, 1, 9, 0, 7, Blocks.water.getDefaultState(), Blocks.water.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 0, 12, 4, 8, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 1, 2, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 4, 0, 1, 5, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 7, 0, 1, 8, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 10, 0, 1, 11, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 0, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 6, 0, 0, 6, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 12, 0, 0, 12, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 0, 11, 0, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 8, 11, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 0, 1, 3, 0, 7, Blocks.water.getDefaultState(), Blocks.water.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 9, 0, 1, 9, 0, 7, Blocks.water.getDefaultState(), Blocks.water.getDefaultState(), false);
                 int i;
 
                 for (i = 1; i <= 7; ++i)
                 {
-                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 1, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 2, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 4, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 5, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 7, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 8, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 10, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 11, 1, i, p_74875_3_);
+                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 1, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 2, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 4, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 5, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 7, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 8, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 10, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 11, 1, i, box);
                 }
 
                 for (i = 0; i < 9; ++i)
                 {
                     for (int j = 0; j < 13; ++j)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 4, i, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.dirt.getDefaultState(), j, -1, i, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 4, i, box);
+                        this.func_175808_b(worldIn, Blocks.dirt.getDefaultState(), j, -1, i, box);
                     }
                 }
 
@@ -586,11 +587,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -600,30 +601,30 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 4 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 0, 6, 4, 8, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 1, 2, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 4, 0, 1, 5, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 0, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 6, 0, 0, 6, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 0, 5, 0, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 8, 5, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 3, 0, 1, 3, 0, 7, Blocks.water.getDefaultState(), Blocks.water.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 0, 6, 4, 8, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 1, 2, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 4, 0, 1, 5, 0, 7, Blocks.farmland.getDefaultState(), Blocks.farmland.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 0, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 6, 0, 0, 6, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 0, 5, 0, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 8, 5, 0, 8, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 0, 1, 3, 0, 7, Blocks.water.getDefaultState(), Blocks.water.getDefaultState(), false);
                 int i;
 
                 for (i = 1; i <= 7; ++i)
                 {
-                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 1, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 2, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 4, 1, i, p_74875_3_);
-                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(p_74875_2_, 2, 7)), 5, 1, i, p_74875_3_);
+                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 1, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 2, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 4, 1, i, box);
+                    this.func_175811_a(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getRandomIntegerInRange(rand, 2, 7)), 5, 1, i, box);
                 }
 
                 for (i = 0; i < 9; ++i)
                 {
                     for (int j = 0; j < 7; ++j)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 4, i, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.dirt.getDefaultState(), j, -1, i, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 4, i, box);
+                        this.func_175808_b(worldIn, Blocks.dirt.getDefaultState(), j, -1, i, box);
                     }
                 }
 
@@ -653,11 +654,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -667,27 +668,27 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 7 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 1, 7, 4, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 2, 1, 6, 8, 4, 10, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 2, 0, 6, 8, 0, 10, Blocks.dirt.getDefaultState(), Blocks.dirt.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 6, 0, 6, p_74875_3_);
-                this.func_175804_a(worldIn, p_74875_3_, 2, 1, 6, 2, 1, 10, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 8, 1, 6, 8, 1, 10, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 3, 1, 10, 7, 1, 10, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 1, 7, 0, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 0, 3, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 8, 0, 0, 8, 3, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 0, 7, 1, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 5, 7, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 2, 0, 7, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 2, 5, 7, 3, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 4, 1, 8, 4, 1, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 4, 4, 8, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 5, 2, 8, 5, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 3, p_74875_3_);
+                this.func_175804_a(worldIn, box, 1, 1, 1, 7, 4, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 2, 1, 6, 8, 4, 10, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 2, 0, 6, 8, 0, 10, Blocks.dirt.getDefaultState(), Blocks.dirt.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 6, 0, 6, box);
+                this.func_175804_a(worldIn, box, 2, 1, 6, 2, 1, 10, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 8, 1, 6, 8, 1, 10, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 1, 10, 7, 1, 10, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 1, 7, 0, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 0, 3, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 8, 0, 0, 8, 3, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 0, 7, 1, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 5, 7, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 2, 0, 7, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 2, 5, 7, 3, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 4, 1, 8, 4, 1, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 4, 4, 8, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 5, 2, 8, 5, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 2, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 3, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 2, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 3, box);
                 int i = this.getMetadataWithOffset(Blocks.oak_stairs, 3);
                 int j = this.getMetadataWithOffset(Blocks.oak_stairs, 2);
                 int k;
@@ -697,56 +698,56 @@ public class VillageBuildings {
                 {
                     for (l = 0; l <= 8; ++l)
                     {
-                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(i), l, 4 + k, k, p_74875_3_);
-                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(j), l, 4 + k, 5 - k, p_74875_3_);
+                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(i), l, 4 + k, k, box);
+                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(j), l, 4 + k, 5 - k, box);
                     }
                 }
 
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 3, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 1, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 2, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 3)), 2, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 1)), 1, 1, 3, p_74875_3_);
-                this.func_175804_a(worldIn, p_74875_3_, 5, 0, 1, 7, 0, 3, Blocks.double_stone_slab.getDefaultState(), Blocks.double_stone_slab.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.double_stone_slab.getDefaultState(), 6, 1, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.double_stone_slab.getDefaultState(), 6, 1, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 3, 1, p_74875_3_);
-                this.func_175810_a(worldIn, p_74875_3_, p_74875_2_, 2, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 1, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 1, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 3, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 1, 3, box);
+                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 2, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 3)), 2, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 1)), 1, 1, 3, box);
+                this.func_175804_a(worldIn, box, 5, 0, 1, 7, 0, 3, Blocks.double_stone_slab.getDefaultState(), Blocks.double_stone_slab.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.double_stone_slab.getDefaultState(), 6, 1, 1, box);
+                this.func_175811_a(worldIn, Blocks.double_stone_slab.getDefaultState(), 6, 1, 2, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 3, 1, box);
+                this.func_175810_a(worldIn, box, rand, 2, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
 
-                if (this.func_175807_a(worldIn, 2, 0, -1, p_74875_3_).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, p_74875_3_).getBlock().getMaterial() != Material.air)
+                if (this.func_175807_a(worldIn, 2, 0, -1, box).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, box).getBlock().getMaterial() != Material.air)
                 {
-                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, box);
                 }
 
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 6, 1, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 6, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 6, 3, 4, p_74875_3_);
-                this.func_175810_a(worldIn, p_74875_3_, p_74875_2_, 6, 1, 5, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 6, 1, 5, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 6, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 6, 3, 4, box);
+                this.func_175810_a(worldIn, box, rand, 6, 1, 5, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
 
                 for (k = 0; k < 5; ++k)
                 {
                     for (l = 0; l < 9; ++l)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, l, 7, k, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), l, -1, k, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, l, 7, k, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), l, -1, k, box);
                     }
                 }
 
-                this.spawnVillagers(worldIn, p_74875_3_, 4, 1, 2, 2);
+                this.spawnVillagers(worldIn, box, 4, 1, 2, 2);
                 return true;
             }
 
@@ -778,11 +779,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -792,11 +793,11 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 9 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 1, 7, 5, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 8, 0, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 5, 0, 8, 5, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 6, 1, 8, 6, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 7, 2, 8, 7, 3, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 1, 7, 5, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 8, 0, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 5, 0, 8, 5, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 6, 1, 8, 6, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 7, 2, 8, 7, 3, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
                 int i = this.getMetadataWithOffset(Blocks.oak_stairs, 3);
                 int j = this.getMetadataWithOffset(Blocks.oak_stairs, 2);
                 int k;
@@ -806,75 +807,75 @@ public class VillageBuildings {
                 {
                     for (l = 0; l <= 8; ++l)
                     {
-                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(i), l, 6 + k, k, p_74875_3_);
-                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(j), l, 6 + k, 5 - k, p_74875_3_);
+                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(i), l, 6 + k, k, box);
+                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(j), l, 6 + k, 5 - k, box);
                     }
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 0, 0, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 5, 8, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 8, 1, 0, 8, 1, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 2, 1, 0, 7, 1, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 2, 0, 0, 4, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 2, 5, 0, 4, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 8, 2, 5, 8, 4, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 8, 2, 0, 8, 4, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 2, 1, 0, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 2, 5, 7, 4, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 8, 2, 1, 8, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 2, 0, 7, 4, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 3, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 3, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 3, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 2, 5, p_74875_3_);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 4, 1, 7, 4, 1, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 4, 4, 7, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 3, 4, 7, 3, 4, Blocks.bookshelf.getDefaultState(), Blocks.bookshelf.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 7, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 0)), 7, 1, 3, p_74875_3_);
+                this.func_175804_a(worldIn, box, 0, 1, 0, 0, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 5, 8, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 8, 1, 0, 8, 1, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 2, 1, 0, 7, 1, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 2, 0, 0, 4, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 2, 5, 0, 4, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 8, 2, 5, 8, 4, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 8, 2, 0, 8, 4, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 2, 1, 0, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 2, 5, 7, 4, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 8, 2, 1, 8, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 2, 0, 7, 4, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 3, 3, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 3, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 3, 3, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 3, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 6, 2, 5, box);
+                this.func_175804_a(worldIn, box, 1, 4, 1, 7, 4, 1, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 4, 4, 7, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 3, 4, 7, 3, 4, Blocks.bookshelf.getDefaultState(), Blocks.bookshelf.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 7, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 0)), 7, 1, 3, box);
                 k = this.getMetadataWithOffset(Blocks.oak_stairs, 3);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 6, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 5, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 4, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 3, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 6, 1, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 6, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 1, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 4, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.crafting_table.getDefaultState(), 7, 1, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 1, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 1, 2, 0, p_74875_3_);
-                this.func_175810_a(worldIn, p_74875_3_, p_74875_2_, 1, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 6, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 5, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 4, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), 3, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 6, 1, 3, box);
+                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 6, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 1, 3, box);
+                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 4, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.crafting_table.getDefaultState(), 7, 1, 1, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 1, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 1, 2, 0, box);
+                this.func_175810_a(worldIn, box, rand, 1, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
 
-                if (this.func_175807_a(worldIn, 1, 0, -1, p_74875_3_).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 1, -1, -1, p_74875_3_).getBlock().getMaterial() != Material.air)
+                if (this.func_175807_a(worldIn, 1, 0, -1, box).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 1, -1, -1, box).getBlock().getMaterial() != Material.air)
                 {
-                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 1, 0, -1, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 1, 0, -1, box);
                 }
 
                 for (l = 0; l < 6; ++l)
                 {
                     for (int i1 = 0; i1 < 9; ++i1)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, i1, 9, l, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), i1, -1, l, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, i1, 9, l, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), i1, -1, l, box);
                     }
                 }
 
-                this.spawnVillagers(worldIn, p_74875_3_, 2, 1, 2, 1);
+                this.spawnVillagers(worldIn, box, 2, 1, 2, 1);
                 return true;
             }
 
@@ -932,11 +933,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -946,55 +947,55 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 6 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 0, 9, 4, 6, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 9, 0, 6, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 4, 0, 9, 4, 6, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 5, 0, 9, 5, 6, Blocks.stone_slab.getDefaultState(), Blocks.stone_slab.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 5, 1, 8, 5, 5, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 0, 2, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 0, 0, 4, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 3, 1, 0, 3, 4, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 6, 0, 4, 6, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 3, 1, p_74875_3_);
-                this.func_175804_a(worldIn, p_74875_3_, 3, 1, 2, 3, 3, 2, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 4, 1, 3, 5, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 1, 0, 3, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 6, 5, 3, 6, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 5, 1, 0, 5, 3, 0, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 9, 1, 0, 9, 3, 0, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 6, 1, 4, 9, 4, 6, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.flowing_lava.getDefaultState(), 7, 1, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.flowing_lava.getDefaultState(), 8, 1, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.iron_bars.getDefaultState(), 9, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.iron_bars.getDefaultState(), 9, 2, 4, p_74875_3_);
-                this.func_175804_a(worldIn, p_74875_3_, 7, 2, 4, 8, 2, 5, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 6, 1, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.furnace.getDefaultState(), 6, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.furnace.getDefaultState(), 6, 3, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.double_stone_slab.getDefaultState(), 8, 1, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 2, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 1, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 3)), 2, 1, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 1)), 1, 1, 4, p_74875_3_);
+                this.func_175804_a(worldIn, box, 0, 1, 0, 9, 4, 6, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 9, 0, 6, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 4, 0, 9, 4, 6, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 5, 0, 9, 5, 6, Blocks.stone_slab.getDefaultState(), Blocks.stone_slab.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 5, 1, 8, 5, 5, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 0, 2, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 0, 0, 4, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 1, 0, 3, 4, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 6, 0, 4, 6, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 3, 1, box);
+                this.func_175804_a(worldIn, box, 3, 1, 2, 3, 3, 2, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 4, 1, 3, 5, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 1, 0, 3, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 6, 5, 3, 6, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 5, 1, 0, 5, 3, 0, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 9, 1, 0, 9, 3, 0, Blocks.oak_fence.getDefaultState(), Blocks.oak_fence.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 6, 1, 4, 9, 4, 6, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.flowing_lava.getDefaultState(), 7, 1, 5, box);
+                this.func_175811_a(worldIn, Blocks.flowing_lava.getDefaultState(), 8, 1, 5, box);
+                this.func_175811_a(worldIn, Blocks.iron_bars.getDefaultState(), 9, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.iron_bars.getDefaultState(), 9, 2, 4, box);
+                this.func_175804_a(worldIn, box, 7, 2, 4, 8, 2, 5, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 6, 1, 3, box);
+                this.func_175811_a(worldIn, Blocks.furnace.getDefaultState(), 6, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.furnace.getDefaultState(), 6, 3, 3, box);
+                this.func_175811_a(worldIn, Blocks.double_stone_slab.getDefaultState(), 8, 1, 1, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 6, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 6, box);
+                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), 2, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 1, 5, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 3)), 2, 1, 5, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.oak_stairs, 1)), 1, 1, 4, box);
 
-                if (!this.hasMadeChest && p_74875_3_.func_175898_b(new BlockPos(this.getXWithOffset(5, 5), this.getYWithOffset(1), this.getZWithOffset(5, 5))))
+                if (!this.hasMadeChest && box.func_175898_b(new BlockPos(this.getXWithOffset(5, 5), this.getYWithOffset(1), this.getZWithOffset(5, 5))))
                 {
                     this.hasMadeChest = true;
-                    this.func_180778_a(worldIn, p_74875_3_, p_74875_2_, 5, 1, 5, ChestGenHooks.getItems(VILLAGE_BLACKSMITH, p_74875_2_), ChestGenHooks.getCount(VILLAGE_BLACKSMITH, p_74875_2_));
+                    this.func_180778_a(worldIn, box, rand, 5, 1, 5, ChestGenHooks.getItems(VILLAGE_BLACKSMITH, rand), ChestGenHooks.getCount(VILLAGE_BLACKSMITH, rand));
                 }
 
                 int i;
 
                 for (i = 6; i <= 8; ++i)
                 {
-                    if (this.func_175807_a(worldIn, i, 0, -1, p_74875_3_).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, i, -1, -1, p_74875_3_).getBlock().getMaterial() != Material.air)
+                    if (this.func_175807_a(worldIn, i, 0, -1, box).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, i, -1, -1, box).getBlock().getMaterial() != Material.air)
                     {
-                        this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), i, 0, -1, p_74875_3_);
+                        this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), i, 0, -1, box);
                     }
                 }
 
@@ -1002,12 +1003,12 @@ public class VillageBuildings {
                 {
                     for (int j = 0; j < 10; ++j)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 6, i, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j, -1, i, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 6, i, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j, -1, i, box);
                     }
                 }
 
-                this.spawnVillagers(worldIn, p_74875_3_, 7, 1, 1, 1);
+                this.spawnVillagers(worldIn, box, 7, 1, 1, 1);
                 return true;
             }
 
@@ -1039,11 +1040,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -1053,26 +1054,26 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 7 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 1, 7, 4, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 2, 1, 6, 8, 4, 10, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 2, 0, 5, 8, 0, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 1, 7, 0, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 0, 3, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 8, 0, 0, 8, 3, 10, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 0, 7, 2, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, 5, 2, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 2, 0, 6, 2, 3, 10, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 3, 0, 10, 7, 3, 10, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 2, 0, 7, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 2, 5, 2, 3, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 4, 1, 8, 4, 1, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 4, 4, 3, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 5, 2, 8, 5, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 4, p_74875_3_);
+                this.func_175804_a(worldIn, box, 1, 1, 1, 7, 4, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 2, 1, 6, 8, 4, 10, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 2, 0, 5, 8, 0, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 1, 7, 0, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 0, 3, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 8, 0, 0, 8, 3, 10, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 0, 7, 2, 0, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 5, 2, 1, 5, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 2, 0, 6, 2, 3, 10, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 0, 10, 7, 3, 10, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 2, 0, 7, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 2, 5, 2, 3, 5, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 4, 1, 8, 4, 1, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 4, 4, 3, 4, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 5, 2, 8, 5, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 2, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 0, 4, 3, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 2, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 3, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 4, 4, box);
                 int i = this.getMetadataWithOffset(Blocks.oak_stairs, 3);
                 int j = this.getMetadataWithOffset(Blocks.oak_stairs, 2);
                 int k;
@@ -1082,88 +1083,88 @@ public class VillageBuildings {
                 {
                     for (l = 0; l <= 8; ++l)
                     {
-                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(i), l, 4 + k, k, p_74875_3_);
+                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(i), l, 4 + k, k, box);
 
                         if ((k > -1 || l <= 1) && (k > 0 || l <= 3) && (k > 1 || l <= 4 || l >= 6))
                         {
-                            this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(j), l, 4 + k, 5 - k, p_74875_3_);
+                            this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(j), l, 4 + k, 5 - k, box);
                         }
                     }
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 3, 4, 5, 3, 4, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 7, 4, 2, 7, 4, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 4, 5, 4, 4, 5, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 6, 5, 4, 6, 5, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 5, 6, 3, 5, 6, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 4, 5, 3, 4, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 7, 4, 2, 7, 4, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 4, 5, 4, 4, 5, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 6, 5, 4, 6, 5, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 5, 6, 3, 5, 6, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
                 k = this.getMetadataWithOffset(Blocks.oak_stairs, 0);
                 int i1;
 
                 for (l = 4; l >= 1; --l)
                 {
-                    this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), l, 2 + l, 7 - l, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), l, 2 + l, 7 - l, box);
 
                     for (i1 = 8 - l; i1 <= 10; ++i1)
                     {
-                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), l, 2 + l, i1, p_74875_3_);
+                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(k), l, 2 + l, i1, box);
                     }
                 }
 
                 l = this.getMetadataWithOffset(Blocks.oak_stairs, 1);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 6, 6, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 7, 5, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(l), 6, 6, 4, p_74875_3_);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 6, 6, 3, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 7, 5, 4, box);
+                this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(l), 6, 6, 4, box);
                 int j1;
 
                 for (i1 = 6; i1 <= 8; ++i1)
                 {
                     for (j1 = 5; j1 <= 10; ++j1)
                     {
-                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(l), i1, 12 - i1, j1, p_74875_3_);
+                        this.func_175811_a(worldIn, Blocks.oak_stairs.getStateFromMeta(l), i1, 12 - i1, j1, box);
                     }
                 }
 
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 4, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 6, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 3, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 2, 5, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 8, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 9, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 2, 2, 6, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 7, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 8, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 2, 2, 9, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 4, 4, 10, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 4, 10, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 6, 4, 10, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 5, 5, 10, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 3, 1, p_74875_3_);
-                this.func_175810_a(worldIn, p_74875_3_, p_74875_2_, 2, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
-                this.func_175804_a(worldIn, p_74875_3_, 1, 0, -1, 3, 2, -1, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 1, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 4, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 6, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 1, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 3, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 8, 2, 5, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 6, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 7, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 8, 2, 8, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 8, 2, 9, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 2, 2, 6, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 7, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 8, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 2, 2, 9, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 4, 4, 10, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 5, 4, 10, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 6, 4, 10, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 5, 5, 10, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 2, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 3, 1, box);
+                this.func_175810_a(worldIn, box, rand, 2, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
+                this.func_175804_a(worldIn, box, 1, 0, -1, 3, 2, -1, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
 
-                if (this.func_175807_a(worldIn, 2, 0, -1, p_74875_3_).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, p_74875_3_).getBlock().getMaterial() != Material.air)
+                if (this.func_175807_a(worldIn, 2, 0, -1, box).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, box).getBlock().getMaterial() != Material.air)
                 {
-                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, box);
                 }
 
                 for (i1 = 0; i1 < 5; ++i1)
                 {
                     for (j1 = 0; j1 < 9; ++j1)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, j1, 7, i1, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j1, -1, i1, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, j1, 7, i1, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j1, -1, i1, box);
                     }
                 }
 
@@ -1171,12 +1172,12 @@ public class VillageBuildings {
                 {
                     for (j1 = 2; j1 < 9; ++j1)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, j1, 7, i1, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j1, -1, i1, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, j1, 7, i1, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j1, -1, i1, box);
                     }
                 }
 
-                this.spawnVillagers(worldIn, p_74875_3_, 4, 1, 2, 2);
+                this.spawnVillagers(worldIn, box, 4, 1, 2, 2);
                 return true;
             }
         }
@@ -1223,11 +1224,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -1237,60 +1238,60 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 6 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 4, 0, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 4, 0, 4, 4, 4, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 4, 1, 3, 4, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 3, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 1, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 3, 4, p_74875_3_);
-                this.func_175804_a(worldIn, p_74875_3_, 0, 1, 1, 0, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 4, 1, 1, 4, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 4, 3, 3, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 4, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 2, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 2, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 1, 0, p_74875_3_);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 4, 0, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 4, 0, 4, 4, 4, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 4, 1, 3, 4, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 0, 3, 4, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 1, 4, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.cobblestone.getDefaultState(), 4, 3, 4, box);
+                this.func_175804_a(worldIn, box, 0, 1, 1, 0, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 4, 1, 1, 4, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 4, 3, 3, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 2, 2, 4, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 4, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 1, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 2, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.planks.getDefaultState(), 3, 1, 0, box);
 
-                if (this.func_175807_a(worldIn, 2, 0, -1, p_74875_3_).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, p_74875_3_).getBlock().getMaterial() != Material.air)
+                if (this.func_175807_a(worldIn, 2, 0, -1, box).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 2, -1, -1, box).getBlock().getMaterial() != Material.air)
                 {
-                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, box);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 1, 1, 1, 3, 3, 3, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 1, 3, 3, 3, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
 
                 if (this.isRoofAccessible)
                 {
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 0, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 5, 0, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 5, 0, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 3, 5, 0, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 0, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 4, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 5, 4, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 5, 4, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 3, 5, 4, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 4, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 1, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 2, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 3, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 1, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 2, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 3, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 0, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 5, 0, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 5, 0, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 3, 5, 0, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 0, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 4, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 5, 4, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 2, 5, 4, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 3, 5, 4, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 4, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 1, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 2, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 4, 5, 3, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 1, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 2, box);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 0, 5, 3, box);
                 }
 
                 int i;
@@ -1298,24 +1299,24 @@ public class VillageBuildings {
                 if (this.isRoofAccessible)
                 {
                     i = this.getMetadataWithOffset(Blocks.ladder, 3);
-                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 1, 3, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 2, 3, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 3, 3, p_74875_3_);
-                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 4, 3, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 1, 3, box);
+                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 2, 3, box);
+                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 3, 3, box);
+                    this.func_175811_a(worldIn, Blocks.ladder.getStateFromMeta(i), 3, 4, 3, box);
                 }
 
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 3, 1, p_74875_3_);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 3, 1, box);
 
                 for (i = 0; i < 5; ++i)
                 {
                     for (int j = 0; j < 5; ++j)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 6, i, p_74875_3_);
-                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j, -1, i, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 6, i, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j, -1, i, box);
                     }
                 }
 
-                this.spawnVillagers(worldIn, p_74875_3_, 1, 1, 2, 1);
+                this.spawnVillagers(worldIn, box, 1, 1, 2, 1);
                 return true;
             }
         }
@@ -1439,7 +1440,7 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 IBlockState iblockstate = this.func_175847_a(Blocks.gravel.getDefaultState());
                 IBlockState iblockstate1 = this.func_175847_a(Blocks.cobblestone.getDefaultState());
@@ -1450,7 +1451,7 @@ public class VillageBuildings {
                     {
                         BlockPos blockpos = new BlockPos(i, 64, j);
 
-                        if (p_74875_3_.func_175898_b(blockpos))
+                        if (box.func_175898_b(blockpos))
                         {
                             blockpos = worldIn.getTopSolidOrLiquidBlock(blockpos).down();
                             worldIn.setBlockState(blockpos, iblockstate, 2);
@@ -1500,7 +1501,7 @@ public class VillageBuildings {
             }
         }
 
-    public static class Start extends VillageBuildings.Well
+    public static class Start extends VillageBuildings.Chicken
         {
             public WorldChunkManager worldChunkMngr;
             /** Boolean that determines if the village is in a desert or not. */
@@ -1559,11 +1560,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World worldIn, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(worldIn, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -1573,16 +1574,16 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 4 - 1, 0);
                 }
 
-                this.func_175804_a(worldIn, p_74875_3_, 0, 0, 0, 2, 3, 1, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 0, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 1, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 2, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.wool.getStateFromMeta(EnumDyeColor.WHITE.getDyeDamage()), 1, 3, 0, p_74875_3_);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 2, 3, 1, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 0, 0, box);
+                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), 1, 2, 0, box);
+                this.func_175811_a(worldIn, Blocks.wool.getStateFromMeta(EnumDyeColor.WHITE.getDyeDamage()), 1, 3, 0, box);
                 boolean flag = this.coordBaseMode == EnumFacing.EAST || this.coordBaseMode == EnumFacing.NORTH;
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateY()), flag ? 2 : 0, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 1, 3, 1, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateYCCW()), flag ? 0 : 2, 3, 0, p_74875_3_);
-                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 1, 3, -1, p_74875_3_);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateY()), flag ? 2 : 0, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 1, 3, 1, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.rotateYCCW()), flag ? 0 : 2, 3, 0, box);
+                this.func_175811_a(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 1, 3, -1, box);
                 return true;
             }
         }
@@ -1813,17 +1814,17 @@ public class VillageBuildings {
         }
 
 
-    public static class Well extends VillageBuildings.Village
+    public static class Chicken extends VillageBuildings.Village
         {
 
-            public Well() {}
+            public Chicken() {}
 
-            public Well(VillageBuildings.Start p_i2109_1_, int p_i2109_2_, Random p_i2109_3_, int p_i2109_4_, int p_i2109_5_)
+            public Chicken(VillageBuildings.Start p_i2109_1_, int p_i2109_2_, Random p_i2109_3_, int p_i2109_4_, int p_i2109_5_)
             {
                 super(p_i2109_1_, p_i2109_2_);
                 this.coordBaseMode = EnumFacing.Plane.HORIZONTAL.random(p_i2109_3_);
-                StructureBoundingBox structureboundingbox = StructureBoundingBox.func_175897_a(p_i2109_2_, p_i2109_4_, p_i2109_5_, 0, 0, 0, 8, 14, 12, this.coordBaseMode);
-                /*switch (VillageBuildings.SwitchEnumFacing.field_176064_a[this.coordBaseMode.ordinal()])
+                
+                switch (VillageBuildings.SwitchEnumFacing.field_176064_a[this.coordBaseMode.ordinal()])
                 {
                     case 1:
                     case 2:
@@ -1831,7 +1832,7 @@ public class VillageBuildings {
                         break;
                     default:
                         this.boundingBox = new StructureBoundingBox(p_i2109_4_, 64, p_i2109_5_, p_i2109_4_ + 8 - 1, 78, p_i2109_5_ + 12 - 1);
-                }*/
+                }
             }
 
             /**
@@ -1839,19 +1840,19 @@ public class VillageBuildings {
              */
             public void buildComponent(StructureComponent p_74861_1_, List p_74861_2_, Random p_74861_3_)
             {
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX - 1, this.boundingBox.maxY + 1, this.boundingBox.minZ + 1, EnumFacing.WEST, this.getComponentType());
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.maxX + 1, this.boundingBox.maxY + 1, this.boundingBox.minZ + 1, EnumFacing.EAST, this.getComponentType());
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY + 1, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType());
-                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY + 1, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX - 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.WEST, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.maxX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.EAST, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType());
+                VillageBuildings.func_176069_e((VillageBuildings.Start)p_74861_1_, p_74861_2_, p_74861_3_, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType());
             }
             
-            public void setBlock(World world, int x, int y, int z, Block block, int metadata)
+            public void setBlock(World world, int x, int y, int z, IBlockState block, int metadata)
         	{
         		Block b1 = world.getBlockState(new BlockPos(x, y, z)).getBlock();
 
         		if(b1.isAir(world, new BlockPos(x, y, z)) || b1.isLeaves(world, new BlockPos(x, y, z)))
         		{
-        			world.setBlockState(new BlockPos(x, y, z), block.getDefaultState());
+        			world.setBlockState(new BlockPos(x, y, z), block);
         		}
         	}
 
@@ -1859,488 +1860,75 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World world, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World world, Random rand, StructureBoundingBox box)
             {
                 if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(world, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(world, box);
 
                     if (this.field_143015_k < 0)
                     {
                         return true;
                     }
 
-                    this.boundingBox.offset(0, this.field_143015_k, 0);
+                    this.boundingBox.offset(0, 0, 0);
                 }
-                MoChickens.logger.info("Village being constructed!!!");
                 
-
-                this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 1, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 2, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 3, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 4, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 5, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 6, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 7, this.boundingBox.minZ + 12, Blocks.grass, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 8, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 8, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 8, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 8, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 8, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 8, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 9, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 9, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 9, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 9, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 9, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 9, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 0, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 0, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 0, this.boundingBox.minZ + 4, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 1, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 2, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 4, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 6, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 7, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 8, this.boundingBox.minZ + 12, Blocks.grass, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 9, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 1, this.boundingBox.minY + 10, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 0, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 0, this.boundingBox.minZ + 4, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 0, this.boundingBox.minZ + 5, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 1, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 1, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 2, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 2, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 3, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 3, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 4, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 4, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 5, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 6, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 6, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 6, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 8, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 8, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 8, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 9, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 9, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 9, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 9, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 9, this.boundingBox.minZ + 12, Blocks.grass, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 10, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 11, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 11, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 11, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 11, this.boundingBox.minZ + 10, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 11, this.boundingBox.minZ + 11, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 12, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 12, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 12, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 12, this.boundingBox.minZ + 10, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 12, this.boundingBox.minZ + 11, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 13, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 13, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 13, this.boundingBox.minZ + 9, Blocks.wool, 15);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 14, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 14, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 14, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 0, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 0, this.boundingBox.minZ + 4, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 1, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 2, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 3, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 4, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 5, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 6, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 6, this.boundingBox.minZ + 3, MoChickens.blockFeatherBlock, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 6, this.boundingBox.minZ + 4, MoChickens.blockFeatherBlock, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 6, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 6, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 8, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 8, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 8, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 9, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 9, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 9, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 9, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 9, this.boundingBox.minZ + 10, Blocks.air, 14);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 9, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 10, Blocks.air, 14);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 10, this.boundingBox.minZ + 12, Blocks.grass, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 11, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 11, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 11, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 11, this.boundingBox.minZ + 10, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 11, this.boundingBox.minZ + 11, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 12, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 12, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 12, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 12, this.boundingBox.minZ + 10, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 12, this.boundingBox.minZ + 11, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 13, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 13, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 13, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 14, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 14, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 14, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 0, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 0, this.boundingBox.minZ + 4, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 1, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 2, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 3, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 4, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 5, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 6, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 6, this.boundingBox.minZ + 3, MoChickens.blockFeatherBlock, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 6, this.boundingBox.minZ + 4, MoChickens.blockFeatherBlock, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 6, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 6, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 8, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 8, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 8, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 9, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 9, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 9, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 9, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 9, this.boundingBox.minZ + 10, Blocks.air, 14);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 9, this.boundingBox.minZ + 12, Blocks.grass, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 10, this.boundingBox.minZ + 10, Blocks.air, 14);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 11, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 11, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 11, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 11, this.boundingBox.minZ + 10, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 11, this.boundingBox.minZ + 11, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 12, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 12, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 12, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 12, this.boundingBox.minZ + 10, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 12, this.boundingBox.minZ + 11, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 13, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 13, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 13, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 14, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 14, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 14, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 0, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 0, this.boundingBox.minZ + 4, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 0, this.boundingBox.minZ + 5, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 1, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 1, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 2, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 2, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 3, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 3, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 4, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 4, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 5, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 6, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 6, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 6, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 8, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 8, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 8, this.boundingBox.minZ + 12, Blocks.grass, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 9, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 9, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 9, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 9, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 10, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 11, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 11, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 11, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 11, this.boundingBox.minZ + 10, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 11, this.boundingBox.minZ + 11, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 12, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 12, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 12, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 12, this.boundingBox.minZ + 10, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 12, this.boundingBox.minZ + 11, Blocks.wool, 4);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 13, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 13, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 13, this.boundingBox.minZ + 9, Blocks.wool, 15);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 14, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 14, this.boundingBox.minZ + 8, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 14, this.boundingBox.minZ + 9, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 0, this.boundingBox.minZ + 3, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 0, this.boundingBox.minZ + 4, Blocks.air, 4);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 0, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 1, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 2, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 3, this.boundingBox.minZ + 12, Blocks.dirt, 1);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 4, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 5, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 6, this.boundingBox.minZ + 12, Blocks.dirt, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 7, this.boundingBox.minZ + 12, Blocks.grass, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 8, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 9, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 0, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 6, this.boundingBox.minY + 10, this.boundingBox.minZ + 7, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 8, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 8, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 8, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 8, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 8, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 8, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 9, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 9, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 9, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 9, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 9, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 9, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 10, this.boundingBox.minZ + 1, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 10, this.boundingBox.minZ + 2, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 10, this.boundingBox.minZ + 3, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 10, this.boundingBox.minZ + 4, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 10, this.boundingBox.minZ + 5, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 7, this.boundingBox.minY + 10, this.boundingBox.minZ + 6, Blocks.snow, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 2, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 3, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 4, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 1, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 2, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 3, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 4, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 5, Blocks.lava, 0);
-        		this.setBlock(world, this.boundingBox.minX + 5, this.boundingBox.minY + 7, this.boundingBox.minZ + 6, Blocks.lava, 0);
-
-                for (int i = 0; i <= 5; ++i)
-                {
-                    for (int j = 0; j <= 5; ++j)
-                    {
-                        if (j == 0 || j == 5 || i == 0 || i == 5)
-                        {
-                            this.placeBlockAtCurrentPosition(world, Blocks.gravel.getDefaultState(), 0, j, 11, p_74875_3_);
-                            this.clearCurrentPositionBlocksUpwards(world, j, 12, i, p_74875_3_);
-                        }
-                    }
+                int k;
+                int l;
+                
+                //Cobble
+                for (k = 0; k <= 7; k++) {
+                	for (l = 0; l <= 11; l++) {
+                		super.func_175811_a(world, Blocks.cobblestone.getDefaultState(), k, -1, l, box);
+                	}
                 }
-
+                
+                //Floor
+                for (k = 0; k <= 7; k++) {
+                	for (l = 0; l <= 11; l++) {
+                		super.func_175811_a(world, Blocks.gravel.getDefaultState(), k, 0, l, box);
+                	}
+                }
+                
+                //Air
+                for (k = 0; k <= 7; k++) {
+                	for (l = 0; l <= 11; l++) {
+                		super.func_175811_a(world, Blocks.air.getDefaultState(), k, 1, l, box);
+                	}
+                }
+                //example at -876 66 -5306
+                //test at 4 67 -485
+                //seed -3997733958856721260
+                
+                //Legs and Feet
+        		this.func_175804_a(world, box, 1, 1, 2, 6, 1, 3, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), false);
+        		this.func_175804_a(world, box, 2, 1, 2, 2, 4, 2, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), false);
+        		this.func_175804_a(world, box, 5, 1, 2, 5, 4, 2, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), false);
+        		this.func_175811_a(world, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), 2, 1, 4, box);
+        		this.func_175811_a(world, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), 5, 1, 4, box);
+        		
+        		//Body
+        		this.func_175804_a(world, box, 1, 5, 0, 6, 10, 7, Blocks.snow.getDefaultState(), Blocks.snow.getDefaultState(), false);
+        		this.func_175804_a(world, box, 0, 7, 1, 7, 10, 6, Blocks.snow.getDefaultState(), Blocks.snow.getDefaultState(), false);
+        		this.func_175804_a(world, box, 2, 7, 1, 5, 9, 6, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+        		this.func_175804_a(world, box, 2, 7, 1, 5, 8, 6, Blocks.lava.getDefaultState(), Blocks.lava.getDefaultState(), false);
+        		this.func_175804_a(world, box, 3, 7, 3, 4, 7, 4, MoChickens.blockFeatherBlock.getDefaultState(), MoChickens.blockFeatherBlock.getDefaultState(), false);
+        		
+        		//Head
+        		this.func_175804_a(world, box, 2, 9, 7, 5, 14, 9, Blocks.snow.getDefaultState(), Blocks.snow.getDefaultState(), false);
+        		this.func_175804_a(world, box, 2, 11, 10, 5, 12, 11, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.YELLOW), false);
+        		this.func_175804_a(world, box, 3, 9, 10, 4, 10, 10, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED), Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED), false);
+        		this.func_175811_a(world, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.BLACK), 2, 13, 9, box);
+        		this.func_175811_a(world, Blocks.wool.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.BLACK), 5, 13, 9, box);
                 return true;
             }
 
 			@Override
-			protected void writeStructureToNBT(NBTTagCompound p_143012_1_) {
-				// TODO Auto-generated method stub
-				
-			}
+			protected void writeStructureToNBT(NBTTagCompound p_143012_1_) {}
 
 			@Override
-			protected void readStructureFromNBT(NBTTagCompound p_143011_1_) {
-				// TODO Auto-generated method stub
-				
-			}
+			protected void readStructureFromNBT(NBTTagCompound p_143011_1_) {}
         }
 
     public static class WoodHut extends VillageBuildings.Village
@@ -2383,11 +1971,11 @@ public class VillageBuildings {
              * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes
              * Mineshafts at the end, it adds Fences...
              */
-            public boolean addComponentParts(World p_74875_1_, Random p_74875_2_, StructureBoundingBox p_74875_3_)
+            public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box)
             {
-                if (this.field_143015_k < 0)
+            	if (this.field_143015_k < 0)
                 {
-                    this.field_143015_k = this.getAverageGroundLevel(p_74875_1_, p_74875_3_);
+                    this.field_143015_k = this.getAverageGroundLevel(worldIn, box);
 
                     if (this.field_143015_k < 0)
                     {
@@ -2397,65 +1985,65 @@ public class VillageBuildings {
                     this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 6 - 1, 0);
                 }
 
-                this.func_175804_a(p_74875_1_, p_74875_3_, 1, 1, 1, 3, 5, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
-                this.func_175804_a(p_74875_1_, p_74875_3_, 0, 0, 0, 3, 0, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
-                this.func_175804_a(p_74875_1_, p_74875_3_, 1, 0, 1, 2, 0, 3, Blocks.dirt.getDefaultState(), Blocks.dirt.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 1, 3, 5, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 0, 0, 3, 0, 4, Blocks.cobblestone.getDefaultState(), Blocks.cobblestone.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 0, 1, 2, 0, 3, Blocks.dirt.getDefaultState(), Blocks.dirt.getDefaultState(), false);
 
                 if (this.isTallHouse)
                 {
-                    this.fillWithBlocks(p_74875_1_, p_74875_3_, 1, 4, 1, 2, 4, 3, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                    this.func_175804_a(worldIn, box, 1, 4, 1, 2, 4, 3, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
                 }
                 else
                 {
-                    this.fillWithBlocks(p_74875_1_, p_74875_3_, 1, 5, 1, 2, 5, 3, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                    this.func_175804_a(worldIn, box, 1, 5, 1, 2, 5, 3, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
                 }
 
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 1, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 2, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 1, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 2, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 0, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 0, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 0, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 3, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 3, 4, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.log.getDefaultState(), 0, 3, 4, p_74875_3_);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 0, 1, 0, 0, 3, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 3, 1, 0, 3, 3, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 0, 1, 4, 0, 3, 4, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 3, 1, 4, 3, 3, 4, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 0, 1, 1, 0, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 3, 1, 1, 3, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 1, 1, 0, 2, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.fillWithBlocks(p_74875_1_, p_74875_3_, 1, 1, 4, 2, 3, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.glass_pane.getDefaultState(), 0, 0, 2, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.glass_pane.getDefaultState(), 0, 3, 2, p_74875_3_);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 1, 4, 0, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 2, 4, 0, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 1, 4, 4, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 2, 4, 4, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 4, 1, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 4, 2, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 0, 4, 3, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 3, 4, 1, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 3, 4, 2, box);
+                this.func_175811_a(worldIn, Blocks.log.getDefaultState(), 3, 4, 3, box);
+                this.func_175804_a(worldIn, box, 0, 1, 0, 0, 3, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 1, 0, 3, 3, 0, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 4, 0, 3, 4, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 1, 4, 3, 3, 4, Blocks.log.getDefaultState(), Blocks.log.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 0, 1, 1, 0, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 3, 1, 1, 3, 3, 3, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 0, 2, 3, 0, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175804_a(worldIn, box, 1, 1, 4, 2, 3, 4, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 0, 2, 2, box);
+                this.func_175811_a(worldIn, Blocks.glass_pane.getDefaultState(), 3, 2, 2, box);
 
                 if (this.tablePosition > 0)
                 {
-                    this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.oak_fence.getDefaultState(), 0, this.tablePosition, 1, p_74875_3_);
-                    this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.wooden_pressure_plate.getDefaultState(), 0, this.tablePosition, 2, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.oak_fence.getDefaultState(), this.tablePosition, 1, 3, box);
+                    this.func_175811_a(worldIn, Blocks.wooden_pressure_plate.getDefaultState(), this.tablePosition, 2, 3, box);
                 }
 
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.air.getDefaultState(), 0, 1, 1, p_74875_3_);
-                this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.air.getDefaultState(), 0, 1, 2, p_74875_3_);
-                this.func_175810_a(p_74875_1_, p_74875_3_, p_74875_2_, 1, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 1, 1, 0, box);
+                this.func_175811_a(worldIn, Blocks.air.getDefaultState(), 1, 2, 0, box);
+                this.func_175810_a(worldIn, box, rand, 1, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
 
-                if (this.func_175807_a(p_74875_1_, 1, 0, -1, p_74875_3_).getBlock().getMaterial() == Material.air && this.func_175807_a(p_74875_1_, 1, -1, -1, p_74875_3_).getBlock().getMaterial() != Material.air)
+                if (this.func_175807_a(worldIn, 1, 0, -1, box).getBlock().getMaterial() == Material.air && this.func_175807_a(worldIn, 1, -1, -1, box).getBlock().getMaterial() != Material.air)
                 {
-                    this.placeBlockAtCurrentPosition(p_74875_1_, Blocks.stone_stairs.getDefaultState(), this.getMetadataWithOffset(Blocks.stone_stairs, 3), 1, 0, p_74875_3_);
+                    this.func_175811_a(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 1, 0, -1, box);
                 }
 
                 for (int i = 0; i < 5; ++i)
                 {
                     for (int j = 0; j < 4; ++j)
                     {
-                        this.clearCurrentPositionBlocksUpwards(p_74875_1_, j, 6, i, p_74875_3_);
-                        this.func_175808_b(p_74875_1_, Blocks.cobblestone.getDefaultState(), 0, j, -1, p_74875_3_);
+                        this.clearCurrentPositionBlocksUpwards(worldIn, j, 6, i, box);
+                        this.func_175808_b(worldIn, Blocks.cobblestone.getDefaultState(), j, -1, i, box);
                     }
                 }
 
-                this.spawnVillagers(p_74875_1_, p_74875_3_, 1, 1, 2, 1);
+                this.spawnVillagers(worldIn, box, 1, 1, 2, 1);
                 return true;
             }
         }
