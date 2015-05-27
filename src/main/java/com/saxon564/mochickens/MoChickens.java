@@ -112,38 +112,36 @@ public class MoChickens {
 	public static Item emeraldStick;
 	public static Item quartzStick;
 	public static Item randomEgg;
-	public static Item itemRedstoneFeather;
-	public static Item itemCoalFeather;
-	public static Item itemIronFeather;
-	public static Item itemGoldFeather;
-	public static Item itemLapisFeather;
-	public static Item itemDiamondFeather;
-	public static Item itemEmeraldFeather;
-	public static Item itemQuartzFeather;
-	public static Item itemEnchantedFeather;
-	public static Item chickenSteel;
+	public static Item redstone_feather;
+	public static Item coal_feather;
+	public static Item iron_feather;
+	public static Item gold_feather;
+	public static Item lapis_feather;
+	public static Item diamond_feather;
+	public static Item emerald_feather;
+	public static Item quartz_feather;
+	public static Item chicken_steel;
 	
 	// Initialize Blocks
-	public static Block blockFeatherPortal;
+	public static Block feather_portal;
 	public static Block blockFeatherBlock;
-	public static Block blockRedstoneFeatherBlock;
-	public static Block blockCoalFeatherBlock;
-	public static Block blockIronFeatherBlock;
-	public static Block blockGoldFeatherBlock;
-	public static Block blockLapisFeatherBlock;
-	public static Block blockDiamondFeatherBlock;
-	public static Block blockEmeraldFeatherBlock;
-	public static Block blockQuartzFeatherBlock;
-	public static Block blockEnchantedFeatherBlock;
-	public static Block blockMasterFeatherBlock;
-	public static Block blockCoalGemOreBlock;
-	public static Block blockChickenFire;
+	public static Block redstone_feather_block;
+	public static Block coal_feather_block;
+	public static Block iron_feather_block;
+	public static Block gold_feather_block;
+	public static Block lapis_feather_block;
+	public static Block diamond_feather_block;
+	public static Block emerald_feather_block;
+	public static Block quartz_feather_block;
+	public static Block master_feather_block;
+	public static Block coal_gem_ore;
+	public static Block chicken_fire;
 	
 	public static String path;
 	
 	//Biomes
-	public static BiomeGenBase biomeChickenForest;
-	public static BiomeGenBase biomeChickenPlains;
+	public static BiomeGenBase chicken_forest;
+	public static BiomeGenBase chicken_plains;
 
 	public static int startEntityId = 300;
 	

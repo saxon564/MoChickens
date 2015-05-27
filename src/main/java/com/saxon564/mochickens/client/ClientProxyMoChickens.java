@@ -76,7 +76,7 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
     }
     
     public void modelExceptions() {
-    	ModelLoader.setCustomStateMapper(MoChickens.blockChickenFire, (new StateMap.Builder()).addPropertiesToIgnore(BlockChickenFireBlock.AGE).build());
+    	ModelLoader.setCustomStateMapper(MoChickens.chicken_fire, (new StateMap.Builder()).addPropertiesToIgnore(BlockChickenFireBlock.AGE).build());
     }
 
 	private void items() {
@@ -92,11 +92,11 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
 		RegisterHelper.registerItemRenders(MoChickens.innerTamingDisc, 0, "inner_taming_disc");
 		RegisterHelper.registerItemRenders(MoChickens.tamingDisc, 0, "taming_disc");
 		RegisterHelper.registerItemRenders(MoChickens.randomEgg, 0, "random_egg");
-		RegisterHelper.registerItemRenders(MoChickens.chickenSteel, 0, "chicken_steel");
+		RegisterHelper.registerItemRenders(MoChickens.chicken_steel, 0, "chicken_steel");
 		
 		//Blocks
 		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.blockFeatherBlock), 0, "feather_block");
-		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.blockCoalGemOreBlock), 0, "coal_gem_ore");
+		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.coal_gem_ore), 0, "coal_gem_ore");
 		
 	}
 
@@ -107,7 +107,7 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
         RenderingRegistry.registerEntityRenderingHandler(EntityGoldChicken.class, new RenderGoldChicken(manager, new ModelGoldChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityLapisChicken.class, new RenderLapisChicken(manager, new ModelGoldChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityRedstoneChicken.class, new RenderRedstoneChicken(manager, new ModelRedstoneChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityEmeraldChicken.class, new RenderEmeraldChicken(manager, new ModelCChicken(), 0.3F));
+        RenderingRegistry.registerEntityRenderingHandler(EntityEmeraldChicken.class, new RenderEmeraldChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityGiantChicken.class, new RenderGiantChicken(manager, new ModelGiantChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityQuartzChicken.class, new RenderQuartzChicken(manager, new ModelCChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonChicken.class, new RenderSkeletonChicken(manager, new ModelSkeletonChicken(), 0.3F));

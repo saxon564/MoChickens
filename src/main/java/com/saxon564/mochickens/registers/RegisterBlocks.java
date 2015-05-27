@@ -14,7 +14,7 @@ import net.minecraft.block.material.Material;
 public class RegisterBlocks {
 	
 	public static void blockRegisters() {
-	MoChickens.blockFeatherPortal = new BlockFeatherPortal();
+	MoChickens.feather_portal = new BlockFeatherPortal();
 	MoChickens.blockFeatherBlock = new BlockFeatherBlock();
 	//MoChickens.blockRedstoneFeatherBlock = new BlockRedstoneFeatherBlock();
 	//MoChickens.blockCoalFeatherBlock = new BlockCoalFeatherBlock();
@@ -26,10 +26,10 @@ public class RegisterBlocks {
 	//MoChickens.blockQuartzFeatherBlock = new BlockQuartzFeatherBlock();
 	//MoChickens.blockEnchantedFeatherBlock = new BlockEnchantedFeatherBlock();
 	//MoChickens.blockMasterFeatherBlock = new BlockMasterFeatherBlock();
-	MoChickens.blockCoalGemOreBlock = new BlockCoalGemOreBlock();
-	MoChickens.blockChickenFire = new BlockChickenFireBlock();
+	MoChickens.coal_gem_ore = new BlockCoalGemOreBlock();
+	MoChickens.chicken_fire = new BlockChickenFireBlock();
 	
-	RegisterHelper.registerBlock(MoChickens.blockFeatherPortal);
+	RegisterHelper.registerBlock(MoChickens.feather_portal);
     RegisterHelper.registerBlock(MoChickens.blockFeatherBlock);
     //RegisterHelper.registerBlock(MoChickens.coalStick);
     //RegisterHelper.registerBlock(MoChickens.ironStick);
@@ -40,8 +40,8 @@ public class RegisterBlocks {
     //RegisterHelper.registerBlock(MoChickens.emeraldStick);
     //RegisterHelper.registerBlock(MoChickens.quartzStick);
     //RegisterHelper.registerBlock(MoChickens.randomEgg);
-    RegisterHelper.registerBlock(MoChickens.blockCoalGemOreBlock);
-    RegisterHelper.registerBlock(MoChickens.blockChickenFire);
+    RegisterHelper.registerBlock(MoChickens.coal_gem_ore);
+    RegisterHelper.registerBlock(MoChickens.chicken_fire);
 	}
 	
 }

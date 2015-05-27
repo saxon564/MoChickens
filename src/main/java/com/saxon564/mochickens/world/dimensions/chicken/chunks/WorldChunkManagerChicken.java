@@ -31,8 +31,8 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 	{
 		this.myBiomeCache = new BiomeCache(this);
 		this.myBiomesToSpawnIn = new ArrayList<BiomeGenBase>();
-		this.myBiomesToSpawnIn.add(MoChickens.biomeChickenForest);
-		this.myBiomesToSpawnIn.add(MoChickens.biomeChickenPlains);
+		this.myBiomesToSpawnIn.add(MoChickens.chicken_forest);
+		this.myBiomesToSpawnIn.add(MoChickens.chicken_plains);
 	}
 
 	public WorldChunkManagerChicken(long seed, WorldType worldtype, String s)
@@ -124,7 +124,7 @@ public class WorldChunkManagerChicken extends WorldChunkManager
 				par1ArrayOfBiomeGenBase[i] = BiomeGenBase.getBiome(aint[i]);
 			} else {
 				//Change this to a biome
-				par1ArrayOfBiomeGenBase[i] = MoChickens.biomeChickenForest;
+				par1ArrayOfBiomeGenBase[i] = MoChickens.chicken_forest;
 			}
 		}
 

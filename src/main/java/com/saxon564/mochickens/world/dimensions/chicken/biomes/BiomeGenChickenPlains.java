@@ -68,7 +68,7 @@ public class BiomeGenChickenPlains extends BiomeGenBase {
 		this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityNuuwChicken.class, 5, 1, 3));
 		this.coalGen = new WorldGenMinable(Blocks.coal_ore.getDefaultState(), 16);
         this.ironGen = new WorldGenMinable(Blocks.iron_ore.getDefaultState(), 8);
-        this.coalGemGen = new WorldGenMinable(MoChickens.blockCoalGemOreBlock.getDefaultState(), 5);
+        this.coalGemGen = new WorldGenMinable(MoChickens.coal_gem_ore.getDefaultState(), 5);
         this.gravelGen = new WorldGenSand(Blocks.gravel, 6);
         this.yellowFlowerGen = new WorldGenFlowers(Blocks.yellow_flower, EnumFlowerType.DANDELION);
         

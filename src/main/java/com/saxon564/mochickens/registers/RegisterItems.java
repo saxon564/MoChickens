@@ -32,7 +32,7 @@ public class RegisterItems {
         MoChickens.emeraldStick = new ItemEmeraldStick();
         MoChickens.quartzStick = new ItemQuartzStick();
         MoChickens.randomEgg = new ItemRandomEgg();
-        MoChickens.chickenSteel = new ItemLighter();
+        MoChickens.chicken_steel = new ItemLighter();
         
         RegisterHelper.registerItem(MoChickens.tamingDisc);
         RegisterHelper.registerItem(MoChickens.innerTamingDisc);
@@ -45,7 +45,7 @@ public class RegisterItems {
         RegisterHelper.registerItem(MoChickens.emeraldStick);
         RegisterHelper.registerItem(MoChickens.quartzStick);
         RegisterHelper.registerItem(MoChickens.randomEgg);
-        RegisterHelper.registerItem(MoChickens.chickenSteel);
+        RegisterHelper.registerItem(MoChickens.chicken_steel);
         
     }
 	

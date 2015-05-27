@@ -48,7 +48,7 @@ public class BlockChickenFireBlock extends BlockFire {
         int j = pos.getY();
         int k = pos.getZ();
 
-        if (!World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && !((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.down(), EnumFacing.UP))
+        if (!World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && !((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.down(), EnumFacing.UP))
         {
             boolean flag = (i + j + k & 1) == 1;
             boolean flag1 = (i / 2 + j / 2 + k / 2 & 1) == 1;
@@ -83,41 +83,41 @@ public class BlockChickenFireBlock extends BlockFire {
 	
 	public static void init()
     {
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.planks, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.double_wooden_slab, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.wooden_slab, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.oak_fence_gate, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.spruce_fence_gate, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.birch_fence_gate, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.jungle_fence_gate, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.dark_oak_fence_gate, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.acacia_fence_gate, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.oak_fence, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.spruce_fence, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.birch_fence, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.jungle_fence, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.dark_oak_fence, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.acacia_fence, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.oak_stairs, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.birch_stairs, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.spruce_stairs, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.jungle_stairs, 5, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.log, 5, 5);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.log2, 5, 5);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.leaves, 30, 60);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.leaves2, 30, 60);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.bookshelf, 30, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.tnt, 15, 100);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.tallgrass, 60, 100);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.double_plant, 60, 100);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.yellow_flower, 60, 100);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.red_flower, 60, 100);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.deadbush, 60, 100);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.wool, 30, 60);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.vine, 15, 100);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.coal_block, 5, 5);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.hay_block, 60, 20);
-        ((BlockChickenFireBlock) MoChickens.blockChickenFire).setFireInfo(Blocks.carpet, 60, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.planks, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.double_wooden_slab, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.wooden_slab, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.oak_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.spruce_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.birch_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.jungle_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.dark_oak_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.acacia_fence_gate, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.oak_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.spruce_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.birch_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.jungle_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.dark_oak_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.acacia_fence, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.oak_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.birch_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.spruce_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.jungle_stairs, 5, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.log, 5, 5);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.log2, 5, 5);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.leaves, 30, 60);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.leaves2, 30, 60);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.bookshelf, 30, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.tnt, 15, 100);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.tallgrass, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.double_plant, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.yellow_flower, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.red_flower, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.deadbush, 60, 100);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.wool, 30, 60);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.vine, 15, 100);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.coal_block, 5, 5);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.hay_block, 60, 20);
+        ((BlockChickenFireBlock) MoChickens.chicken_fire).setFireInfo(Blocks.carpet, 60, 20);
     }
 	
 	public void setFireInfo(Block blockIn, int encouragement, int flammability)
@@ -376,7 +376,7 @@ public class BlockChickenFireBlock extends BlockFire {
 				world.setBlockToAir(pos);
 			} else {
 				world.scheduleUpdate(pos, this, this.tickRate(world) + world.rand.nextInt(10));
-				((BlockFeatherPortal)MoChickens.blockFeatherPortal).func_176548_d(world, pos);
+				((BlockFeatherPortal)MoChickens.feather_portal).func_176548_d(world, pos);
 			}
 			
 		}
@@ -395,9 +395,9 @@ public class BlockChickenFireBlock extends BlockFire {
         double d1;
         double d2;
 
-        if (!World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && !((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.down(), EnumFacing.UP))
+        if (!World.doesBlockHaveSolidTopSurface(worldIn, pos.down()) && !((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.down(), EnumFacing.UP))
         {
-            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.west(), EnumFacing.EAST))
+            if (((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.west(), EnumFacing.EAST))
             {
                 for (i = 0; i < 2; ++i)
                 {
@@ -408,7 +408,7 @@ public class BlockChickenFireBlock extends BlockFire {
                 }
             }
 
-            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.east(), EnumFacing.WEST))
+            if (((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.east(), EnumFacing.WEST))
             {
                 for (i = 0; i < 2; ++i)
                 {
@@ -419,7 +419,7 @@ public class BlockChickenFireBlock extends BlockFire {
                 }
             }
 
-            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH))
+            if (((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH))
             {
                 for (i = 0; i < 2; ++i)
                 {
@@ -430,7 +430,7 @@ public class BlockChickenFireBlock extends BlockFire {
                 }
             }
 
-            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.south(), EnumFacing.NORTH))
+            if (((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.south(), EnumFacing.NORTH))
             {
                 for (i = 0; i < 2; ++i)
                 {
@@ -441,7 +441,7 @@ public class BlockChickenFireBlock extends BlockFire {
                 }
             }
 
-            if (((BlockChickenFireBlock) MoChickens.blockChickenFire).canCatchFire(worldIn, pos.up(), EnumFacing.DOWN))
+            if (((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.up(), EnumFacing.DOWN))
             {
                 for (i = 0; i < 2; ++i)
                 {

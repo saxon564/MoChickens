@@ -102,9 +102,9 @@ public class ChickenTeleporter extends Teleporter {
                     {
                         blockpos1 = blockpos.down();
 
-                        if (this.worldServerInstance.getBlockState(blockpos).getBlock() == MoChickens.blockFeatherPortal)
+                        if (this.worldServerInstance.getBlockState(blockpos).getBlock() == MoChickens.feather_portal)
                         {
-                            while (this.worldServerInstance.getBlockState(blockpos1 = blockpos.down()).getBlock() == MoChickens.blockFeatherPortal)
+                            while (this.worldServerInstance.getBlockState(blockpos1 = blockpos.down()).getBlock() == MoChickens.feather_portal)
                             {
                                 blockpos = blockpos1;
                             }
@@ -135,22 +135,22 @@ public class ChickenTeleporter extends Teleporter {
             double d6 = (double)((BlockPos)object).getZ() + 0.5D;
             EnumFacing enumfacing = null;
 
-            if (this.worldServerInstance.getBlockState(((BlockPos)object).west()).getBlock() == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(((BlockPos)object).west()).getBlock() == MoChickens.feather_portal)
             {
                 enumfacing = EnumFacing.NORTH;
             }
 
-            if (this.worldServerInstance.getBlockState(((BlockPos)object).east()).getBlock() == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(((BlockPos)object).east()).getBlock() == MoChickens.feather_portal)
             {
                 enumfacing = EnumFacing.SOUTH;
             }
 
-            if (this.worldServerInstance.getBlockState(((BlockPos)object).north()).getBlock() == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(((BlockPos)object).north()).getBlock() == MoChickens.feather_portal)
             {
                 enumfacing = EnumFacing.EAST;
             }
 
-            if (this.worldServerInstance.getBlockState(((BlockPos)object).south()).getBlock() == MoChickens.blockFeatherPortal)
+            if (this.worldServerInstance.getBlockState(((BlockPos)object).south()).getBlock() == MoChickens.feather_portal)
             {
                 enumfacing = EnumFacing.WEST;
             }
@@ -429,7 +429,7 @@ public class ChickenTeleporter extends Teleporter {
             }
         }
 
-        IBlockState iblockstate = MoChickens.blockFeatherPortal.getDefaultState().withProperty(BlockFeatherPortal.AXIS, l5 != 0 ? EnumFacing.Axis.X : EnumFacing.Axis.Z);
+        IBlockState iblockstate = MoChickens.feather_portal.getDefaultState().withProperty(BlockFeatherPortal.AXIS, l5 != 0 ? EnumFacing.Axis.X : EnumFacing.Axis.Z);
 
         for (j3 = 0; j3 < 4; ++j3)
         {

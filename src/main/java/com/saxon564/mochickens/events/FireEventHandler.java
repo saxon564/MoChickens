@@ -94,7 +94,7 @@ public class FireEventHandler {
 		BlockPos pos = player.getPosition();
 		World world = player.worldObj;
 		Block block = world.getBlockState(pos).getBlock();
-		if ((block == MoChickens.blockChickenFire) || (world.getBlockState(pos.up()).getBlock() == MoChickens.blockChickenFire)) {
+		if ((block == MoChickens.chicken_fire) || (world.getBlockState(pos.up()).getBlock() == MoChickens.chicken_fire)) {
 			if (player.isImmuneToFire()) {
 				
 			} else if ((player instanceof EntityPlayer) && (((EntityPlayer)player).capabilities.isCreativeMode)) {
@@ -108,7 +108,7 @@ public class FireEventHandler {
 	private void extinguishFire(EntityPlayer player, BlockPos posIn, EnumFacing face, World world, Event event, int key) {
 		 BlockPos pos = posIn.offset(face);
 
-	        if (world.getBlockState(pos).getBlock() == MoChickens.blockChickenFire)
+	        if (world.getBlockState(pos).getBlock() == MoChickens.chicken_fire)
 	        {
 	        	if ((event instanceof MouseEvent) || (event instanceof PlayerInteractEvent)) {
 		        	MoChickens.network.sendToServer(new FireMessage(player, face, pos));

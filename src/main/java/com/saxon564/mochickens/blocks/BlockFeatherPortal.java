@@ -372,7 +372,7 @@ public class BlockFeatherPortal extends BlockPortal
                             break label56;
                         }
 
-                        if (block == MoChickens.blockFeatherPortal)
+                        if (block == MoChickens.feather_portal)
                         {
                             ++this.field_150864_e;
                         }
@@ -422,7 +422,7 @@ public class BlockFeatherPortal extends BlockPortal
 
             protected boolean func_150857_a(Block p_150857_1_)
             {
-                return p_150857_1_.getMaterial() == Material.air || p_150857_1_ == MoChickens.blockChickenFire || p_150857_1_ == MoChickens.blockFeatherPortal;
+                return p_150857_1_.getMaterial() == Material.air || p_150857_1_ == MoChickens.chicken_fire || p_150857_1_ == MoChickens.feather_portal;
             }
 
             public boolean func_150860_b()
@@ -438,7 +438,7 @@ public class BlockFeatherPortal extends BlockPortal
 
                     for (int j = 0; j < this.field_150862_g; ++j)
                     {
-                        this.world.setBlockState(blockpos.up(j), MoChickens.blockFeatherPortal.getDefaultState().withProperty(BlockPortal.AXIS, this.axis), 2);
+                        this.world.setBlockState(blockpos.up(j), MoChickens.feather_portal.getDefaultState().withProperty(BlockPortal.AXIS, this.axis), 2);
                     }
                 }
             }

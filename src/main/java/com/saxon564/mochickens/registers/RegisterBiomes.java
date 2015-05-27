@@ -14,12 +14,12 @@ public class RegisterBiomes {
 
 	public static void biomeRegisters() {
 		
-		MoChickens.biomeChickenForest = new BiomeGenChickenForest(ChickenForestConfig.id);
-		MoChickens.biomeChickenPlains = new BiomeGenChickenPlains(ChickenPlainsConfig.id);
+		MoChickens.chicken_forest = new BiomeGenChickenForest(ChickenForestConfig.id);
+		MoChickens.chicken_plains = new BiomeGenChickenPlains(ChickenPlainsConfig.id);
 		
 		/*     (class, can villages spawn in it [true/false])     */
-		RegisterHelper.registerBiome(MoChickens.biomeChickenForest, false);
-		RegisterHelper.registerBiome(MoChickens.biomeChickenPlains, true);
+		RegisterHelper.registerBiome(MoChickens.chicken_forest, false);
+		RegisterHelper.registerBiome(MoChickens.chicken_plains, true);
 	}
 
 }

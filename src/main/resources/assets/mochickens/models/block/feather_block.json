@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "mochickens:blocks/feather_block"
+        "all": "mochickens:blocks/feather_block_new"
     }
 }
