@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.registers;
 
-import com.saxon564.mochickens.MoChickensReference;
+import com.saxon564.mochickens.Reference;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,7 @@ public class RegisterHelper {
 	}
 	
 	public static void registerItemRenders(Item item, int meta, String name) {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(MoChickensReference.MODID + ":" + name, "inventory"));	
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(Reference.MOD_ID + ":" + name, "inventory"));	
 	}
 	
 }

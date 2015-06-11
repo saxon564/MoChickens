@@ -1,7 +1,7 @@
 package com.saxon564.mochickens.blocks;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.MoChickensReference;
+import com.saxon564.mochickens.Reference;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

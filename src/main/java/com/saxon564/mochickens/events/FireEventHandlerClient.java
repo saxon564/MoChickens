@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
-public class FireEventHandler {
+public class FireEventHandlerClient {
 
 	@SubscribeEvent
 	public void onMouseEvent(MouseEvent event) {

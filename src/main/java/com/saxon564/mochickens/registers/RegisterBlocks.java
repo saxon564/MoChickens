@@ -15,7 +15,7 @@ public class RegisterBlocks {
 	
 	public static void blockRegisters() {
 	MoChickens.feather_portal = new BlockFeatherPortal();
-	MoChickens.blockFeatherBlock = new BlockFeatherBlock();
+	MoChickens.feather_block = new BlockFeatherBlock();
 	//MoChickens.blockRedstoneFeatherBlock = new BlockRedstoneFeatherBlock();
 	//MoChickens.blockCoalFeatherBlock = new BlockCoalFeatherBlock();
 	//MoChickens.blockIronFeatherBlock = new BlockIronFeatherBlock();
@@ -30,7 +30,7 @@ public class RegisterBlocks {
 	MoChickens.chicken_fire = new BlockChickenFireBlock();
 	
 	RegisterHelper.registerBlock(MoChickens.feather_portal);
-    RegisterHelper.registerBlock(MoChickens.blockFeatherBlock);
+    RegisterHelper.registerBlock(MoChickens.feather_block);
     //RegisterHelper.registerBlock(MoChickens.coalStick);
     //RegisterHelper.registerBlock(MoChickens.ironStick);
     //RegisterHelper.registerBlock(MoChickens.goldStick);

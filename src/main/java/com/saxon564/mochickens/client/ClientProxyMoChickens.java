@@ -3,11 +3,15 @@ package com.saxon564.mochickens.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.blocks.BlockChickenFireBlock;
 import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
 import com.saxon564.mochickens.entities.mobs.EntityBlazingChicken;
@@ -58,6 +62,9 @@ import com.saxon564.mochickens.entities.mobs.renders.RenderRainbowChicken;
 import com.saxon564.mochickens.entities.mobs.renders.RenderRedstoneChicken;
 import com.saxon564.mochickens.entities.mobs.renders.RenderSkeletonChicken;
 import com.saxon564.mochickens.entities.mobs.renders.RenderSnowChicken;
+import com.saxon564.mochickens.enums.EnumResourceTypes;
+import com.saxon564.mochickens.events.FireEventHandlerClient;
+import com.saxon564.mochickens.events.FireEventHandlerServer;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import com.saxon564.mochickens.registers.RegisterHelper;
 
@@ -78,24 +85,29 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
     public void modelExceptions() {
     	ModelLoader.setCustomStateMapper(MoChickens.chicken_fire, (new StateMap.Builder()).addPropertiesToIgnore(BlockChickenFireBlock.AGE).build());
     }
+    
+    public void eventHandlers() {
+    	MinecraftForge.EVENT_BUS.register(new FireEventHandlerClient());
+		FMLCommonHandler.instance().bus().register(new FireEventHandlerClient());
+    }
 
 	private void items() {
+		for (EnumResourceTypes types : EnumResourceTypes.values()) {
+			String itemModelName = types.getName();
+			int metadata = types.getMetadata();
+			
+			RegisterHelper.registerItemRenders(MoChickens.disc_stick, metadata, itemModelName + "_stick");
+			RegisterHelper.registerItemRenders(MoChickens.chicken_feather, metadata, itemModelName + "_feather");
+		}
+		
 		//Items
-		RegisterHelper.registerItemRenders(MoChickens.coalStick, 0, "coal_stick");
-		RegisterHelper.registerItemRenders(MoChickens.ironStick, 0, "iron_stick");
-		RegisterHelper.registerItemRenders(MoChickens.goldStick, 0, "gold_stick");
-		RegisterHelper.registerItemRenders(MoChickens.redstoneStick, 0, "redstone_stick");
-		RegisterHelper.registerItemRenders(MoChickens.lapisStick, 0, "lapis_stick");
-		RegisterHelper.registerItemRenders(MoChickens.diamondStick, 0, "diamond_stick");
-		RegisterHelper.registerItemRenders(MoChickens.emeraldStick, 0, "emerald_stick");
-		RegisterHelper.registerItemRenders(MoChickens.quartzStick, 0, "quartz_stick");
-		RegisterHelper.registerItemRenders(MoChickens.innerTamingDisc, 0, "inner_taming_disc");
-		RegisterHelper.registerItemRenders(MoChickens.tamingDisc, 0, "taming_disc");
-		RegisterHelper.registerItemRenders(MoChickens.randomEgg, 0, "random_egg");
+		RegisterHelper.registerItemRenders(MoChickens.inner_taming_disc, 0, "inner_taming_disc");
+		RegisterHelper.registerItemRenders(MoChickens.taming_disc, 0, "taming_disc");
+		RegisterHelper.registerItemRenders(MoChickens.random_egg, 0, "random_egg");
 		RegisterHelper.registerItemRenders(MoChickens.chicken_steel, 0, "chicken_steel");
 		
 		//Blocks
-		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.blockFeatherBlock), 0, "feather_block");
+		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.feather_block), 0, "feather_block");
 		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.coal_gem_ore), 0, "coal_gem_ore");
 		
 	}
@@ -122,5 +134,28 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
         RenderingRegistry.registerEntityRenderingHandler(EntityBlazingChicken.class, new RenderBlazingChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityEnchantedChicken.class, new RenderEnchantedChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityNuuwChicken.class, new RenderNuuwChicken(manager, new ModelEnderChicken(), 0.3F));
+	}
+
+	public void addVariants() {
+		ModelBakery.addVariantName(MoChickens.disc_stick,
+				Reference.MOD_ID + ":coal_stick",
+				Reference.MOD_ID + ":iron_stick",
+				Reference.MOD_ID + ":gold_stick",
+				Reference.MOD_ID + ":redstone_stick",
+				Reference.MOD_ID + ":lapis_stick",
+				Reference.MOD_ID + ":diamond_stick",
+				Reference.MOD_ID + ":emerald_stick",
+				Reference.MOD_ID + ":quartz_stick");
+		
+		ModelBakery.addVariantName(MoChickens.chicken_feather,
+				Reference.MOD_ID + ":coal_feather",
+				Reference.MOD_ID + ":iron_feather",
+				Reference.MOD_ID + ":gold_feather",
+				Reference.MOD_ID + ":redstone_feather",
+				Reference.MOD_ID + ":lapis_feather",
+				Reference.MOD_ID + ":diamond_feather",
+				Reference.MOD_ID + ":emerald_feather",
+				Reference.MOD_ID + ":quartz_feather");
+		
 	}
 }

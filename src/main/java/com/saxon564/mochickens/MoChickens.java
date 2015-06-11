@@ -70,7 +70,8 @@ import com.saxon564.mochickens.entities.mobs.EntityRainbowChicken;
 import com.saxon564.mochickens.entities.mobs.EntityRedstoneChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken;
 import com.saxon564.mochickens.entities.mobs.EntitySnowChicken;
-import com.saxon564.mochickens.events.FireEventHandler;
+import com.saxon564.mochickens.events.FireEventHandlerClient;
+import com.saxon564.mochickens.events.FireEventHandlerServer;
 import com.saxon564.mochickens.network.FireMessage;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import com.saxon564.mochickens.recipes.CraftingRecipes;
@@ -86,7 +87,7 @@ import com.saxon564.mochickens.world.dimensions.chicken.structures.MapGenChicken
 import com.saxon564.mochickens.world.dimensions.chicken.structures.VillageBuildings;
 
 
-@Mod(modid = MoChickensReference.MODID, name = MoChickensReference.MODNAME, version = MoChickensReference.VERSION)
+@Mod(modid = Reference.MOD_ID, name = Reference.MODNAME, version = Reference.VERSION)
 public class MoChickens {
 	@SidedProxy(clientSide = "com.saxon564.mochickens.client.ClientProxyMoChickens", serverSide = "com.saxon564.mochickens.proxies.CommonProxyMoChickens")
 	public static CommonProxyMoChickens proxy;
@@ -101,39 +102,16 @@ public class MoChickens {
 	public static SimpleNetworkWrapper network;
 	
 	// Initialize Items
-	public static Item tamingDisc;
-	public static Item innerTamingDisc;
-	public static Item coalStick;
-	public static Item ironStick;
-	public static Item goldStick;
-	public static Item redstoneStick;
-	public static Item lapisStick;
-	public static Item diamondStick;
-	public static Item emeraldStick;
-	public static Item quartzStick;
-	public static Item randomEgg;
-	public static Item redstone_feather;
-	public static Item coal_feather;
-	public static Item iron_feather;
-	public static Item gold_feather;
-	public static Item lapis_feather;
-	public static Item diamond_feather;
-	public static Item emerald_feather;
-	public static Item quartz_feather;
+	public static Item taming_disc;
+	public static Item inner_taming_disc;
+	public static Item random_egg;
+	public static Item chicken_feather;
 	public static Item chicken_steel;
+	public static Item disc_stick;
 	
 	// Initialize Blocks
 	public static Block feather_portal;
-	public static Block blockFeatherBlock;
-	public static Block redstone_feather_block;
-	public static Block coal_feather_block;
-	public static Block iron_feather_block;
-	public static Block gold_feather_block;
-	public static Block lapis_feather_block;
-	public static Block diamond_feather_block;
-	public static Block emerald_feather_block;
-	public static Block quartz_feather_block;
-	public static Block master_feather_block;
+	public static Block feather_block;
 	public static Block coal_gem_ore;
 	public static Block chicken_fire;
 	
@@ -168,10 +146,8 @@ public class MoChickens {
 		RegisterDimensions.dimensionRegisters();
 		RegisterBiomes.biomeRegisters();
 		proxy.modelExceptions();
-		
-		//Events
-		MinecraftForge.EVENT_BUS.register(new FireEventHandler());
-		FMLCommonHandler.instance().bus().register(new FireEventHandler());
+		proxy.eventHandlers();
+		proxy.addVariants();
 		
 		//Structures
 		MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");

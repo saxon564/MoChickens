@@ -1,8 +1,11 @@
 package com.saxon564.mochickens.entities.mobs;
 
+import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.configs.chickens.LapisChickenConfig;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -27,6 +30,30 @@ public class EntityLapisChicken extends EntityMoChicken
         int k = MathHelper.floor_double(this.posZ);
         return this.worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock() == Blocks.grass && this.worldObj.getLight(new BlockPos(i, j, k)) > 8 && super.getCanSpawnHere();
     }
+    
+    protected Item getDropItemId() {
+		return new ItemStack(MoChickens.chicken_feather, 1, 4).getItem();
+	}
+
+	/**
+	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity
+	 * has recently been hit by a player. @param par2 - Level of Looting used to
+	 * kill this mob.
+	 */
+	protected void dropFewItems(boolean par1, int par2) {
+		int j = this.rand.nextInt(3) + this.rand.nextInt(1 + par2);
+
+		if (j >= 3) {
+			this.entityDropItem(new ItemStack(MoChickens.chicken_feather, 1, 4), 1);
+		}
+
+		if (this.isBurning()) {
+			this.dropItem((Item) Item.itemRegistry.getObject("cooked_chicken"),
+					1);
+		} else {
+			this.dropItem((Item) Item.itemRegistry.getObject("chicken"), 1);
+		}
+	}
 
     /**
      * Returns the sound this mob makes while it's alive.
