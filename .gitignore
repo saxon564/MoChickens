@@ -1,13 +1,34 @@
-/eclipse
-/bin
-/build
-/.gradle
-/.settings
-/gradle
-/temp removed
-/.classpath
-/.project
-/build.gradle
-/gradlew
-/gradlew.bat
-/new mochickens stuff
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+saves
+mods
+logs
+config
+crash-reports
+resourcepacks
+new mochickens stuff
+MoChickensCrafting and Misc images
+rub.bat
+usercache.json
+usernamecache.json
+options.txt
