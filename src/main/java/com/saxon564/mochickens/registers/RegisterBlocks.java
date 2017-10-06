@@ -40,9 +40,7 @@ public class RegisterBlocks {
 		MoChickens.chicken_fire = new BlockChickenFireBlock();
 		
 		RegisterHelper.registerBlock(event, MoChickens.feather_portal);
-		//for (EnumBlockTypes types : EnumBlockTypes.values()) {
-			RegisterHelper.registerBlock(event, MoChickens.feather_block);
-		//}
+		RegisterHelper.registerBlock(event, MoChickens.feather_block);
 	    //RegisterHelper.registerBlock(MoChickens.coalStick);
 	    //RegisterHelper.registerBlock(MoChickens.ironStick);
 	    //RegisterHelper.registerBlock(MoChickens.goldStick);

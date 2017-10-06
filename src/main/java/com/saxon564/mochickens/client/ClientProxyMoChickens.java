@@ -82,7 +82,6 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
     public void registerRenders()
     {
     	chickens();
-    	//items();
     }
     
     public void modelExceptions() {
@@ -107,7 +106,7 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
 			String itemModelName = types.getName();
 			int metadata = types.getID();
 			
-			RegisterHelper.registerBlockRenders(Item.getItemFromBlock(MoChickens.feather_block), metadata, itemModelName + "_feather_block", itemModelName.toLowerCase());
+			RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.feather_block), metadata, itemModelName + "_feather_block");
 		}
 		
 		//Items
@@ -117,7 +116,7 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
 		RegisterHelper.registerItemRenders(MoChickens.chicken_steel, 0, "chicken_steel");
 		
 		//Blocks
-		RegisterHelper.registerBlockRenders(Item.getItemFromBlock(MoChickens.coal_gem_ore), 0, "coal_gem_ore", "normal");
+		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.coal_gem_ore), 0, "coal_gem_ore");
 		
 	}
 
@@ -143,39 +142,5 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
         RenderingRegistry.registerEntityRenderingHandler(EntityBlazingChicken.class, new RenderBlazingChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityEnchantedChicken.class, new RenderEnchantedChicken(manager, new ModelEnderChicken(), 0.3F));
         RenderingRegistry.registerEntityRenderingHandler(EntityNuuwChicken.class, new RenderNuuwChicken(manager, new ModelEnderChicken(), 0.3F));
-	}
-
-	public void addVariants() {
-		ModelBakery.registerItemVariants(MoChickens.disc_stick,
-				new ResourceLocation(Reference.MOD_ID + ":coal_stick"),
-				new ResourceLocation(Reference.MOD_ID + ":iron_stick"),
-				new ResourceLocation(Reference.MOD_ID + ":gold_stick"),
-				new ResourceLocation(Reference.MOD_ID + ":redstone_stick"),
-				new ResourceLocation(Reference.MOD_ID + ":lapis_stick"),
-				new ResourceLocation(Reference.MOD_ID + ":diamond_stick"),
-				new ResourceLocation(Reference.MOD_ID + ":emerald_stick"),
-				new ResourceLocation(Reference.MOD_ID + ":quartz_stick"));
-		
-		ModelBakery.registerItemVariants(MoChickens.chicken_feather,
-				new ResourceLocation(Reference.MOD_ID + ":coal_feather"),
-				new ResourceLocation(Reference.MOD_ID + ":iron_feather"),
-				new ResourceLocation(Reference.MOD_ID + ":gold_feather"),
-				new ResourceLocation(Reference.MOD_ID + ":redstone_feather"),
-				new ResourceLocation(Reference.MOD_ID + ":lapis_feather"),
-				new ResourceLocation(Reference.MOD_ID + ":diamond_feather"),
-				new ResourceLocation(Reference.MOD_ID + ":emerald_feather"),
-				new ResourceLocation(Reference.MOD_ID + ":quartz_feather"));
-		
-		ModelBakery.registerItemVariants(Item.getItemFromBlock(MoChickens.feather_block),
-				new ResourceLocation(Reference.MOD_ID + ":chicken_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":coal_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":iron_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":gold_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":redstone_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":lapis_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":diamond_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":emerald_feather_block"),
-				new ResourceLocation(Reference.MOD_ID + ":quartz_feather_block"));
-		
 	}
 }

@@ -32,8 +32,11 @@ public class ItemFeatherBlock extends ItemBlock {
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-	  EnumBlockTypes color = EnumBlockTypes.byID(stack.getMetadata());
-	  return super.getUnlocalizedName() + "." + color.toString();
+    	int metadata = stack.getMetadata();
+    	int typeBits = metadata;
+    	
+    	EnumBlockTypes type = EnumBlockTypes.byID(typeBits);
+    	return super.getUnlocalizedName(stack) + "." + type.getName();
 	}
 	
 	@SideOnly(Side.CLIENT)

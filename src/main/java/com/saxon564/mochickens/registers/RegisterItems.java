@@ -33,11 +33,9 @@ public class RegisterItems {
         MoChickens.random_egg = new ItemRandomEgg();
         MoChickens.chicken_steel = new ItemLighter();
     	
-    	//for (EnumResourceTypes types : EnumResourceTypes.values()) {
-    		RegisterHelper.registerItem(event, MoChickens.disc_stick/*, types.getName().toLowerCase() + "_stick"*/);
-        	RegisterHelper.registerItem(event, MoChickens.chicken_feather/*, types.getName().toLowerCase() + "_feather"*/);
-    	//}
-        RegisterHelper.registerItem(event, new ItemBlock(MoChickens.feather_block).setRegistryName(MoChickens.feather_block.getRegistryName()).setMaxStackSize(64));
+    	RegisterHelper.registerItem(event, new ItemBlock(MoChickens.feather_block).setRegistryName(MoChickens.feather_block.getRegistryName()).setMaxStackSize(64));
+		RegisterHelper.registerItem(event, MoChickens.disc_stick);
+    	RegisterHelper.registerItem(event, MoChickens.chicken_feather);
         RegisterHelper.registerItem(event, MoChickens.taming_disc);
         RegisterHelper.registerItem(event, MoChickens.inner_taming_disc);
         RegisterHelper.registerItem(event, MoChickens.random_egg);

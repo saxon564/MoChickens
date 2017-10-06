@@ -27,10 +27,6 @@ public class RegisterHelper {
 		event.getRegistry().register(item);
 	}
 	
-	public static void registerItem (RegistryEvent.Register<Item> event, Item item, String name) {
-		event.getRegistry().register(item.setRegistryName(name));;
-	}
-	
 	public static void registerDimension(int id, Class provider, boolean loaded) {
 		DimensionType.register("chicken", "_chicken", id, provider, loaded);
 		DimensionManager.registerDimension(id, DimensionType.valueOf("chicken"));
@@ -47,12 +43,6 @@ public class RegisterHelper {
 	
 	public static void registerItemRenders(Item item, int meta, String name) {
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Reference.MOD_ID + ":" + name, "inventory"));	
-	}
-	
-	public static void registerBlockRenders(Item item, int meta, String name, String variant) {
-		System.out.println(name);
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), variant));
-		registerItemRenders(item, meta, name);
 	}
 	
 }

@@ -24,8 +24,4 @@ public class CommonProxyMoChickens
     	MinecraftForge.EVENT_BUS.register(new FireEventHandlerServer());
 		FMLCommonHandler.instance().bus().register(new FireEventHandlerServer());
     }
-    
-    public void addVariants() 
-    {
-    }
 }

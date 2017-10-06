@@ -148,7 +148,6 @@ public class MoChickens {
 		//RegisterBiomes.biomeRegisters();
 		proxy.modelExceptions();
 		proxy.eventHandlers();
-		proxy.addVariants();
 		
 		//Structures
 		MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");
@@ -156,21 +155,12 @@ public class MoChickens {
 		
 		/*if (Loader.isModLoaded(Thaumcraft.id)) {
 			loadThaumcraft();
-		}
-		
-		if (Loader.isModLoaded(AdvancedGenetics.id)) {
-			loadAG();
 		}*/
 	}
 	
 	/*@Optional.Method(modid = Thaumcraft.id)
 	private void loadThaumcraft() {
 		Thaumcraft.addAspects();
-	}
-	
-	@Optional.Method(modid = AdvancedGenetics.id)
-	private void loadAG() {
-		AdvancedGenetics.addAbilities();
 	}*/
 
 	@EventHandler
