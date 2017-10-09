@@ -80,7 +80,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private Entity lastEntityToAttack;
 	private boolean isAggressive;
 	private int teleportDelay;
-	private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityCreeper.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityMoChicken.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> SCREAMING = EntityDataManager.<Boolean>createKey(EntityMoChicken.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<String> OWNER = EntityDataManager.<String>createKey(EntityMoChicken.class, DataSerializers.STRING);
 
@@ -145,6 +145,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	protected void entityInit() {
 		super.entityInit();
+		this.dataManager.register(STATE, Integer.valueOf(-1));
+		this.dataManager.register(SCREAMING, false);
 		this.dataManager.register(OWNER, "");
 	}
 
@@ -178,10 +180,12 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			s = par1NBTTagCompound.getUniqueId("OwnerUUID");
 		} else {
 			String s1 = par1NBTTagCompound.getString("Owner");
-			s = UUID.fromString(PreYggdrasilConverter.convertMobOwnerIfNeeded(getServer(), s1));
+			if (s1 != null && s1 != "") {
+				s = UUID.fromString(PreYggdrasilConverter.convertMobOwnerIfNeeded(getServer(), s1));
+			}
 		}
 
-		if (s.toString().length() > 0) {
+		if (s != null && s.toString().length() > 0) {
 			this.setTamed(true);
 			this.setOwnerId(s);
 		}
@@ -773,7 +777,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	public int getCreeperState()
     {
-        return ((Integer)this.dataManager.get(STATE)).intValue();
+        return ((Integer)this.dataManager.get(this.STATE)).intValue();
     }
 
     /**
@@ -781,7 +785,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
      */
     public void setCreeperState(int state)
     {
-        this.dataManager.set(STATE, Integer.valueOf(state));
+        this.dataManager.set(this.STATE, Integer.valueOf(state));
     }
 
 	private void difficultyChange() {

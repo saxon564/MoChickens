@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -11,10 +12,12 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
@@ -34,6 +37,7 @@ import com.saxon564.mochickens.entities.mobs.EntityGlowingChicken;
 import com.saxon564.mochickens.entities.mobs.EntityGoldChicken;
 import com.saxon564.mochickens.entities.mobs.EntityIronChicken;
 import com.saxon564.mochickens.entities.mobs.EntityLapisChicken;
+import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
 import com.saxon564.mochickens.entities.mobs.EntityNuuwChicken;
 import com.saxon564.mochickens.entities.mobs.EntityQuartzChicken;
 import com.saxon564.mochickens.entities.mobs.EntityRainbowChicken;
@@ -121,26 +125,152 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
 	}
 
 	private void chickens() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityDiamondChicken.class, new RenderDiamondChicken(manager, new ModelEnderChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityCoalChicken.class, new RenderCoalChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityIronChicken.class, new RenderIronChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityGoldChicken.class, new RenderGoldChicken(manager, new ModelGoldChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityLapisChicken.class, new RenderLapisChicken(manager, new ModelGoldChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityRedstoneChicken.class, new RenderRedstoneChicken(manager, new ModelRedstoneChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityEmeraldChicken.class, new RenderEmeraldChicken(manager, new ModelEnderChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityGiantChicken.class, new RenderGiantChicken(manager, new ModelGiantChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityQuartzChicken.class, new RenderQuartzChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonChicken.class, new RenderSkeletonChicken(manager, new ModelSkeletonChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityEnderChicken.class, new RenderEnderChicken(manager, new ModelEnderChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityCreeperChicken.class, new RenderCreeperChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityCookieChicken.class, new RenderCookieChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntitySnowChicken.class, new RenderSnowChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityClayChicken.class, new RenderClayChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityRainbowChicken.class, new RenderRainbowChicken(manager, new ModelCChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityBeefyChicken.class, new RenderBeefyChicken(manager, new ModelBeefyChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityGlowingChicken.class, new RenderGlowingChicken(manager, new ModelEnderChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityBlazingChicken.class, new RenderBlazingChicken(manager, new ModelEnderChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityEnchantedChicken.class, new RenderEnchantedChicken(manager, new ModelEnderChicken(), 0.3F));
-        RenderingRegistry.registerEntityRenderingHandler(EntityNuuwChicken.class, new RenderNuuwChicken(manager, new ModelEnderChicken(), 0.3F));
+		RenderingRegistry.registerEntityRenderingHandler(
+				EntityDiamondChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderDiamondChicken(manager, new ModelEnderChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityCoalChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderCoalChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityIronChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderIronChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityGoldChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderGoldChicken(manager, new ModelGoldChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityLapisChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderLapisChicken(manager, new ModelGoldChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityRedstoneChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderRedstoneChicken(manager, new ModelRedstoneChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityEmeraldChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderEmeraldChicken(manager, new ModelEnderChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityGiantChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderGiantChicken(manager, new ModelGiantChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityQuartzChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderQuartzChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntitySkeletonChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderSkeletonChicken(manager, new ModelSkeletonChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityEnderChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderEnderChicken(manager, new ModelEnderChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityCreeperChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderCreeperChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityCookieChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderCookieChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntitySnowChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderSnowChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityClayChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderClayChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityRainbowChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderRainbowChicken(manager, new ModelCChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityBeefyChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderBeefyChicken(manager, new ModelBeefyChicken(), 0.3F);
+					}
+        		});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityGlowingChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderGlowingChicken(manager, new ModelEnderChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityBlazingChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderBlazingChicken(manager, new ModelEnderChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityEnchantedChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderEnchantedChicken(manager, new ModelEnderChicken(), 0.3F);
+					}
+				});
+        RenderingRegistry.registerEntityRenderingHandler(
+        		EntityNuuwChicken.class, new IRenderFactory<EntityMoChicken>() {
+					@Override
+					public Render<? super EntityMoChicken> createRenderFor(RenderManager manager) {
+						return new RenderNuuwChicken(manager, new ModelEnderChicken(), 0.3F);
+					}
+				});
 	}
 }

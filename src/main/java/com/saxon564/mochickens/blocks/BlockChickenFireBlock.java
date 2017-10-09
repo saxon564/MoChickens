@@ -3,6 +3,8 @@ package com.saxon564.mochickens.blocks;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Maps;
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
@@ -35,13 +37,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockChickenFireBlock extends Block {
 	
 	public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 15);
-    public static final PropertyBool FLIP = PropertyBool.create("flip");
-    public static final PropertyBool ALT = PropertyBool.create("alt");
     public static final PropertyBool NORTH = PropertyBool.create("north");
     public static final PropertyBool EAST = PropertyBool.create("east");
     public static final PropertyBool SOUTH = PropertyBool.create("south");
     public static final PropertyBool WEST = PropertyBool.create("west");
-    public static final PropertyInteger UPPER = PropertyInteger.create("upper", 0, 2);
+    public static final PropertyBool UPPER = PropertyBool.create("upper");
     private final Map encouragements = Maps.newIdentityHashMap();
     private final Map flammabilities = Maps.newIdentityHashMap();
 
@@ -49,28 +49,14 @@ public class BlockChickenFireBlock extends Block {
 	
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
-        int i = pos.getX();
-        int j = pos.getY();
-        int k = pos.getZ();
 
         if (!worldIn.getBlockState(pos.down()).isOpaqueCube() && !((BlockChickenFireBlock) MoChickens.chicken_fire).canCatchFire(worldIn, pos.down(), EnumFacing.UP))
         {
-            boolean flag = (i + j + k & 1) == 1;
-            boolean flag1 = (i / 2 + j / 2 + k / 2 & 1) == 1;
-            int l = 0;
-
-            if (this.canCatchFire(worldIn, pos.up(), EnumFacing.DOWN))
-            {
-                l = flag ? 1 : 2;
-            }
-
-            return state.withProperty(NORTH, Boolean.valueOf(this.canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH)))
-                        .withProperty(EAST, Boolean.valueOf(this.canCatchFire(worldIn, pos.east(),  EnumFacing.EAST )))
-                        .withProperty(SOUTH, Boolean.valueOf(this.canCatchFire(worldIn, pos.south(), EnumFacing.NORTH)))
-                        .withProperty(WEST, Boolean.valueOf(this.canCatchFire(worldIn, pos.west(),  EnumFacing.EAST )))
-                        .withProperty(UPPER, Integer.valueOf(l))
-                        .withProperty(FLIP, Boolean.valueOf(flag1))
-                        .withProperty(ALT, Boolean.valueOf(flag));
+        	return state.withProperty(NORTH, this.canCatchFire(worldIn, pos.north(), EnumFacing.SOUTH))
+                    .withProperty(EAST,  this.canCatchFire(worldIn, pos.east(), EnumFacing.WEST))
+                    .withProperty(SOUTH, this.canCatchFire(worldIn, pos.south(), EnumFacing.NORTH))
+                    .withProperty(WEST,  this.canCatchFire(worldIn, pos.west(), EnumFacing.EAST))
+                    .withProperty(UPPER, this.canCatchFire(worldIn, pos.up(), EnumFacing.DOWN));
         }
         else
         {
@@ -82,7 +68,7 @@ public class BlockChickenFireBlock extends Block {
 		super(Material.FIRE);
         this.setRegistryName(new ResourceLocation(Reference.MOD_ID, "chicken_fire"));
 		setUnlocalizedName("chicken_fire");
-		setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)).withProperty(FLIP, Boolean.valueOf(false)).withProperty(ALT, Boolean.valueOf(false)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(UPPER, Integer.valueOf(0)));
+		setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)).withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(UPPER, false));
 		setTickRandomly(true);
 		setLightLevel(0.8F);
 	}
@@ -133,17 +119,18 @@ public class BlockChickenFireBlock extends Block {
         this.flammabilities.put(blockIn, Integer.valueOf(flammability));
     }
 	
-	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+	@Nullable
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
     {
-        return null;
+        return NULL_AABB;
     }
 
-    public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
 
-    public boolean isFullCube()
+    public boolean isFullCube(IBlockState state)
     {
         return false;
     }
@@ -283,24 +270,24 @@ public class BlockChickenFireBlock extends Block {
         return false;
     }
 	
-	private void tryCatchFire(World worldIn, BlockPos pos, int chance, Random random, int age, EnumFacing face)
+    private void tryCatchFire(World worldIn, BlockPos pos, int chance, Random random, int age, EnumFacing face)
     {
-        int k = worldIn.getBlockState(pos).getBlock().getFlammability(worldIn, pos, face);
+        int i = worldIn.getBlockState(pos).getBlock().getFlammability(worldIn, pos, face);
 
-        if (random.nextInt(chance) < k)
+        if (random.nextInt(chance) < i)
         {
             IBlockState iblockstate = worldIn.getBlockState(pos);
 
             if (random.nextInt(age + 10) < 5 && !worldIn.isRainingAt(pos))
             {
-                int l = age + random.nextInt(5) / 4;
+                int j = age + random.nextInt(5) / 4;
 
-                if (l > 15)
+                if (j > 15)
                 {
-                    l = 15;
+                    j = 15;
                 }
 
-                worldIn.setBlockState(pos, this.getDefaultState().withProperty(AGE, Integer.valueOf(l)), 3);
+                worldIn.setBlockState(pos, this.getDefaultState().withProperty(AGE, Integer.valueOf(j)), 3);
             }
             else
             {
@@ -314,15 +301,10 @@ public class BlockChickenFireBlock extends Block {
         }
     }
 	
-	private boolean canNeighborCatchFire(World worldIn, BlockPos pos)
+    private boolean canNeighborCatchFire(World worldIn, BlockPos pos)
     {
-        EnumFacing[] aenumfacing = EnumFacing.values();
-        int i = aenumfacing.length;
-
-        for (int j = 0; j < i; ++j)
+        for (EnumFacing enumfacing : EnumFacing.values())
         {
-            EnumFacing enumfacing = aenumfacing[j];
-
             if (this.canCatchFire(worldIn, pos.offset(enumfacing), enumfacing.getOpposite()))
             {
                 return true;
@@ -332,7 +314,7 @@ public class BlockChickenFireBlock extends Block {
         return false;
     }
 	
-	private int getNeighborEncouragement(World worldIn, BlockPos pos)
+    private int getNeighborEncouragement(World worldIn, BlockPos pos)
     {
         if (!worldIn.isAirBlock(pos))
         {
@@ -341,13 +323,10 @@ public class BlockChickenFireBlock extends Block {
         else
         {
             int i = 0;
-            EnumFacing[] aenumfacing = EnumFacing.values();
-            int j = aenumfacing.length;
 
-            for (int k = 0; k < j; ++k)
+            for (EnumFacing enumfacing : EnumFacing.values())
             {
-                EnumFacing enumfacing = aenumfacing[k];
-                i = Math.max(worldIn.getBlockState(pos.offset(enumfacing)).getBlock().getFlammability(worldIn, pos.offset(enumfacing), enumfacing.getOpposite()), i);
+                i = Math.max(worldIn.getBlockState(pos.offset(enumfacing)).getBlock().getFireSpreadSpeed(worldIn, pos.offset(enumfacing), enumfacing.getOpposite()), i);
             }
 
             return i;
@@ -499,7 +478,7 @@ public class BlockChickenFireBlock extends Block {
 
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {AGE, NORTH, EAST, SOUTH, WEST, UPPER, FLIP, ALT});
+        return new BlockStateContainer(this, new IProperty[] {AGE, NORTH, EAST, SOUTH, WEST, UPPER});
     }
 
     public boolean canCatchFire(IBlockAccess world, BlockPos pos, EnumFacing face)

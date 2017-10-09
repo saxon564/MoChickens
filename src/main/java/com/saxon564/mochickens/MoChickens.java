@@ -111,6 +111,7 @@ public class MoChickens {
 	public static Item chicken_feather;
 	public static Item chicken_steel;
 	public static Item disc_stick;
+	public static Item item_feather_block;
 	
 	// Initialize Blocks
 	public static Block feather_portal;
@@ -148,6 +149,7 @@ public class MoChickens {
 		//RegisterBiomes.biomeRegisters();
 		proxy.modelExceptions();
 		proxy.eventHandlers();
+		proxy.registerRenders();
 		
 		//Structures
 		MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");
@@ -181,7 +183,7 @@ public class MoChickens {
 		ItemFile.generate(event);
 		}
 		
-		/* Register Random Spawn Egg Entries
+		// Register Random Spawn Egg Entries
 		randomSpawnEgg(EntityCoalChicken.class, CoalChickenConfig.config);
 		randomSpawnEgg(EntityIronChicken.class, IronChickenConfig.config);
 		randomSpawnEgg(EntityGoldChicken.class, GoldChickenConfig.config);
@@ -207,7 +209,7 @@ public class MoChickens {
 		randomSpawnEgg(EntityBat.class, null);
 		randomSpawnEgg(EntityBat.class, null);
 		randomSpawnEgg(EntityBat.class, null);
-		randomSpawnEgg(EntityBat.class, null);*/
+		randomSpawnEgg(EntityBat.class, null);
 	}
 
 	public static void randomSpawnEgg(Class c, Configuration config) {

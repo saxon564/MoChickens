@@ -10,12 +10,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityQuartzChicken;
 
 @SideOnly(Side.CLIENT)
 public class RenderQuartzChicken extends RenderLiving
 {
-    private static final ResourceLocation chickenCTextures = new ResourceLocation("mochickens:textures/mobs/quartzChicken.png");
+    private static final ResourceLocation chickenCTextures = new ResourceLocation(Reference.MOD_ID, "textures/mobs/quartzchicken.png");
 
     public RenderQuartzChicken(RenderManager renderManager, ModelBase modelBase, float f1)
     {

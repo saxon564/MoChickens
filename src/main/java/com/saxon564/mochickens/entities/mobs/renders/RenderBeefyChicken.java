@@ -1,21 +1,25 @@
 package com.saxon564.mochickens.entities.mobs.renders;
 
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
+import com.saxon564.mochickens.entities.mobs.models.ModelBeefyChicken;
 
 @SideOnly(Side.CLIENT)
 public class RenderBeefyChicken extends RenderLiving
 {
-    private static final ResourceLocation chickenCTextures = new ResourceLocation("mochickens:textures/mobs/beefyChicken.png");
+    private static final ResourceLocation chickenCTextures = new ResourceLocation(Reference.MOD_ID, "textures/mobs/beefychicken.png");
 
     public RenderBeefyChicken(RenderManager renderManager, ModelBase modelBase, float f1)
     {

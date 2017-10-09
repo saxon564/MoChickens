@@ -5,6 +5,7 @@ import com.saxon564.mochickens.enums.EnumHandler.EnumBlockTypes;
 import com.saxon564.mochickens.enums.EnumHandler.EnumResourceTypes;
 import com.saxon564.mochickens.items.ItemChickenFeather;
 import com.saxon564.mochickens.items.ItemDiscStick;
+import com.saxon564.mochickens.items.ItemFeatherBlock;
 import com.saxon564.mochickens.items.ItemInnerTamingDisc;
 import com.saxon564.mochickens.items.ItemLighter;
 import com.saxon564.mochickens.items.ItemRandomEgg;
@@ -32,8 +33,9 @@ public class RegisterItems {
     	MoChickens.inner_taming_disc = new ItemInnerTamingDisc();
         MoChickens.random_egg = new ItemRandomEgg();
         MoChickens.chicken_steel = new ItemLighter();
+        MoChickens.item_feather_block = new ItemFeatherBlock(MoChickens.feather_block);
     	
-    	RegisterHelper.registerItem(event, new ItemBlock(MoChickens.feather_block).setRegistryName(MoChickens.feather_block.getRegistryName()).setMaxStackSize(64));
+    	RegisterHelper.registerItem(event, MoChickens.item_feather_block);
 		RegisterHelper.registerItem(event, MoChickens.disc_stick);
     	RegisterHelper.registerItem(event, MoChickens.chicken_feather);
         RegisterHelper.registerItem(event, MoChickens.taming_disc);

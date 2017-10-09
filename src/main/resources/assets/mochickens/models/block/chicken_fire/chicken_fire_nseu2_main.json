@@ -1,7 +1,0 @@
-{
-    "parent": "mochickens:block/chicken_fire/chicken_fire_nseu2",
-    "textures": {
-        "particle": "mochickens:blocks/chicken_fire_layer_0",
-        "fire": "mochickens:blocks/chicken_fire_layer_0"
-    }
-}

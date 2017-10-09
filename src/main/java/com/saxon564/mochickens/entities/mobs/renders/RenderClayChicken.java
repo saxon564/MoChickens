@@ -10,12 +10,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityClayChicken;
 
 @SideOnly(Side.CLIENT)
 public class RenderClayChicken extends RenderLiving
 {
-    private static final ResourceLocation chickenCTextures = new ResourceLocation("mochickens:textures/mobs/clayChicken.png");
+    private static final ResourceLocation chickenCTextures = new ResourceLocation(Reference.MOD_ID, "textures/mobs/claychicken.png");
 
     public RenderClayChicken(RenderManager renderManager, ModelBase modelBase, float f1)
     {

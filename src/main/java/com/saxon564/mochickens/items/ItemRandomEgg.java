@@ -19,7 +19,10 @@ import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -41,14 +44,14 @@ public class ItemRandomEgg extends Item {
 		setUnlocalizedName("random_egg");
 	}
 
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (worldIn.isRemote)
         {
-            return true;
+            return EnumActionResult.SUCCESS;
         }
         else if (!playerIn.canPlayerEdit(pos.offset(side), side, stack))
         {
-            return false;
+            return EnumActionResult.FAIL;
         }
         else
         {
@@ -72,7 +75,7 @@ public class ItemRandomEgg extends Item {
                         stack.setCount(stack.getCount() - 1);
                     }
 
-                    return true;
+                    return EnumActionResult.SUCCESS;
                 }
             }
             
@@ -120,14 +123,14 @@ public class ItemRandomEgg extends Item {
 			}
 		}
 
-		return false;
+		return EnumActionResult.FAIL;
 	}
 	
-	public ItemStack onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player)
+	/*public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player)
     {
         if (worldIn.isRemote)
         {
-            return stack;
+            return new ActionResult(EnumActionResult.PASS, stack);
         }
         else
         {
@@ -135,7 +138,7 @@ public class ItemRandomEgg extends Item {
 
             if (movingobjectposition == null)
             {
-                return stack;
+            	return new ActionResult(EnumActionResult.FAIL, stack);
             }
             else
             {
@@ -197,6 +200,86 @@ public class ItemRandomEgg extends Item {
                 }
 
                 return stack;
+            }
+        }
+    }*/
+	
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+    {
+		System.out.println("Right Clicked!");
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
+
+        if (worldIn.isRemote)
+        {
+			System.out.println("Remote!");
+            return new ActionResult(EnumActionResult.PASS, itemstack);
+        }
+        else
+        {
+            RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, true);
+
+            if (raytraceresult != null && raytraceresult.typeOfHit == RayTraceResult.Type.BLOCK)
+            {
+				System.out.println("It's a Block!");
+                BlockPos blockpos = raytraceresult.getBlockPos();
+
+                if (!(worldIn.getBlockState(blockpos).getBlock() instanceof BlockLiquid))
+                {
+					System.out.println("It Isn't a Liquid!");
+                	double d0 = 0.0D;
+
+        			if (!playerIn.capabilities.isCreativeMode) {
+    					System.out.println("Not in Creative!");
+        				itemstack.setCount(itemstack.getCount() - 1);
+        			}
+
+        			float look = -playerIn.rotationYaw;
+        			final int random = randomInt(0, MoChickens.eggNum);
+        			Class type = MoChickens.egg[random];
+        			if (type != null) {
+        				Configuration configs = MoChickens.configs[random];
+    					System.out.println("Before Try!");
+        				try {
+        					System.out.println("Inside Try!");
+        					EntityLiving newEntity = (EntityLiving) type
+        							.getDeclaredConstructor(World.class).newInstance(
+        									worldIn);
+        					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
+        						// prevent tying to age bat
+        					} else {
+        						((EntityMoChicken) newEntity).addVars(configs, type);
+        					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
+        					}
+        					newEntity.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + d0, (double)blockpos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+        					// newEntity.setTamed(true);
+        					worldIn.spawnEntity(newEntity);
+        				} catch (InstantiationException e) {
+        					e.printStackTrace();
+        				} catch (IllegalAccessException e) {
+        					e.printStackTrace();
+        				} catch (IllegalArgumentException e) {
+        					e.printStackTrace();
+        				} catch (InvocationTargetException e) {
+        					e.printStackTrace();
+        				} catch (NoSuchMethodException e) {
+        					e.printStackTrace();
+        				} catch (SecurityException e) {
+        					e.printStackTrace();
+        				}
+    					System.out.println("After Try!");
+        			}
+					System.out.println("Failed Spawn Process!");
+        			return new ActionResult(EnumActionResult.PASS, itemstack);
+                }
+                else
+                {
+					System.out.println("Skipped Spawn Process!");
+                    return new ActionResult(EnumActionResult.FAIL, itemstack);
+                }
+            }
+            else
+            {
+                return new ActionResult(EnumActionResult.PASS, itemstack);
             }
         }
     }

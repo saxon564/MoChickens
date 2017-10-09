@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,7 +33,7 @@ public class ItemDiscStick extends Item
     }
     
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> items) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> items) {
     	
     	for (EnumResourceTypes types : EnumResourceTypes.values()) {
     		

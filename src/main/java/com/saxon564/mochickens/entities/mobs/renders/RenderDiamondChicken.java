@@ -10,12 +10,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityDiamondChicken;
 
 @SideOnly(Side.CLIENT)
 public class RenderDiamondChicken extends RenderLiving
 {
-    private static final ResourceLocation chickenTextures = new ResourceLocation("mochickens:textures/mobs/diamondChicken.png");
+    private static final ResourceLocation chickenTextures = new ResourceLocation(Reference.MOD_ID, "textures/mobs/diamondchicken.png");
 
     public RenderDiamondChicken(RenderManager renderManager, ModelBase modelBase, float f1)
     {

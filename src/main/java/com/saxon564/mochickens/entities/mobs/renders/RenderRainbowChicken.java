@@ -10,12 +10,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityRainbowChicken;
 
 @SideOnly(Side.CLIENT)
 public class RenderRainbowChicken extends RenderLiving
 {
-    private static final ResourceLocation chickenCTextures = new ResourceLocation("mochickens:textures/mobs/rainbowChicken.png");
+    private static final ResourceLocation chickenCTextures = new ResourceLocation(Reference.MOD_ID, "textures/mobs/rainbowchicken.png");
 
     public RenderRainbowChicken(RenderManager renderManager, ModelBase modelBase, float f1)
     {

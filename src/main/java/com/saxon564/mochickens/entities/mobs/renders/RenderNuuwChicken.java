@@ -10,13 +10,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityNuuwChicken;
 
 @SideOnly(Side.CLIENT)
 public class RenderNuuwChicken extends RenderLiving
 {
-    private static final ResourceLocation chickenCTextures = new ResourceLocation("mochickens:textures/mobs/diamondChicken.png");
-    private static final ResourceLocation chickenCTextures2 = new ResourceLocation("mochickens:textures/mobs/dirtChicken.png");
+    private static final ResourceLocation chickenCTextures = new ResourceLocation(Reference.MOD_ID, "textures/mobs/diamondchicken.png");
+    private static final ResourceLocation chickenCTextures2 = new ResourceLocation(Reference.MOD_ID, "textures/mobs/dirtchicken.png");
     public boolean tamed = false;
 
     public RenderNuuwChicken(RenderManager renderManager, ModelBase modelBase, float f1)
