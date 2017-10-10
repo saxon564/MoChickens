@@ -75,7 +75,6 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
 	private static AttributeModifier attackingSpeedBoostModifier;
 
-	private int stareTimer;
 	private Entity entityToAttack;
 	private Entity lastEntityToAttack;
 	private boolean isAggressive;
@@ -84,7 +83,6 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private static final DataParameter<Boolean> SCREAMING = EntityDataManager.<Boolean>createKey(EntityMoChicken.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<String> OWNER = EntityDataManager.<String>createKey(EntityMoChicken.class, DataSerializers.STRING);
 
-	public boolean field_70885_d = false;
 	public float field_70886_e = 0.0F;
 	public float destPos = 0.0F;
 	public float field_70884_g;
@@ -93,9 +91,88 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private EnumDifficulty checked = this.world.getDifficulty();
 	private boolean despawn;
 	private int ran;
-	private Configuration config;
-	private double health;
 	private Class chicken;
+	
+	/**********************************/
+	/*********config variables*********/
+	/**********************************/
+	private Configuration config;
+	
+	// Attack Data
+	private int[] effectIDs = new int[50];
+	private int[] effectAmplifiers = new int[50];
+	private int[] effectDurations = new int[50];
+	private int arrowShootSpeed;
+	private double attackDamage;
+	private double attackSpeed;
+	private double attackTrackingRange;
+	private boolean canBlowUp;
+	private boolean canShootArrows;
+	private int explosionRadius;
+	private int fireDuration;
+	private int fuseTime;
+	private boolean setTargetOnFire;
+	
+	// Breeding
+	private Item breedingItem;
+	private int breedingItemData;
+	private boolean breedingItemUsesData;
+	
+	// Entity Data
+	private boolean allowBreeding;
+	private boolean allowTeleporting;
+	private boolean burnsInSun;
+	private double damageFromWater;
+	private boolean despawnTamed;
+	private boolean despawnUntamed;
+	private boolean emitsLight;
+	private boolean emitsParticles;
+	private boolean getsHurtByWater;
+	private double health;
+	private double hitBoxSizeX;
+	private double hitBoxSizeZ;
+	private boolean hostile;
+	private int id;
+	private boolean immuneToFire;
+	private int lightLevelEmited;
+	private EnumParticleTypes particleType;
+	private int particlesPerTick;
+	private double walkSpeed;
+	
+	// Laying
+	private Item layingItem;
+	private int layingItemAmount;
+	private int layingItemData;
+	private int layingItemMaxData;
+	private int layingItemMinData;
+	private boolean layingItemUsesData;
+	private boolean layingItemUsesRandomData;
+	private SoundEvent layingSound;
+	private int minItemLayTime;
+	private int variableItemLayTime;
+	
+	// Spawning
+	private int[] blacklistSpawnBiomes = new int[100];
+	private boolean canSpawn;
+	private int maxSpawnGroupSize;
+	private double maxSpawnTemp;
+	private int minSpawnGroupSize;
+	private double minSpawnTemp;
+	private int spawnProbability;
+	
+	// Taming
+	private int tamingChance;
+	private Item tamingItem;
+	private int tamingItemData;
+	private boolean tamingItemUsesData;
+	
+	// Tempting
+	private int delayFollowingBetweenItemHoldings;
+	private Item temptingItem;
+	private int temptingItemData;
+	private boolean temptingItemUsesData;
+	
+	
 
 	private int lastActiveTime;
 	private int timeSinceIgnited;
@@ -107,38 +184,31 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	public EntityMoChicken(World par1World) {
 		super(par1World);
-		float x = (float) config.getCategory("entity data")
-				.get("Hit Box Size X").getDouble();
-		float z = (float) config.getCategory("entity data")
-				.get("Hit Box Size Z").getDouble();
+		float x = (float) hitBoxSizeX;
+		float z = (float) hitBoxSizeZ;
 		this.setSize(x, z);
 		float f = 0.25F;
 		this.attackingSpeedBoostModifier = (new AttributeModifier(
 				attackingSpeedBoostModifierUUID, "attackingSpeedBoostModifier",
-				config.getCategory("attack data").get("Attack Speed")
-						.getDouble(), 0)).setSaved(false);
-		if (config.getCategory("entity data").get("Burns in Sun").getBoolean()) {
+				attackSpeed, 0)).setSaved(false);
+		if (burnsInSun) {
 			this.tasks.addTask(2, new EntityAIRestrictSun(this));
 			this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
 		}
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
-		if (config.getCategory("attack data").get("Can Blow Up").getBoolean()) {
+		if (canBlowUp) {
 			this.tasks.addTask(2, new ChickAISwell(this));
 		}
-		this.isImmuneToFire = config.getCategory("entity data")
-				.get("Immune To Fire").getBoolean();
+		this.isImmuneToFire = immuneToFire;
 		this.tasks.addTask(4, new EntityAIFollowParent(this, 1.1D));
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this,
 				EntityPlayer.class, 6.0F));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 		this.timeUntilNextEgg = -1;
-		if (config.getCategory("attack data").get("Can Shoot Arrows")
-				.getBoolean()) {
-			aiArrowAttack = new ChickAIAttackRangedBow(this, 1.0D, config
-					.getCategory("attack data").get("Arrow Shoot Speed")
-					.getInt(), 15.0F);
+		if (canShootArrows) {
+			aiArrowAttack = new ChickAIAttackRangedBow(this, 1.0D, arrowShootSpeed, 15.0F);
 		}
 		this.setTamed(false);
 	}
@@ -159,16 +229,9 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	public void applyEntityAttributes(Configuration c, Class cl) {
 		super.applyEntityAttributes();
-		addVars(c, cl);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
-						config.getCategory("entity data").get("Health").getDouble());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-						config.getCategory("entity data").get("Walk Speed").getDouble());
-	}
-
-	public void addVars(Configuration c, Class cl) {
-		config = c;
-		chicken = cl;
+		setupConfigVariables(c, cl);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(walkSpeed);
 	}
 
 	@Override
@@ -221,52 +284,31 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		if (tamed) {
 			this.world.setEntityState(this, (byte) 7);
 			this.tasks.removeTask(new EntityAIAttackMelee(this, 1.0D, false));
-			if (config.getCategory("attack data").get("Can Shoot Arrows")
-					.getBoolean()) {
+			if (canShootArrows) {
 				this.tasks.removeTask(this.aiArrowAttack);
 			}
 			this.targetTasks.taskEntries.clear();
-			if (config.getCategory("tempting").get("Tempting Item Uses Data")
-					.getBoolean()) {
+			if (temptingItemUsesData) {
 				this.tasks.addTask(
 						3,
 						new ChickAITemptDye(this, 1.0D, new ItemStack(
-								(Item) Item.REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-										config.getCategory("tempting")
-												.get("Tempting Item")
-												.getString())), 1, config
-										.getCategory("tempting")
-										.get("Tempting Item Data").getInt())
-								.getDisplayName().toLowerCase(), false, config
-								.getCategory("tempting")
-								.get("Delay Following Between Item Holdings")
-								.getInt()));
+								(Item) temptingItem, 1, temptingItemData)
+								.getDisplayName().toLowerCase(), false, 
+								delayFollowingBetweenItemHoldings));
 			} else {
 				this.tasks.addTask(
 						3,
-						new ChickAITempt(this, 1.0D, (Item) Item.
-								REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-								config.getCategory("tempting")
-								.get("Tempting Item")
-								.getString())), false, config
-								.getCategory("tempting")
-								.get("Delay Following Between Item Holdings")
-								.getInt()));
+						new ChickAITempt(this, 1.0D, (Item) temptingItem, false, 
+								delayFollowingBetweenItemHoldings));
 
 			}
-			despawn = config.getCategory("entity data").get("Despawn Tamed")
-					.getBoolean();
+			despawn = despawnTamed;
 			ran = 0;
 			this.canDespawn();
-			this.timeUntilNextEgg = this.rand.nextInt(config
-					.getCategory("laying").get("Variable Item Lay Time")
-					.getInt())
-					+ config.getCategory("laying").get("Min Item Lay Time")
-							.getInt();
-		} else if (config.getCategory("entity data").get("Hostile")
-				.getBoolean()) {
-			if (config.getCategory("attack data").get("Can Shoot Arrows")
-					.getBoolean()) {
+			this.timeUntilNextEgg = this.rand.nextInt(variableItemLayTime)
+					+ minItemLayTime;
+		} else if (hostile) {
+			if (canShootArrows) {
 				this.tasks.addTask(4, this.aiArrowAttack);
 			} else {
 				this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
@@ -274,13 +316,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(
 					this, EntityPlayer.class, 0, true, tamed, null));
 			setCreeperState(-1);
-			despawn = config.getCategory("entity data").get("Despawn Untamed")
-					.getBoolean();
+			despawn = despawnUntamed;
 			ran = 0;
 			this.canDespawn();
 		} else {
-			despawn = config.getCategory("entity data").get("Despawn Untamed")
-					.getBoolean();
+			despawn = despawnUntamed;
 			ran = 0;
 			this.canDespawn();
 		}
@@ -337,8 +377,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
 		if (this.isEntityInvulnerable(par1DamageSource)) {
 			return false;
-		} else if (config.getCategory("entity data").get("Allow Teleporting")
-				.getBoolean()) {
+		} else if (allowTeleporting) {
 			this.setScreaming(true);
 
 			if (par1DamageSource instanceof EntityDamageSource
@@ -367,27 +406,19 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	public boolean attackEntityAsMob(Entity par1Entity) {
 		if ((!this.isTamed())
-				&& (config.getCategory("entity data").get("Hostile")
-						.getBoolean())
-				&& (!config.getCategory("attack data").get("Can Blow Up")
-						.getBoolean())) {
+				&& (hostile)
+				&& (!canBlowUp)) {
 			EntityPlayer entityplayer = this.world
-					.getClosestPlayerToEntity(
-							this,
-							config.getCategory("attack data")
-									.get("Attack Tracking Range").getDouble());
-			float f = (float) config.getCategory("attack data")
-					.get("Attack Damage").getDouble();
+					.getClosestPlayerToEntity(this, attackTrackingRange);
+			float f = (float) attackDamage;
 			int i = 0;
 
 			if (entityplayer instanceof EntityLivingBase) {
 				f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase)par1Entity).getCreatureAttribute());
 	            i += EnchantmentHelper.getKnockbackModifier(this);
-				addEffects(entityplayer);
-				if (config.getCategory("attack data").get("Set Target On Fire")
-						.getBoolean()) {
-					entityplayer.setFire(config.getCategory("attack data")
-							.get("Fire Duration").getInt());
+				applyEffects(entityplayer);
+				if (setTargetOnFire) {
+					entityplayer.setFire(fireDuration);
 				}
 			}
 
@@ -433,20 +464,12 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		}
 	}
 
-	private void addEffects(EntityPlayer entityplayer) {
-		int[] pots = new int[50];
-		pots = config.getCategory("attack data").get("Effect IDs").getIntList();
-		int[] amps = new int[50];
-		amps = config.getCategory("attack data").get("Effect Amplifiers")
-				.getIntList();
-		int[] durs = new int[50];
-		durs = config.getCategory("attack data").get("Effect Durations")
-				.getIntList();
+	private void applyEffects(EntityPlayer entityplayer) {
 
-		for (int p = 0; p < pots.length; p++) {
-			Potion k = Potion.getPotionById(pots[p]);
-			int j = amps[p];
-			int h = durs[p];
+		for (int p = 0; p < effectIDs.length; p++) {
+			Potion k = Potion.getPotionById(effectIDs[p]);
+			int j = effectAmplifiers[p];
+			int h = effectDurations[p];
 			if (checkpot(k, j, h) != null) {
 				entityplayer.addPotionEffect(new PotionEffect(k, h, j));
 			}
@@ -462,9 +485,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	private void addLight() {
 		this.world.setLightFor(EnumSkyBlock.BLOCK, new BlockPos((int) this.posX,
-				(int) this.posY, (int) this.posZ),
-				config.getCategory("entity data").get("Light Level Emited")
-						.getInt());
+				(int) this.posY, (int) this.posZ), lightLevelEmited);
 		this.world.markBlockRangeForRenderUpdate((int) this.posX,
 				(int) this.posY, (int) this.posX, 12, 12, 12);
 		this.world.updateBlockTick(new BlockPos((int) this.posX, (int) this.posY,
@@ -498,8 +519,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		//}
 		if (this.world.isDaytime()
 				&& !this.world.isRemote
-				&& config.getCategory("entity data").get("Burns in Sun")
-						.getBoolean()) {
+				&& burnsInSun) {
 			float f = this.getBrightness(1.0F);
 
 			if (f > 0.5F
@@ -528,8 +548,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 		this.lastEntityToAttack = this.entityToAttack;
 
-		if (config.getCategory("entity data").get("Allow Teleporting")
-				.getBoolean()) {
+		if (allowTeleporting) {
 			if (this.world.isDaytime() && !this.world.isRemote) {
 				float f = this.getBrightness(1.0F);
 
@@ -585,10 +604,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		}
 
 		if ((!this.isTamed())
-				&& (config.getCategory("attack data").get("Can Blow Up")
-						.getBoolean())
-				&& (config.getCategory("entity data").get("Hostile")
-						.getBoolean())) {
+				&& (canBlowUp)
+				&& (hostile)) {
 			if (this.isEntityAlive()) {
 				this.lastActiveTime = this.timeSinceIgnited;
 				int i = this.getCreeperState();
@@ -603,28 +620,19 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 					this.timeSinceIgnited = 0;
 				}
 
-				if (this.timeSinceIgnited >= config.getCategory("attack data")
-						.get("Fuse Time").getInt()) {
-					this.timeSinceIgnited = config.getCategory("attack data")
-							.get("Fuse Time").getInt();
+				if (this.timeSinceIgnited >= fuseTime) {
+					this.timeSinceIgnited = fuseTime;
 
 					if (!this.world.isRemote) {
 						EntityPlayer entityplayer = this.world
 								.getClosestPlayerToEntity(this, 5.0D);
 						boolean flag = this.world.getGameRules()
 								.getBoolean("mobGriefing");
-						this.world
-								.createExplosion(
-										this,
-										this.posX,
-										this.posY,
-										this.posZ,
-										(float) config
-												.getCategory("attack data")
-												.get("Explosion Radius")
-												.getInt(), flag);
+						this.world.createExplosion(
+								this, this.posX, this.posY, this.posZ,
+								(float) explosionRadius, flag);
 						if (entityplayer != null) {
-							addEffects(entityplayer);
+							applyEffects(entityplayer);
 						}
 						this.setDead();
 					}
@@ -634,8 +642,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 		this.field_70888_h = this.field_70886_e;
 		this.field_70884_g = this.destPos;
-		this.destPos = (float) ((double) this.destPos + (double) (this.onGround ? -1
-				: 4) * 0.3D);
+		this.destPos = (float) ((double) this.destPos + (double)
+				(this.onGround ? -1 : 4) * 0.3D);
 
 		if (this.destPos < 0.0F) {
 			this.destPos = 0.0F;
@@ -649,12 +657,9 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			this.field_70889_i = 1.0F;
 		}
 
-		if (config.getCategory("entity data").get("Emits Particles")
-				.getBoolean()) {
-			for (int i = 0; i < config.getCategory("entity data")
-					.get("Particles Per Tick").getInt(); ++i) {
-				this.world.spawnParticle(EnumParticleTypes.valueOf(config.getCategory("entity data")
-						.get("Particle Type").getString().toUpperCase()),
+		if (emitsParticles) {
+			for (int i = 0; i < particlesPerTick; ++i) {
+				this.world.spawnParticle(particleType,
 						this.posX + (this.rand.nextDouble() - 0.5D)
 								* (double) this.width,
 						this.posY + this.rand.nextDouble()
@@ -664,16 +669,13 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			}
 		}
 
-		if (config.getCategory("entity data").get("Emits Light").getBoolean()) {
+		if (emitsLight) {
 			addLight();
 		}
 
 		if ((this.isWet())
-				&& (config.getCategory("entity data").get("Gets Hurt by Water")
-						.getBoolean())) {
-			this.attackEntityFrom(DamageSource.DROWN, (float) config
-					.getCategory("entity data").get("Damage From Water")
-					.getDouble());
+				&& (getsHurtByWater)) {
+			this.attackEntityFrom(DamageSource.DROWN, (float) damageFromWater);
 		}
 
 		this.field_70889_i = (float) ((double) this.field_70889_i * 0.9D);
@@ -692,67 +694,28 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		if (!this.isChild() && !this.world.isRemote
 				&& --this.timeUntilNextEgg == 0) {
 			this.playSound(
-					SoundEvent.REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, config.getCategory("laying").get("Laying Sound")
-							.getString().toLowerCase())),
-					1.0F,
+					layingSound, 1.0F,
 					(this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
-			if (Item.REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-					config.getCategory("laying").get("Laying Item")
-					.getString())) != null) {
-				if (config.getCategory("laying").get("Laying Item Uses Data")
-						.getBoolean()) {
-					if (config.getCategory("laying")
-							.get("Laying Item Uses Random Data").getBoolean()) {
+			if (layingItem != null) {
+				if (layingItemUsesData) {
+					if (layingItemUsesRandomData) {
 						this.entityDropItem(
-								new ItemStack(
-										(Item) Item.
-										REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-										config.getCategory("laying")
-										.get("Laying Item")
-										.getString())),
-										1,
-										this.randomInt(
-												config.getCategory("laying")
-														.get("Laying Item Min Data")
-														.getInt(),
-												config.getCategory("laying")
-														.get("Laying Item Max Data")
-														.getInt())),
-								config.getCategory("laying")
-										.get("Laying Item Amount").getInt());
+								new ItemStack(layingItem, 1,
+										this.randomInt(layingItemMinData, 
+												layingItemMaxData)), layingItemAmount);
 					} else {
-						this.entityDropItem(
-								new ItemStack((Item) Item.
-										REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-												config.getCategory("laying")
-												.get("Laying Item")
-												.getString())), 1,
-										config.getCategory("laying")
-												.get("Laying Item Data")
-												.getInt()),
-								config.getCategory("laying")
-										.get("Laying Item Amount").getInt());
+						this.entityDropItem(new ItemStack(layingItem, 
+								1, layingItemData), 
+								layingItemAmount);
 					}
 				} else {
-					this.dropItem(
-							(Item) Item.
-							REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-							config.getCategory("laying")
-							.get("Laying Item")
-							.getString())),
-							config.getCategory("laying")
-									.get("Laying Item Amount").getInt());
+					this.dropItem(layingItem, layingItemAmount);
 				}
 			} else {
-				this.dropItem(Items.EGG, config
-						.getCategory("laying").get("Laying Item Amount")
-						.getInt());
+				this.dropItem(Items.EGG, layingItemAmount);
 			}
-			this.timeUntilNextEgg = this.rand.nextInt(config
-					.getCategory("laying").get("Variable Item Lay Time")
-					.getInt())
-					+ config.getCategory("laying").get("Min Item Lay Time")
-							.getInt();
+			this.timeUntilNextEgg = this.rand.nextInt(variableItemLayTime) 
+					+ minItemLayTime;
 		}
 
 		if (this.isDead) {
@@ -771,8 +734,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	public float getCreeperFlashIntensity(float par1) {
 		return ((float) this.lastActiveTime + (float) (this.timeSinceIgnited - this.lastActiveTime)
 				* par1)
-				/ (float) (config.getCategory("attack data").get("Fuse Time")
-						.getInt() - 2);
+				/ (float) (fuseTime - 2);
 	}
 
 	public int getCreeperState()
@@ -842,17 +804,14 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	 */
 	public boolean processInteract(EntityPlayer par1EntityPlayer, EnumHand hand) {
 		ItemStack itemstack = par1EntityPlayer.getHeldItem(hand);
-
+		System.out.println("Player Interacted");
 		if (!this.isTamed()) {
-			if (config.getCategory("taming").get("Taming Item Uses Data").getBoolean()) {
+			System.out.println(this.getName() + " is not tamed");
+			if (tamingItemUsesData) {
+				System.out.print("Item Requires Data");
 				if (itemstack != null && ((itemstack.getDisplayName().toLowerCase()
-						.equalsIgnoreCase(new ItemStack((Item) Item.
-								REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-								config.getCategory("taming")
-								.get("Taming Item")
-								.getString())), 1, 
-								config.getCategory("taming")
-								.get("Taming Item Data").getInt())
+						.equalsIgnoreCase(new ItemStack(tamingItem, 1, 
+								tamingItemData)
 								.getDisplayName().toLowerCase())))) {
 					if (!par1EntityPlayer.capabilities.isCreativeMode) {
 						itemstack.setCount(itemstack.getCount() - 1);;
@@ -865,8 +824,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 					}
 
 					if (!this.world.isRemote) {
-						if (this.rand.nextInt(config.getCategory("taming")
-								.get("Taming Chance").getInt()) == 0) {
+						if (this.rand.nextInt(tamingChance) == 0) {
+							System.out.println("Tamed");
 							this.setTamed(true);
 							this.navigator.clearPathEntity();
 							this.setAttackTarget((EntityLivingBase) null);
@@ -874,6 +833,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 							this.setOwnerId(par1EntityPlayer.getUniqueID());
 							this.playTameEffect(true);
 						} else {
+							System.out.println("Taming Failed");
 							this.playTameEffect(false);
 							this.world.setEntityState(this, (byte) 6);
 						}
@@ -881,16 +841,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 					return true;
 				}
-			} else if (itemstack != null && ((itemstack.getItem().equals(
-					(Item) Item.
-					REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-					config.getCategory("taming")
-					.get("Taming Item")
-					.getString())))))) {
+			} else if (itemstack != null && ((itemstack.getItem().equals(tamingItem)))) {
 				if (!par1EntityPlayer.capabilities.isCreativeMode) {
 					itemstack.setCount(itemstack.getCount() - 1);
 				}
-
+				System.out.println("Item Data Not Required");
 				if (itemstack.getCount() <= 0) {
 					par1EntityPlayer.inventory.setInventorySlotContents(
 							par1EntityPlayer.inventory.currentItem,
@@ -898,8 +853,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				}
 
 				if (!this.world.isRemote) {
-					if (this.rand.nextInt(config.getCategory("taming")
-							.get("Taming Chance").getInt()) == 0) {
+					if (this.rand.nextInt(tamingChance) == 0) {
+						System.out.println("Tamed");
 						this.setTamed(true);
 						this.navigator.clearPathEntity();
 						this.setAttackTarget((EntityLivingBase) null);
@@ -907,6 +862,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 						this.setOwnerId(par1EntityPlayer.getUniqueID());
 						this.playTameEffect(true);
 					} else {
+						System.out.println("Taming Failed");
 						this.playTameEffect(false);
 						this.world.setEntityState(this, (byte) 6);
 					}
@@ -932,7 +888,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 			if (s != null && s.getUniqueID().toString().length() > 0) {
 				((EntityMoChicken) newEntity).setOwnerId(s.getUniqueID());
-				((EntityMoChicken) newEntity).addVars(config, chicken);
+				((EntityMoChicken) newEntity).setupConfigVariables(config, chicken);
 				((EntityMoChicken) newEntity).setTamed(true);
 			}
 
@@ -958,26 +914,15 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	 * it (wheat, carrots or seeds depending on the animal type)
 	 */
 	public boolean isBreedingItem(ItemStack par1ItemStack) {
-		if (config.getCategory("entity data").get("Allow Breeding").getBoolean()) {
+		if (allowBreeding) {
 			if (this.isTamed()) {
-				if (config.getCategory("breeding").get("Breeding Item Uses Data").getBoolean()) {
+				if (breedingItemUsesData) {
 					return par1ItemStack != null && par1ItemStack.getDisplayName().toLowerCase()
-							.equalsIgnoreCase(
-									new ItemStack((Item) Item.
-											REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-													config.getCategory("breeding")
-													.get("Breeding Item")
-													.getString())), 1, 
-											config.getCategory("breeding")
-											.get("Breeding Item Data")
-											.getInt()).getDisplayName().toLowerCase());
+							.equalsIgnoreCase(new ItemStack(breedingItem, 1, breedingItemData)
+									.getDisplayName().toLowerCase());
 				} else {
 					return par1ItemStack != null && par1ItemStack.getItem()
-							.equals((Item) Item.
-							REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, 
-							config.getCategory("breeding")
-							.get("Breeding Item")
-							.getString())));
+							.equals(breedingItem);
 				}
 			} else {
 				return false;
@@ -1061,4 +1006,84 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
         entitytippedarrow.setEnchantmentEffectsFromEntity(this, power);
         return entitytippedarrow;
     }
+
+	public void setupConfigVariables(Configuration c, Class cl) {
+		
+		chicken = cl;
+		config = c;
+		
+		// Attack Data
+		effectIDs = config.getCategory("attack data").get("Effect IDs").getIntList();
+		effectAmplifiers = config.getCategory("attack data").get("Effect Amplifiers").getIntList();
+		effectDurations = config.getCategory("attack data").get("Effect Durations").getIntList();
+		arrowShootSpeed = config.getCategory("attack data").get("Arrow Shoot Speed").getInt();
+		attackDamage = config.getCategory("attack data").get("Attack Damage").getDouble();
+		attackSpeed = config.getCategory("attack data").get("Attack Speed").getDouble();
+		attackTrackingRange = config.getCategory("attack data").get("Attack Tracking Range").getDouble();
+		canBlowUp = config.getCategory("attack data").get("Can Blow Up").getBoolean();
+		canShootArrows = config.getCategory("attack data").get("Can Shoot Arrows").getBoolean();
+		explosionRadius = config.getCategory("attack data").get("Explosion Radius").getInt();
+		fireDuration = config.getCategory("attack data").get("Fire Duration").getInt();
+		fuseTime = config.getCategory("attack data").get("Fuse Time").getInt();
+		setTargetOnFire = config.getCategory("attack data").get("Set Target On Fire").getBoolean();
+		
+		// Breeding
+		breedingItem = Item.REGISTRY.getObject(new ResourceLocation(config.getCategory("breeding").get("Breeding Item").getString()));
+		breedingItemData = config.getCategory("breeding").get("Breeding Item Data").getInt();
+		breedingItemUsesData = config.getCategory("breeding").get("Breeding Item Uses Data").getBoolean();
+		
+		// Entity Data
+		allowBreeding = config.getCategory("entity data").get("Allow Breeding").getBoolean();
+		allowTeleporting = config.getCategory("entity data").get("Allow Teleporting").getBoolean();
+		burnsInSun = config.getCategory("entity data").get("Burns in Sun").getBoolean();
+		damageFromWater = config.getCategory("entity data").get("Damage From Water").getDouble();
+		despawnTamed = config.getCategory("entity data").get("Despawn Tamed").getBoolean();
+		despawnUntamed = config.getCategory("entity data").get("Despawn Untamed").getBoolean();
+		emitsLight = config.getCategory("entity data").get("Emits Light").getBoolean();
+		emitsParticles = config.getCategory("entity data").get("Emits Particles").getBoolean();
+		getsHurtByWater = config.getCategory("entity data").get("Gets Hurt by Water").getBoolean();
+		health = config.getCategory("entity data").get("Health").getDouble();
+		hitBoxSizeX = config.getCategory("entity data").get("Hit Box Size X").getDouble();
+		hitBoxSizeZ = config.getCategory("entity data").get("Hit Box Size Z").getDouble();
+		hostile = config.getCategory("entity data").get("Hostile").getBoolean();
+		id = config.getCategory("entity data").get("ID").getInt();
+		immuneToFire = config.getCategory("entity data").get("Immune To Fire").getBoolean();
+		lightLevelEmited = config.getCategory("entity data").get("Light Level Emited").getInt();
+		particleType = EnumParticleTypes.getByName(config.getCategory("entity data").get("Particle Type").getString());
+		particlesPerTick = config.getCategory("entity data").get("Particles Per Tick").getInt();
+		walkSpeed = config.getCategory("entity data").get("Walk Speed").getDouble();
+		
+		// Laying
+		layingItem = Item.REGISTRY.getObject(new ResourceLocation(config.getCategory("laying").get("Laying Item").getString()));
+		layingItemAmount = config.getCategory("laying").get("Laying Item Amount").getInt();
+		layingItemData = config.getCategory("laying").get("Laying Item Data").getInt();
+		layingItemMaxData = config.getCategory("laying").get("Laying Item Max Data").getInt();
+		layingItemMinData = config.getCategory("laying").get("Laying Item Min Data").getInt();
+		layingItemUsesData = config.getCategory("laying").get("Laying Item Uses Data").getBoolean();
+		layingItemUsesRandomData = config.getCategory("laying").get("Laying Item Uses Random Data").getBoolean();
+		layingSound = SoundEvent.REGISTRY.getObject(new ResourceLocation(config.getCategory("laying").get("Laying Sound").getString()));
+		minItemLayTime = config.getCategory("laying").get("Min Item Lay Time").getInt();
+		variableItemLayTime = config.getCategory("laying").get("Variable Item Lay Time").getInt();
+		
+		// Spawning
+		blacklistSpawnBiomes = config.getCategory("spawning").get("Blacklist Spawn Biomes").getIntList();
+		canSpawn = config.getCategory("spawning").get("Can Spawn").getBoolean();
+		maxSpawnGroupSize = config.getCategory("spawning").get("Max Spawn Group Size").getInt();
+		maxSpawnTemp = config.getCategory("spawning").get("Max Spawn Temp").getDouble();
+		minSpawnGroupSize = config.getCategory("spawning").get("Min Spawn Group Size").getInt();
+		minSpawnTemp = config.getCategory("spawning").get("Min Spawn Temp").getDouble();
+		spawnProbability = config.getCategory("spawning").get("Spawn Probability").getInt();
+		
+		// Taming
+		tamingChance = config.getCategory("taming").get("Taming Chance").getInt();
+		tamingItem = Item.REGISTRY.getObject(new ResourceLocation(config.getCategory("taming").get("Taming Item").getString()));
+		tamingItemData = config.getCategory("taming").get("Taming Item Data").getInt();
+		tamingItemUsesData = config.getCategory("taming").get("Taming Item Uses Data").getBoolean();
+		
+		// Tempting
+		delayFollowingBetweenItemHoldings = config.getCategory("tempting").get("Delay Following Between Item Holdings").getInt();
+		temptingItem = Item.REGISTRY.getObject(new ResourceLocation(config.getCategory("tempting").get("Tempting Item").getString()));
+		temptingItemData = config.getCategory("tempting").get("Tempting Item Data").getInt();
+		temptingItemUsesData = config.getCategory("tempting").get("Tempting Item Uses Data").getBoolean();
+	}
 }

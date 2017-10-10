@@ -101,7 +101,7 @@ public class ItemRandomEgg extends Item {
 					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
 						// prevent tying to age bat
 					} else {
-						((EntityMoChicken) newEntity).addVars(configs, type);
+						((EntityMoChicken) newEntity).setupConfigVariables(configs, type);
 					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
 					}
 					newEntity.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY() + d0, (double)pos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
@@ -247,7 +247,7 @@ public class ItemRandomEgg extends Item {
         					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
         						// prevent tying to age bat
         					} else {
-        						((EntityMoChicken) newEntity).addVars(configs, type);
+        						((EntityMoChicken) newEntity).setupConfigVariables(configs, type);
         					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
         					}
         					newEntity.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + d0, (double)blockpos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
