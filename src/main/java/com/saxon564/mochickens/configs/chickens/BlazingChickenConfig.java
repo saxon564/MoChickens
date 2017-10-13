@@ -63,7 +63,7 @@ public class BlazingChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {2};
+	public static String[] effectIds = {"minecraft:slowness"};
 	public static int[] effectDurations = {200};
 	public static int[] effectAmplifiers = {3};
 	public static Property savedEffectIds;
@@ -142,7 +142,7 @@ public class BlazingChickenConfig {
 		waterDamage = config.get("entity data", "Gets Hurt by Water", true).getBoolean(true);
 		damageByWater = config.get("entity data", "Damage From Water", 2.0D).getDouble(2.0F);
 		emitsParticles = config.get("entity data", "Emits Particles", true).getBoolean(true);
-		particleType = config.get("entity data", "Particle Type", "smoke_large").getString();
+		particleType = config.get("entity data", "Particle Type", "largesmoke").getString();
 		particleFrequency = config.get("entity data", "Particles Per Tick", 2).getInt(2);
 	}
 		

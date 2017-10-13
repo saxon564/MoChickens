@@ -99,7 +99,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private Configuration config;
 	
 	// Attack Data
-	private int[] effectIDs = new int[50];
+	private String[] effectIDs = new String[50];
 	private int[] effectAmplifiers = new int[50];
 	private int[] effectDurations = new int[50];
 	private int arrowShootSpeed;
@@ -474,7 +474,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 		for (int p = 0; p < effectIDs.length; p++) {
 			System.out.println(effectIDs[p] + " is id for " + p + " of " + effectIDs.length);
-			Potion pot = Potion.getPotionById(effectIDs[p]);
+			Potion pot = Potion.getPotionFromResourceLocation(effectIDs[p]);
 			int amplifier = effectAmplifiers[p];
 			int duration = effectDurations[p];
 			if (checkpot(pot, amplifier, duration) != "") {
@@ -1022,7 +1022,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		config = c;
 		
 		// Attack Data
-		effectIDs = config.getCategory("attack data").get("Effect IDs").getIntList();
+		effectIDs = config.getCategory("attack data").get("Effect IDs").getStringList();
 		for (int p = 0; p < effectIDs.length; p++) {
 			System.out.println(effectIDs[p]);
 		}
