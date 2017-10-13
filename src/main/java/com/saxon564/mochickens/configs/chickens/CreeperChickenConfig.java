@@ -63,9 +63,9 @@ public class CreeperChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {9};
-	public static int[] effectDurations = {300};
-	public static int[] effectAmplifiers = {5};
+	public static String[] effectIds = {"minecraft:neausa", "minecraft:blindness"};
+	public static int[] effectDurations = {300, 300};
+	public static int[] effectAmplifiers = {5, 1};
 	public static Property savedEffectIds;
 	public static Property savedEffectDurations;
 	public static Property savedEffectAmplifiers;

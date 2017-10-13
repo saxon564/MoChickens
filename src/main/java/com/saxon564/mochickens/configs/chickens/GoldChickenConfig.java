@@ -63,7 +63,7 @@ public class GoldChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {15};
+	public static String[] effectIds = {"minecraft:blindness"};
 	public static int[] effectDurations = {200};
 	public static int[] effectAmplifiers = {1};
 	public static Property savedEffectIds;

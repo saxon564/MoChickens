@@ -63,9 +63,9 @@ public class GiantChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {2, 19, 15};
+	public static String[] effectIds = {"minecraft:slowness", "minecraft:poison", "minecraft:blindness"};
 	public static int[] effectDurations = {200, 200, 200};
-	public static int[] effectAmplifiers = {1, 1, 1};
+	public static int[] effectAmplifiers = {2, 1, 1};
 	public static Property savedEffectIds;
 	public static Property savedEffectDurations;
 	public static Property savedEffectAmplifiers;

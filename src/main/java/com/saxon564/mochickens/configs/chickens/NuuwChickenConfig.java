@@ -63,7 +63,7 @@ public class NuuwChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {15, 2};
+	public static String[] effectIds = {"minecraft:blindness", "minecraft:slowness"};
 	public static int[] effectDurations = {200, 200};
 	public static int[] effectAmplifiers = {1, 2};
 	public static Property savedEffectIds;

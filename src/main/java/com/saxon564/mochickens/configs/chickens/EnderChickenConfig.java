@@ -63,7 +63,7 @@ public class EnderChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {18, 15};
+	public static String[] effectIds = {"minecraft:weakness", "minecraft:blindness"};
 	public static int[] effectDurations = {200, 200};
 	public static int[] effectAmplifiers = {3, 5};
 	public static Property savedEffectIds;

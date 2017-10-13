@@ -63,7 +63,7 @@ public class ClayChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {2, 15, 4};
+	public static String[] effectIds = {"minecraft:slowness", "minecraft:blindness", "minecraft:mining_fatigue"};
 	public static int[] effectDurations = {200, 200, 200};
 	public static int[] effectAmplifiers = {1, 2, 2};
 	public static Property savedEffectIds;

@@ -63,9 +63,9 @@ public class DiamondChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {15, 2};
+	public static String[] effectIds = {"minecraft:blindeness", "minecraft:slowness"};
 	public static int[] effectDurations = {200, 200};
-	public static int[] effectAmplifiers = {1, 2};
+	public static int[] effectAmplifiers = {1, 3};
 	public static Property savedEffectIds;
 	public static Property savedEffectDurations;
 	public static Property savedEffectAmplifiers;

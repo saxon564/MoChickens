@@ -63,7 +63,7 @@ public class LapisChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {2};
+	public static String[] effectIds = {"minecraft:slowness"};
 	public static int[] effectDurations = {200};
 	public static int[] effectAmplifiers = {1};
 	public static Property savedEffectIds;

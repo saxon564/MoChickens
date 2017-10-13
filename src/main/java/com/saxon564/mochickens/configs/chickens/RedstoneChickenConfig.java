@@ -63,7 +63,7 @@ public class RedstoneChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {1};
+	public static String[] effectIds = {"minecraft:speed"};
 	public static int[] effectDurations = {200};
 	public static int[] effectAmplifiers = {10};
 	public static Property savedEffectIds;

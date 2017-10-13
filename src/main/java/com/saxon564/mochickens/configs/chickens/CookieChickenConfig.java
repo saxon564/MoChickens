@@ -63,7 +63,7 @@ public class CookieChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {1, 9};
+	public static String[] effectIds = {"minecraft:speed", "minecraft:neausa"};
 	public static int[] effectDurations = {200, 200};
 	public static int[] effectAmplifiers = {3, 3};
 	public static Property savedEffectIds;

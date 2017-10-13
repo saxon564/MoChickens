@@ -63,7 +63,7 @@ public class SnowChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {4};
+	public static String[] effectIds = {"minecraft:mining_fatigue"};
 	public static int[] effectDurations = {200};
 	public static int[] effectAmplifiers = {3};
 	public static Property savedEffectIds;

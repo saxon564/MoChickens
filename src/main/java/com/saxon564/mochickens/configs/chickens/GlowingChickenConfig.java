@@ -63,7 +63,7 @@ public class GlowingChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {16, 8};
+	public static String[] effectIds = {"minecraft:night_vision", "minecraft:jump_boost"};
 	public static int[] effectDurations = {500, 400};
 	public static int[] effectAmplifiers = {2, 5};
 	public static Property savedEffectIds;

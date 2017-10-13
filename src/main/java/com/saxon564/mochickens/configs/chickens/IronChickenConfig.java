@@ -63,7 +63,7 @@ public class IronChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {19};
+	public static String[] effectIds = {"minecraft:poison"};
 	public static int[] effectDurations = {200};
 	public static int[] effectAmplifiers = {1};
 	public static Property savedEffectIds;

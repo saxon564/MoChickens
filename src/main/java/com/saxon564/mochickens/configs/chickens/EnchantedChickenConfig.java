@@ -63,7 +63,7 @@ public class EnchantedChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {9};
+	public static String[] effectIds = {"minecraft:nausea"};
 	public static int[] effectDurations = {200};
 	public static int[] effectAmplifiers = {3};
 	public static Property savedEffectIds;
@@ -138,9 +138,9 @@ public class EnchantedChickenConfig {
 		burnsInLight = config.get("entity data", "Burns in Sun", false).getBoolean(false);
 		waterDamage = config.get("entity data", "Gets Hurt by Water", false).getBoolean(false);
 		damageByWater = config.get("entity data", "Damage From Water", 0.0D).getDouble(0.0F);
-		emitsParticles = config.get("entity data", "Emits Particles", false).getBoolean(false);
-		particleType = config.get("entity data", "Particle Type", "none").getString();
-		particleFrequency = config.get("entity data", "Particles Per Tick", 0).getInt(0);
+		emitsParticles = config.get("entity data", "Emits Particles", true).getBoolean(false);
+		particleType = config.get("entity data", "Particle Type", "enchantmenttable").getString();
+		particleFrequency = config.get("entity data", "Particles Per Tick", 5).getInt(5);
 	}
 		
 	public static void taming() {

@@ -63,7 +63,7 @@ public class QuartzChickenConfig {
 	public static boolean canTeleport;
 	public static boolean isHostile;
 	public static float attackDamage;
-	public static int[] effectIds = {1, 15};
+	public static String[] effectIds = {"minecraft:speed", "minecraft:blindness"};
 	public static int[] effectDurations = {200, 200};
 	public static int[] effectAmplifiers = {3, 1};
 	public static Property savedEffectIds;
