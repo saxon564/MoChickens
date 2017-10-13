@@ -261,6 +261,14 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		}
 		return despawn;
 	}
+	
+	@Override
+	public boolean isTamed()
+    {
+		int tamedInt = (((Byte)this.dataManager.get(TAMED)).byteValue() & 4);
+		boolean tamed = tamedInt != 0;
+        return tamed;
+    }
 
 	@Override
 	public void setTamed(boolean tamed)
@@ -292,14 +300,12 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				this.tasks.addTask(
 						3,
 						new ChickAITemptDye(this, 1.0D, new ItemStack(
-								(Item) temptingItem, 1, temptingItemData)
-								.getDisplayName().toLowerCase(), false, 
-								delayFollowingBetweenItemHoldings));
+								temptingItem, 1, temptingItemData)
+								.getDisplayName().toLowerCase(), false));
 			} else {
 				this.tasks.addTask(
 						3,
-						new ChickAITempt(this, 1.0D, (Item) temptingItem, false, 
-								delayFollowingBetweenItemHoldings));
+						new ChickAITempt(this, 1.0D, temptingItem, false));
 
 			}
 			despawn = despawnTamed;
@@ -467,19 +473,25 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private void applyEffects(EntityPlayer entityplayer) {
 
 		for (int p = 0; p < effectIDs.length; p++) {
-			Potion k = Potion.getPotionById(effectIDs[p]);
-			int j = effectAmplifiers[p];
-			int h = effectDurations[p];
-			if (checkpot(k, j, h) != null) {
-				entityplayer.addPotionEffect(new PotionEffect(k, h, j));
+			System.out.println(effectIDs[p] + " is id for " + p + " of " + effectIDs.length);
+			Potion pot = Potion.getPotionById(effectIDs[p]);
+			int amplifier = effectAmplifiers[p];
+			int duration = effectDurations[p];
+			if (checkpot(pot, amplifier, duration) != "") {
+				entityplayer.addPotionEffect(new PotionEffect(pot, amplifier, duration));
+			} else {
+				System.out.println("No potion effect found!");
 			}
 		}
 	}
 
-	private String checkpot(Potion k, int j, int h) {
-		String test = new PotionEffect(k, h, j).getEffectName();
-		int test2 = new PotionEffect(k, h, j).getDuration();
-		int test3 = new PotionEffect(k, h, j).getAmplifier();
+	private String checkpot(Potion pot, int amplifier, int duration) {
+		String test = "";
+		if (pot != null) {
+			test = new PotionEffect(pot, amplifier, duration).getEffectName();
+			int test2 = new PotionEffect(pot, amplifier, duration).getDuration();
+			int test3 = new PotionEffect(pot, amplifier, duration).getAmplifier();
+		}
 		return test;
 	}
 
@@ -802,38 +814,37 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow,
 	 * gets into the saddle on a pig.
 	 */
-	public boolean processInteract(EntityPlayer par1EntityPlayer, EnumHand hand) {
-		ItemStack itemstack = par1EntityPlayer.getHeldItem(hand);
-		System.out.println("Player Interacted");
+	public boolean processInteract(EntityPlayer player, EnumHand hand) {
+		
+		ItemStack itemstack = player.getHeldItem(hand);
+		
 		if (!this.isTamed()) {
-			System.out.println(this.getName() + " is not tamed");
+			
 			if (tamingItemUsesData) {
 				System.out.print("Item Requires Data");
-				if (itemstack != null && ((itemstack.getDisplayName().toLowerCase()
+				if (!itemstack.isEmpty() && ((itemstack.getDisplayName().toLowerCase()
 						.equalsIgnoreCase(new ItemStack(tamingItem, 1, 
 								tamingItemData)
 								.getDisplayName().toLowerCase())))) {
-					if (!par1EntityPlayer.capabilities.isCreativeMode) {
+					if (!player.capabilities.isCreativeMode) {
 						itemstack.setCount(itemstack.getCount() - 1);;
 					}
 
 					if (itemstack.getCount() <= 0) {
-						par1EntityPlayer.inventory.setInventorySlotContents(
-								par1EntityPlayer.inventory.currentItem,
+						player.inventory.setInventorySlotContents(
+								player.inventory.currentItem,
 								(ItemStack) null);
 					}
 
 					if (!this.world.isRemote) {
 						if (this.rand.nextInt(tamingChance) == 0) {
-							System.out.println("Tamed");
 							this.setTamed(true);
 							this.navigator.clearPathEntity();
 							this.setAttackTarget((EntityLivingBase) null);
 							this.setAttackTarget(null);
-							this.setOwnerId(par1EntityPlayer.getUniqueID());
+							this.setOwnerId(player.getUniqueID());
 							this.playTameEffect(true);
 						} else {
-							System.out.println("Taming Failed");
 							this.playTameEffect(false);
 							this.world.setEntityState(this, (byte) 6);
 						}
@@ -841,28 +852,26 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 					return true;
 				}
-			} else if (itemstack != null && ((itemstack.getItem().equals(tamingItem)))) {
-				if (!par1EntityPlayer.capabilities.isCreativeMode) {
+			} else if (!itemstack.isEmpty() && ((itemstack.getItem().equals(tamingItem)))) {
+				if (!player.capabilities.isCreativeMode) {
 					itemstack.setCount(itemstack.getCount() - 1);
 				}
-				System.out.println("Item Data Not Required");
+
 				if (itemstack.getCount() <= 0) {
-					par1EntityPlayer.inventory.setInventorySlotContents(
-							par1EntityPlayer.inventory.currentItem,
+					player.inventory.setInventorySlotContents(
+							player.inventory.currentItem,
 							(ItemStack) null);
 				}
 
 				if (!this.world.isRemote) {
 					if (this.rand.nextInt(tamingChance) == 0) {
-						System.out.println("Tamed");
 						this.setTamed(true);
 						this.navigator.clearPathEntity();
 						this.setAttackTarget((EntityLivingBase) null);
 						this.setAttackTarget(null);
-						this.setOwnerId(par1EntityPlayer.getUniqueID());
+						this.setOwnerId(player.getUniqueID());
 						this.playTameEffect(true);
 					} else {
-						System.out.println("Taming Failed");
 						this.playTameEffect(false);
 						this.world.setEntityState(this, (byte) 6);
 					}
@@ -871,7 +880,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			}
 		}
 
-		return super.processInteract(par1EntityPlayer, hand);
+		return super.processInteract(player, hand);
 	}
 
 	/**
@@ -917,11 +926,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		if (allowBreeding) {
 			if (this.isTamed()) {
 				if (breedingItemUsesData) {
-					return par1ItemStack != null && par1ItemStack.getDisplayName().toLowerCase()
+					return !par1ItemStack.isEmpty() && par1ItemStack.getDisplayName().toLowerCase()
 							.equalsIgnoreCase(new ItemStack(breedingItem, 1, breedingItemData)
 									.getDisplayName().toLowerCase());
 				} else {
-					return par1ItemStack != null && par1ItemStack.getItem()
+					return !par1ItemStack.isEmpty() && par1ItemStack.getItem()
 							.equals(breedingItem);
 				}
 			} else {
@@ -1014,6 +1023,9 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		
 		// Attack Data
 		effectIDs = config.getCategory("attack data").get("Effect IDs").getIntList();
+		for (int p = 0; p < effectIDs.length; p++) {
+			System.out.println(effectIDs[p]);
+		}
 		effectAmplifiers = config.getCategory("attack data").get("Effect Amplifiers").getIntList();
 		effectDurations = config.getCategory("attack data").get("Effect Durations").getIntList();
 		arrowShootSpeed = config.getCategory("attack data").get("Arrow Shoot Speed").getInt();

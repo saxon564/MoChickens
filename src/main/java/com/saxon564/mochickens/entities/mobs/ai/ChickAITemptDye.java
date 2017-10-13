@@ -1,67 +1,59 @@
 package com.saxon564.mochickens.entities.mobs.ai;
 
-import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
-
+import com.google.common.collect.Sets;
+import java.util.Set;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.server.MinecraftServer;
 
 public class ChickAITemptDye extends EntityAIBase
 {
     /** The entity using this AI that is tempted by the player. */
-    private EntityCreature temptedEntity;
-    private double field_75282_b;
-
+    private final EntityCreature temptedEntity;
+    private final double speed;
     /** X position of player tempting this mob */
     private double targetX;
-
     /** Y position of player tempting this mob */
     private double targetY;
-
     /** Z position of player tempting this mob */
     private double targetZ;
-    private double field_75278_f;
-    private double field_75279_g;
-
+    /** Tempting player's pitch */
+    private double pitch;
+    /** Tempting player's yaw */
+    private double yaw;
     /** The player that is tempting the entity that is using this AI. */
     private EntityPlayer temptingPlayer;
-
     /**
-     * A counter that is decremented each time the shouldExecute method is
-     * called. The shouldExecute method will always return false if
-     * delayTemptCounter is greater than 0.
+     * A counter that is decremented each time the shouldExecute method is called. The shouldExecute method will always
+     * return false if delayTemptCounter is greater than 0.
      */
     private int delayTemptCounter;
-    private int configedDelay;
-
     /** True if this EntityAITempt task is running */
     private boolean isRunning;
+    private final String temptItem;
+    /** Whether the entity using this AI will be scared by the tempter's sudden movement. */
+    private final boolean scaredByPlayerMovement;
 
-    /**
-     * This field saves the ID of the items that can be used to breed entities
-     * with this behaviour.
-     */
-    private String breedingFood;
-
-    /**
-     * Whether the entity using this AI will be scared by the tempter's sudden
-     * movement.
-     */
-    private boolean scaredByPlayerMovement;
-    private boolean field_75286_m;
-
-    public ChickAITemptDye(EntityCreature par1EntityCreature, double par2,
-                           String par4, boolean par5, int delay)
+    public ChickAITemptDye(EntityCreature temptedEntityIn, double speedIn, String temptItemIn, boolean scaredByPlayerMovementIn)
     {
-        this.setTemptedEntity(par1EntityCreature);
-        this.field_75282_b = par2;
-        this.setBreedingFood(par4);
-        this.configedDelay = delay;
-        this.scaredByPlayerMovement = par5;
+        this(temptedEntityIn, speedIn, scaredByPlayerMovementIn, temptItemIn);
+    }
+
+    public ChickAITemptDye(EntityCreature temptedEntityIn, double speedIn, boolean scaredByPlayerMovementIn, String temptItemIn)
+    {
+        this.temptedEntity = temptedEntityIn;
+        this.speed = speedIn;
+        this.temptItem = temptItemIn;
+        this.scaredByPlayerMovement = scaredByPlayerMovementIn;
         this.setMutexBits(3);
+
+        if (!(temptedEntityIn.getNavigator() instanceof PathNavigateGround))
+        {
+            throw new IllegalArgumentException("Unsupported mob type for TemptGoal");
+        }
     }
 
     /**
@@ -69,32 +61,21 @@ public class ChickAITemptDye extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        String owner = this.getTemptedEntity().getDataManager().get(EntityMoChicken.OWNER);
-
-        if (this.getDelayTemptCounter() > 0)
+        if (this.delayTemptCounter > 0)
         {
-            this.setDelayTemptCounter(this.getDelayTemptCounter() - 1);
+            --this.delayTemptCounter;
             return false;
         }
         else
         {
-            this.setTemptingPlayer(this.getTemptedEntity().world
-                                   .getClosestPlayerToEntity(this.getTemptedEntity(), 10.0D));
-
-            if (this.getTemptingPlayer() == null)
-            {
-                return false;
-            }
-            else if (!this.getTemptingPlayer().getUniqueID().toString().equals(owner))
-            {
-                return false;
-            }
-            else
-            {
-                ItemStack itemstack = this.getTemptingPlayer().getHeldItemMainhand();
-                return itemstack == null ? false : itemstack.getDisplayName().equalsIgnoreCase(this.getBreedingFood());
-            }
+            this.temptingPlayer = this.temptedEntity.world.getClosestPlayerToEntity(this.temptedEntity, 10.0D);
+            return this.temptingPlayer == null ? false : this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
         }
+    }
+
+    protected boolean isTempting(ItemStack stack)
+    {
+        return this.temptItem.equals(stack.getItem().getItemStackDisplayName(stack));
     }
 
     /**
@@ -104,32 +85,27 @@ public class ChickAITemptDye extends EntityAIBase
     {
         if (this.scaredByPlayerMovement)
         {
-            if (this.getTemptedEntity().getDistanceSqToEntity(
-                        this.getTemptingPlayer()) < 36.0D)
+            if (this.temptedEntity.getDistanceSqToEntity(this.temptingPlayer) < 36.0D)
             {
-                if (this.getTemptingPlayer().getDistanceSq(this.targetX,
-                        this.targetY, this.targetZ) > 0.010000000000000002D)
+                if (this.temptingPlayer.getDistanceSq(this.targetX, this.targetY, this.targetZ) > 0.010000000000000002D)
                 {
                     return false;
                 }
 
-                if (Math.abs((double) this.getTemptingPlayer().rotationPitch
-                             - this.field_75278_f) > 5.0D
-                        || Math.abs((double) this.getTemptingPlayer().rotationYaw
-                                    - this.field_75279_g) > 5.0D)
+                if (Math.abs((double)this.temptingPlayer.rotationPitch - this.pitch) > 5.0D || Math.abs((double)this.temptingPlayer.rotationYaw - this.yaw) > 5.0D)
                 {
                     return false;
                 }
             }
             else
             {
-                this.targetX = this.getTemptingPlayer().posX;
-                this.targetY = this.getTemptingPlayer().posY;
-                this.targetZ = this.getTemptingPlayer().posZ;
+                this.targetX = this.temptingPlayer.posX;
+                this.targetY = this.temptingPlayer.posY;
+                this.targetZ = this.temptingPlayer.posZ;
             }
 
-            this.field_75278_f = (double) this.getTemptingPlayer().rotationPitch;
-            this.field_75279_g = (double) this.getTemptingPlayer().rotationYaw;
+            this.pitch = (double)this.temptingPlayer.rotationPitch;
+            this.yaw = (double)this.temptingPlayer.rotationYaw;
         }
 
         return this.shouldExecute();
@@ -140,9 +116,9 @@ public class ChickAITemptDye extends EntityAIBase
      */
     public void startExecuting()
     {
-        this.targetX = this.getTemptingPlayer().posX;
-        this.targetY = this.getTemptingPlayer().posY;
-        this.targetZ = this.getTemptingPlayer().posZ;
+        this.targetX = this.temptingPlayer.posX;
+        this.targetY = this.temptingPlayer.posY;
+        this.targetZ = this.temptingPlayer.posZ;
         this.isRunning = true;
     }
 
@@ -151,9 +127,9 @@ public class ChickAITemptDye extends EntityAIBase
      */
     public void resetTask()
     {
-        this.setTemptingPlayer(null);
-        this.getTemptedEntity().getNavigator().clearPathEntity();
-        this.setDelayTemptCounter(this.configedDelay);
+        this.temptingPlayer = null;
+        this.temptedEntity.getNavigator().clearPathEntity();
+        this.delayTemptCounter = 100;
         this.isRunning = false;
     }
 
@@ -162,22 +138,15 @@ public class ChickAITemptDye extends EntityAIBase
      */
     public void updateTask()
     {
-        this.getTemptedEntity()
-        .getLookHelper()
-        .setLookPositionWithEntity(this.getTemptingPlayer(), 30.0F,
-                                   (float) this.getTemptedEntity().getVerticalFaceSpeed());
+        this.temptedEntity.getLookHelper().setLookPositionWithEntity(this.temptingPlayer, (float)(this.temptedEntity.getHorizontalFaceSpeed() + 20), (float)this.temptedEntity.getVerticalFaceSpeed());
 
-        if (this.getTemptedEntity().getDistanceSqToEntity(
-                    this.getTemptingPlayer()) < 6.25D)
+        if (this.temptedEntity.getDistanceSqToEntity(this.temptingPlayer) < 6.25D)
         {
-            this.getTemptedEntity().getNavigator().clearPathEntity();
+            this.temptedEntity.getNavigator().clearPathEntity();
         }
         else
         {
-            this.getTemptedEntity()
-            .getNavigator()
-            .tryMoveToEntityLiving(this.getTemptingPlayer(),
-                                   this.field_75282_b);
+            this.temptedEntity.getNavigator().tryMoveToEntityLiving(this.temptingPlayer, this.speed);
         }
     }
 
@@ -187,45 +156,5 @@ public class ChickAITemptDye extends EntityAIBase
     public boolean isRunning()
     {
         return this.isRunning;
-    }
-
-    public int getDelayTemptCounter()
-    {
-        return delayTemptCounter;
-    }
-
-    public void setDelayTemptCounter(int delayTemptCounter)
-    {
-        this.delayTemptCounter = delayTemptCounter;
-    }
-
-    public EntityPlayer getTemptingPlayer()
-    {
-        return temptingPlayer;
-    }
-
-    public void setTemptingPlayer(EntityPlayer temptingPlayer)
-    {
-        this.temptingPlayer = temptingPlayer;
-    }
-
-    public EntityCreature getTemptedEntity()
-    {
-        return temptedEntity;
-    }
-
-    public void setTemptedEntity(EntityCreature temptedEntity)
-    {
-        this.temptedEntity = temptedEntity;
-    }
-
-    public String getBreedingFood()
-    {
-        return breedingFood;
-    }
-
-    public void setBreedingFood(String par4)
-    {
-        this.breedingFood = par4;
     }
 }
