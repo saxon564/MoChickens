@@ -44,7 +44,7 @@ public class ChickAIAttackRangedBow extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        return this.entity.getAttackTarget() == null ? false : this.isBowInMainhand();
+    	return this.entity.getAttackTarget() == null ? false : this.isBowInMainhand();
     }
 
     protected boolean isBowInMainhand()
@@ -57,7 +57,7 @@ public class ChickAIAttackRangedBow extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.isBowInMainhand();
+    	return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.isBowInMainhand();
     }
 
     /**
@@ -87,6 +87,7 @@ public class ChickAIAttackRangedBow extends EntityAIBase
 
         if (entitylivingbase != null)
         {
+        	
             double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getEntityBoundingBox().minY, entitylivingbase.posZ);
             boolean flag = this.entity.getEntitySenses().canSee(entitylivingbase);
             boolean flag1 = this.seeTime > 0;
@@ -149,23 +150,19 @@ public class ChickAIAttackRangedBow extends EntityAIBase
             {
                 this.entity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
             }
-
-            if (this.entity.isHandActive())
+            
+            if (this.attackTime > 0) {
+            	--this.attackTime;
+            }
+            else if (flag)
             {
-                if (!flag && this.seeTime < -60)
+            	int i = 2100;
+
+                if (i >= 20)
                 {
                     this.entity.resetActiveHand();
-                }
-                else if (flag)
-                {
-                    int i = this.entity.getItemInUseMaxCount();
-
-                    if (i >= 20)
-                    {
-                        this.entity.resetActiveHand();
-                        this.entity.attackEntityWithRangedAttack(entitylivingbase, ItemBow.getArrowVelocity(i));
-                        this.attackTime = this.attackCooldown;
-                    }
+                    this.entity.attackEntityWithRangedAttack(entitylivingbase, ItemBow.getArrowVelocity(i));
+                    this.attackTime = this.attackCooldown;
                 }
             }
             else if (--this.attackTime <= 0 && this.seeTime >= -60)

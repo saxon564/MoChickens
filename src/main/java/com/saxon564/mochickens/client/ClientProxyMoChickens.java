@@ -93,7 +93,7 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
     }
     
     public void eventHandlers() {
-    	MinecraftForge.EVENT_BUS.register(new FireEventHandlerClient());
+    	//MinecraftForge.EVENT_BUS.register(new FireEventHandlerClient());
     }
     
     @SubscribeEvent

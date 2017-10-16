@@ -177,7 +177,7 @@ public class RedstoneChickenConfig {
 		layAmount = config.get("laying", "Laying Item Amount", 1).getInt(1);
 		minItemLayTime = config.get("laying", "Min Item Lay Time", 6000).getInt(6000);
 		varItemLayTime = config.get("laying", "Variable Item Lay Time", 2000).getInt(2000);
-		layItem = config.get("laying", "Laying Sound", "mob.chicken.plop").getString();
+		layItem = config.get("laying", "Laying Sound", "entity.chicken.egg").getString();
 	}
 	
 	public static void attackData() {

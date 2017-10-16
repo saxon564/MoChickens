@@ -238,9 +238,7 @@ public class ItemRandomEgg extends Item {
         			Class type = MoChickens.egg[random];
         			if (type != null) {
         				Configuration configs = MoChickens.configs[random];
-    					System.out.println("Before Try!");
         				try {
-        					System.out.println("Inside Try!");
         					EntityLiving newEntity = (EntityLiving) type
         							.getDeclaredConstructor(World.class).newInstance(
         									worldIn);
@@ -249,9 +247,9 @@ public class ItemRandomEgg extends Item {
         					} else {
         						((EntityMoChicken) newEntity).setupConfigVariables(configs, type);
         					   ((EntityAgeable) newEntity).setGrowingAge(-24000);
+        					   //((EntityMoChicken) newEntity).setTamed(true);
         					}
-        					newEntity.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)blockpos.getY() + d0, (double)blockpos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
-        					// newEntity.setTamed(true);
+        					newEntity.setLocationAndAngles((double)blockpos.getX() + 0.5D, (double)blockpos.up().getY() + d0, (double)blockpos.getZ() + 0.5D, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
         					worldIn.spawnEntity(newEntity);
         				} catch (InstantiationException e) {
         					e.printStackTrace();
@@ -266,9 +264,7 @@ public class ItemRandomEgg extends Item {
         				} catch (SecurityException e) {
         					e.printStackTrace();
         				}
-    					System.out.println("After Try!");
         			}
-					System.out.println("Failed Spawn Process!");
         			return new ActionResult(EnumActionResult.PASS, itemstack);
                 }
                 else

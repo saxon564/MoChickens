@@ -64,6 +64,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.fml.common.registry.GameData;
 
+import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.ai.ChickAIAttackRangedBow;
 import com.saxon564.mochickens.entities.mobs.ai.ChickAISwell;
@@ -99,9 +100,9 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private Configuration config;
 	
 	// Attack Data
-	private String[] effectIDs = new String[50];
-	private int[] effectAmplifiers = new int[50];
-	private int[] effectDurations = new int[50];
+	private String[] effectIDs;
+	private int[] effectAmplifiers;
+	private int[] effectDurations;
 	private int arrowShootSpeed;
 	private double attackDamage;
 	private double attackSpeed;
@@ -152,7 +153,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private int variableItemLayTime;
 	
 	// Spawning
-	private int[] blacklistSpawnBiomes = new int[100];
+	private int[] blacklistSpawnBiomes;
 	private boolean canSpawn;
 	private int maxSpawnGroupSize;
 	private double maxSpawnTemp;
@@ -247,8 +248,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				s = UUID.fromString(PreYggdrasilConverter.convertMobOwnerIfNeeded(getServer(), s1));
 			}
 		}
-
-		if (s != null && s.toString().length() > 0) {
+		
+		if (s != null && s.toString().length() > 0 && !s.toString().equals("00000000-0000-0000-0000-000000000000")) {
 			this.setTamed(true);
 			this.setOwnerId(s);
 		}
@@ -267,6 +268,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     {
 		int tamedInt = (((Byte)this.dataManager.get(TAMED)).byteValue() & 4);
 		boolean tamed = tamedInt != 0;
+		
         return tamed;
     }
 
@@ -288,7 +290,6 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     }
 	
 	public void setupTaimedAI(boolean tamed) {
-
 		if (tamed) {
 			this.world.setEntityState(this, (byte) 7);
 			this.tasks.removeTask(new EntityAIAttackMelee(this, 1.0D, false));
@@ -473,14 +474,13 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private void applyEffects(EntityPlayer entityplayer) {
 
 		for (int p = 0; p < effectIDs.length; p++) {
-			System.out.println(effectIDs[p] + " is id for " + p + " of " + effectIDs.length);
 			Potion pot = Potion.getPotionFromResourceLocation(effectIDs[p]);
 			int amplifier = effectAmplifiers[p];
 			int duration = effectDurations[p];
 			if (checkpot(pot, amplifier, duration) != "") {
-				entityplayer.addPotionEffect(new PotionEffect(pot, amplifier, duration));
+				entityplayer.addPotionEffect(new PotionEffect(pot, duration, amplifier));
 			} else {
-				System.out.println("No potion effect found!");
+				MoChickens.logger.error("Effect " + effectIDs[p] + " was not found!");
 			}
 		}
 	}
@@ -529,9 +529,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		//	System.out.println(this.chicken + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
 		//	loc ++;
 		//}
-		if (this.world.isDaytime()
-				&& !this.world.isRemote
-				&& burnsInSun) {
+		if (this.world.isDaytime() && !this.world.isRemote && burnsInSun) {
 			float f = this.getBrightness(1.0F);
 
 			if (f > 0.5F
@@ -564,8 +562,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			if (this.world.isDaytime() && !this.world.isRemote) {
 				float f = this.getBrightness(1.0F);
 
-				if (f > 0.5F
-						&& this.world.canBlockSeeSky(new BlockPos(
+				if (f > 0.5F && this.world.canBlockSeeSky(new BlockPos(
 								MathHelper.floor(this.posX),
 								MathHelper.floor(this.posY),
 								MathHelper.floor(this.posZ)))
@@ -615,9 +612,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			}
 		}
 
-		if ((!this.isTamed())
-				&& (canBlowUp)
-				&& (hostile)) {
+		if ((!this.isTamed()) && (canBlowUp) && (hostile)) {
 			if (this.isEntityAlive()) {
 				this.lastActiveTime = this.timeSinceIgnited;
 				int i = this.getCreeperState();
@@ -685,8 +680,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			addLight();
 		}
 
-		if ((this.isWet())
-				&& (getsHurtByWater)) {
+		if ((this.isWet()) && (getsHurtByWater)) {
 			this.attackEntityFrom(DamageSource.DROWN, (float) damageFromWater);
 		}
 
@@ -745,8 +739,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 	public float getCreeperFlashIntensity(float par1) {
 		return ((float) this.lastActiveTime + (float) (this.timeSinceIgnited - this.lastActiveTime)
-				* par1)
-				/ (float) (fuseTime - 2);
+				* par1) / (float) (fuseTime - 2);
 	}
 
 	public int getCreeperState()
@@ -773,6 +766,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		} else {
 			if (this.getOwner() != null) {
 				EntityLivingBase s = (EntityLivingBase) this.getOwner();
+				System.out.println("Difficult Change");
+				System.out.println(s.getUniqueID().toString());
 
 				if (s.getUniqueID().toString().length() > 0) {
 					this.setTamed(true);
@@ -1007,12 +1002,22 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
         entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.world.getDifficulty().getDifficultyId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(entityarrow);
+        
     }
 	
 	protected EntityArrow getArrow(float power)
     {
         EntityTippedArrow entitytippedarrow = new EntityTippedArrow(this.world, this);
-        entitytippedarrow.setEnchantmentEffectsFromEntity(this, power);
+        for (int p = 0; p < effectIDs.length; p++) {
+			Potion pot = Potion.getPotionFromResourceLocation(effectIDs[p]);
+			int amplifier = effectAmplifiers[p];
+			int duration = effectDurations[p];
+			if (checkpot(pot, amplifier, duration) != "") {
+				entitytippedarrow.addEffect(new PotionEffect(pot, duration, amplifier));
+			} else {
+				MoChickens.logger.error("Effect " + effectIDs[p] + " was not found for arrow!");
+			}
+		}
         return entitytippedarrow;
     }
 
@@ -1023,9 +1028,6 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		
 		// Attack Data
 		effectIDs = config.getCategory("attack data").get("Effect IDs").getStringList();
-		for (int p = 0; p < effectIDs.length; p++) {
-			System.out.println(effectIDs[p]);
-		}
 		effectAmplifiers = config.getCategory("attack data").get("Effect Amplifiers").getIntList();
 		effectDurations = config.getCategory("attack data").get("Effect Durations").getIntList();
 		arrowShootSpeed = config.getCategory("attack data").get("Arrow Shoot Speed").getInt();

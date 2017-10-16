@@ -1,11 +1,13 @@
 package com.saxon564.mochickens.entities.mobs;
 
+import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.configs.chickens.GiantChickenConfig;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -36,25 +38,30 @@ public class EntityGiantChicken extends EntityMoChicken
      * Returns the sound this mob makes while it's alive.
      * @return
      */
-    protected SoundEvent getLivingSound()
+    @Override
+	public void playLivingSound()
     {
-    	return SoundEvent.REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, "sounds.deepCluck"));
+    	this.playSound(MoChickens.DEEP_CLUCK, 1.0f, 1.0f);
     }
 
     /**
      * Returns the sound this mob makes when it is hurt.
      */
+    @Override
     protected SoundEvent getHurtSound()
     {
-        return SoundEvent.REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, "sounds.giantHurt"));
+    	this.playSound(MoChickens.GIANT_HURT, 1.0f, 1.0f);
+    	return MoChickens.GIANT_HURT;
     }
 
     /**
      * Returns the sound this mob makes on death.
      */
+    @Override
     protected SoundEvent getDeathSound()
     {
-    	return SoundEvent.REGISTRY.getObject(new ResourceLocation(Reference.MOD_ID, "sounds.giantHurt"));
+    	this.playSound(MoChickens.GIANT_HURT, 1.0f, 1.0f);
+    	return MoChickens.GIANT_HURT;
     }
 
     /**

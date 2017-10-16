@@ -1,5 +1,26 @@
 {
-	"layDiamond": {"category": "neutral","sounds": ["layDiamond"]},
-	"deepCluck": {"category": "neutral","sounds": ["deepCluck1", "deepCluck2", "deepCluck3"]},
-	"giantHurt": {"category": "neutral","sounds": ["giantHurt1", "giantHurt2"]}
+	"layDiamond": {
+	   "category": "neutral",
+	   "subtitle": "mochickens.subtitle.layDiamond",
+	   "sounds": [
+	       "mochickens:laydiamond"
+	   ]
+	},
+	"deepCluck": {
+	   "category": "neutral",
+       "subtitle": "mochickens.subtitle.deepCluck",
+	   "sounds": [
+	       "mochickens:deepcluck1",
+	       "mochickens:deepcluck2",
+	       "mochickens:deepcluck3"
+	       ]
+	},
+	"giantHurt": {
+	   "category": "neutral",
+       "subtitle": "mochickens.subtitle.giantHurt",
+	   "sounds": [
+	       "mochickens:gianthurt1",
+	       "mochickens:gianthurt2"
+	   ]
+    }
 }

@@ -9,6 +9,7 @@ import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
@@ -80,9 +81,9 @@ import com.saxon564.mochickens.registers.RegisterBiomes;
 import com.saxon564.mochickens.registers.RegisterBlocks;
 import com.saxon564.mochickens.registers.RegisterChickens;
 import com.saxon564.mochickens.registers.RegisterDimensions;
-import com.saxon564.mochickens.registers.RegisterEggs;
 import com.saxon564.mochickens.registers.RegisterItems;
 import com.saxon564.mochickens.registers.RegisterOreDict;
+import com.saxon564.mochickens.registers.RegisterSounds;
 import com.saxon564.mochickens.registers.RegisterSpawns;
 import com.saxon564.mochickens.world.dimensions.chicken.biomes.BiomeGenChickenForest;
 import com.saxon564.mochickens.world.dimensions.chicken.biomes.BiomeGenChickenPlains;
@@ -119,6 +120,11 @@ public class MoChickens {
 	public static Block coal_gem_ore;
 	public static Block chicken_fire;
 	
+	// Initialize Sounds
+	public static SoundEvent DEEP_CLUCK;
+	public static SoundEvent GIANT_HURT;
+	public static SoundEvent DIAMOND_LAY;
+	
 	public static String path;
 	
 	//Biomes
@@ -139,12 +145,11 @@ public class MoChickens {
 		path = event.getModConfigurationDirectory().toString() + "\\MoChickens";
 		logger = LogManager.getLogger("Mo' Chickens");
 		network = NetworkRegistry.INSTANCE.newSimpleChannel("moChickens");
-		network.registerMessage(FireMessage.Handler.class, FireMessage.class, 0, Side.SERVER);
+		//network.registerMessage(FireMessage.Handler.class, FireMessage.class, 0, Side.SERVER);
 		 
 		FileManager.PreInit(event);
 
 		RegisterChickens.entityRegisters();
-		RegisterEggs.EggRegisters();
 		//RegisterDimensions.dimensionRegisters();
 		//RegisterBiomes.biomeRegisters();
 		proxy.modelExceptions();
@@ -169,7 +174,7 @@ public class MoChickens {
 	public void load(FMLInitializationEvent event) { 
 		CraftingRecipes.CraftingRecipieManager();
 		RegisterOreDict.AddOres();
-		proxy.registerSounds();
+		RegisterSounds.init();
 	}
 
 	@EventHandler
