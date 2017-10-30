@@ -19,15 +19,19 @@ public class ConfigComments {
 						+ config.NEW_LINE
 						+ "}"
 						+ config.NEW_LINE
+						+ "The line \"Biome List Type\" can either be \"Whitelist\" or \"Blacklist\""
+						+ config.NEW_LINE
 						+ "If a biome has custom spawn settings,"
 						+ config.NEW_LINE
-						+ "it overrides the blacklist for that biome"
+						+ "it overrides the blacklist/whitelist for that biome"
 						+ config.NEW_LINE
-						+ "The Blacklist Spawn Biomes list requires Biomes IDs."
+						+ "The Biome List requires Biomes IDs."
 						+ config.NEW_LINE
 						+ "Biomes that are blacklisted will cause the Chicken not to spawn in that biome"
 						+ config.NEW_LINE
-						+ "To get the Biome IDs either enable \"Debug\" mode in the \"MoChickens\" config file,"
+						+ "Likewise, biomes on the whitelist will be the only biomes the Chicken spawns in"
+						+ config.NEW_LINE
+						+ "To get the Biome IDs either enable \"Biome List\" option in the \"MoChickens\" config file,"
 						+ config.NEW_LINE
 						+ "or visit the Minecraft wikia at http://minecraft.gamepedia.com/Data_Values#Biome_IDs");
 	}

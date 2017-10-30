@@ -1,7 +1,9 @@
 package com.saxon564.mochickens.registers;
 
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
@@ -164,50 +166,58 @@ public class RegisterSpawns {
 			Configuration config) {
 		
 		Boolean allowed;
-		int[] blacklist = config.getCategory("spawning").get("Blacklist Spawn Biomes").getIntList();
-		for (int i = 0; i < Biome.REGISTRY.hashCode(); i++) {
+		String listType = config.getCategory("spawning").get("Biome List Type").getString();
+		String[] biomeList = config.getCategory("spawning").get("Biome List").getStringList();
+		for (Object obj : Biome.REGISTRY.getKeys()) {
+			
 			allowed = true;
-			Biome biome = Biome.getBiome(i);
-			if ((biome != null)
-					&& (!biome.getBiomeName().toLowerCase().equalsIgnoreCase(
-							"chicken forest"))
-					&& (!biome.getBiomeName().toLowerCase().equalsIgnoreCase(
-							"chicken plains")))
-				if (biome.getBiomeName() == null) {
-					System.out
-							.println("[Mo' Chickens] Biome (id "
-									+ i
-									+ ") has null name, could not build spawn information.");
-				} else {
-					String name = biome.getBiomeName().toLowerCase();
-					float E = biome.getTemperature();
-					float F = biome.getRainfall();
-					int I = biome.theBiomeDecorator.flowersPerChunk;
-					int J = biome.theBiomeDecorator.grassPerChunk;
-					int K = biome.theBiomeDecorator.treesPerChunk;
-					int C = biome.theBiomeDecorator.clayPerChunk;
-					if ((GeneralConfig.debug) && (ran != 1)) {
-						System.out.println("Name:" + name + " id: " + i);
-					}
-					if (!config.getCategory("" + biome.getIdForBiome(biome)).isEmpty()) {
-						EntityRegistry.addSpawn(entity, config.getCategory("" + biome.getIdForBiome(biome)).get("Spawn Probability").getInt(), config.getCategory("" + biome.getIdForBiome(biome)).get("Min Spawn Group Size").getInt(), config.getCategory("" + biome.getIdForBiome(biome)).get("Max Spawn Group Size").getInt(), type, Biome.getBiome(i));
-						//System.out.println("SPECIAL SPAWNS " + entity.getName() + " in " + BiomeGenBase.getBiome(i) + " ID:" + BiomeGenBase.getBiome(i).biomeID);
-						//System.out.println("SPECIAL SPAWNING INFO:  entity:" + entity + "     BiomeId:" + biome.biomeID + "     probability:" + config.getCategory("" + biome.biomeID).get("Spawn Probability").getInt() + "      MaxGroup:" + config.getCategory("" + biome.biomeID).get("Max Spawn Group Size").getInt() + "     MinGroup:" + config.getCategory("" + biome.biomeID).get("Min Spawn Group Size").getInt());
-					} else if ((E <= (float)config.getCategory("spawning").get("Max Spawn Temp").getDouble()) && (E >= (float)config.getCategory("spawning").get("Min Spawn Temp").getDouble())) {
-						for (int k = 0; k < blacklist.length; k++) {
-							if ( blacklist[k] == Biome.getBiome(i).getIdForBiome(biome)) {
-								//System.out.println("BLACKLISTED BIOME " + BiomeGenBase.getBiome(i).biomeID);
+			String biomeResource = (String) obj.toString().toLowerCase();
+			ConfigCategory customCategory = config.getCategory(biomeResource);
+			ConfigCategory category = config.getCategory("spawning");
+			
+			if ((biomeResource != null)
+					&& (!biomeResource.equalsIgnoreCase(
+							"mochickens:chicken_forest"))
+					&& (!biomeResource.equalsIgnoreCase(
+							"mochcickens:chicken_plains"))) {
+				Biome biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeResource));
+				float E = biome.getTemperature();
+				float F = biome.getRainfall();
+				int I = biome.theBiomeDecorator.flowersPerChunk;
+				int J = biome.theBiomeDecorator.grassPerChunk;
+				int K = biome.theBiomeDecorator.treesPerChunk;
+				int C = biome.theBiomeDecorator.clayPerChunk;
+				if (!customCategory.isEmpty()) {
+					EntityRegistry.addSpawn(entity, customCategory.get("Spawn Probability").getInt(), customCategory.get("Min Spawn Group Size").getInt(), customCategory.get("Max Spawn Group Size").getInt(), type, Biome.REGISTRY.getObject(new ResourceLocation(biomeResource)));
+				} else if ((E <= (float)category.get("Max Spawn Temp").getDouble()) && (E >= (float)category.get("Min Spawn Temp").getDouble())) {
+					for (int k = 0; k < biomeList.length; k++) {
+						if (listType.equalsIgnoreCase("whitelist")) {
+							if (!biomeList[k].equals(biomeResource)) {
+								//if (entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityEnderChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityCreeperChicken")) {
+									System.out.println(entity.getName() + " whitelist biome " + biomeList[k] + " compared to " + biomeResource);
+								//}
+								allowed = false;
+								break;
+							}
+						} else {
+							if (biomeList[k].equals(biomeResource)) {
+								//if (entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityEnderChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityCreeperChicken")) {
+									System.out.println(entity.getName() + " blacklist biome " + biomeList[k] + " compared to " + biomeResource);
+								//}
 								allowed = false;
 								break;
 							}
 						}
-						if ( allowed == true ) {
-							EntityRegistry.addSpawn(entity, config.getCategory("spawning").get("Spawn Probability").getInt(), config.getCategory("spawning").get("Min Spawn Group Size").getInt(), config.getCategory("spawning").get("Max Spawn Group Size").getInt(), type, Biome.getBiome(i));
-							//System.out.println("SPAWNS " + entity.getName() + " in " + BiomeGenBase.getBiome(i) + " ID:" + BiomeGenBase.getBiome(i).biomeID);
-							//System.out.println("SPAWNING INFO:  entity:" + entity.getName() + "     BiomeId:" + biome.biomeID + "     probability:" + config.getCategory("spawning").get("Spawn Probability").getInt() + "      MaxGroup:" + config.getCategory("spawning").get("Max Spawn Group Size").getInt() + "     MinGroup:" + config.getCategory("spawning").get("Min Spawn Group Size").getInt());
-						}
+					}
+					if ( allowed == true ) {
+						EntityRegistry.addSpawn(entity, category.get("Spawn Probability").getInt(), category.get("Min Spawn Group Size").getInt(), category.get("Max Spawn Group Size").getInt(), type, Biome.REGISTRY.getObject(new ResourceLocation(biomeResource)));
 					}
 				}
+			} else {
+				System.out.println("[Mo' Chickens] Biome (id "
+								+ biomeResource
+								+ ") has null name, could not build spawn information.");
+			}
 		}
 		ran = 1;
 	}

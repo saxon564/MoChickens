@@ -9,7 +9,9 @@ import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
@@ -182,10 +184,22 @@ public class MoChickens {
 		FileManager.PostInit(event);
 		
 		//RegisterSpawns.generateBiomeData();
-		//RegisterSpawns.entitySpawns();
-		
+		RegisterSpawns.entitySpawns();
+
 		if (GeneralConfig.itemFile) {
-		ItemFile.generate(event);
+			ItemFile.generateResourceLocation("Items.txt", Item.REGISTRY.getKeys());
+		}
+		
+		if (GeneralConfig.biomeFile) {
+			ItemFile.generateResourceLocation("Biomes.txt", Biome.REGISTRY.getKeys());
+		}
+		
+		if (GeneralConfig.soundFile) {
+			ItemFile.generateResourceLocation("Sounds.txt", SoundEvent.REGISTRY.getKeys());
+		}
+		
+		if (GeneralConfig.particleFile) {
+			ItemFile.generateString("Particles.txt", EnumParticleTypes.getParticleNames());
 		}
 		
 		// Register Random Spawn Egg Entries

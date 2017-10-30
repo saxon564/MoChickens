@@ -24,10 +24,10 @@ public class EntitySnowChicken extends EntityMoChicken
     
     public boolean getCanSpawnHere()
     {
-        int i = MathHelper.floor(this.posX);
-        int j = MathHelper.floor(this.getEntityBoundingBox().minY);
-        int k = MathHelper.floor(this.posZ);
-        return this.world.getBlockState(new BlockPos(i, j - 1, k)).getBlock() == Blocks.GRASS && this.world.getLight(new BlockPos(i, j, k)) > 8 && super.getCanSpawnHere();
+    	BlockPos pos = this.getPosition();
+    	//int light = this.world.getLight(pos);
+        //return this.world.getBlockState(pos.down()) == Blocks.GRASS && light >= this.minSpawnLightLevel && light <= this.maxSpawnLightLevel && super.getCanSpawnHere();
+        return this.world.getBlockState(pos.down()) == Blocks.GRASS && super.getCanSpawnHere();
     }
 
     /**

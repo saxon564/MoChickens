@@ -25,9 +25,12 @@ public class QuartzChickenConfig {
 	public static int spawnProb;
 	public static int minSpawn;
 	public static int maxSpawn;
+	public static int minSpawnLight;
+	public static int maxSpawnLight;
 	public static boolean emitsParticles;
 	public static String particleType;
-	public static int[] blacklistSpawn;
+	public static String biomeListType;
+	public static String[] biomeList;
 	public static double health;
 	public static double speed;
 	public static boolean spawn;
@@ -113,12 +116,15 @@ public class QuartzChickenConfig {
 	public static void spawning() { 
 		ConfigComments.spawningComments(config);
 		spawn = config.get("spawning", "Can Spawn", true).getBoolean(true);
-		spawnProb = config.get("spawning", "Spawn Probability", 0).getInt(0);
-		minSpawn = config.get("spawning", "Min Spawn Group Size", 0).getInt(0);
-		maxSpawn = config.get("spawning", "Max Spawn Group Size", 0).getInt(0);
+		spawnProb = config.get("spawning", "Spawn Probability", 60).getInt(60);
+		minSpawn = config.get("spawning", "Min Spawn Group Size", 1).getInt(1);
+		maxSpawn = config.get("spawning", "Max Spawn Group Size", 3).getInt(3);
+		minSpawnLight = config.get("spawning", "Min Spawn Light Level", 0).getInt(0);
+		maxSpawnLight = config.get("spawning", "Max Spawn Light Level", 12).getInt(12);
 		maxTemp = config.get("spawning", "Max Spawn Temp", 100.0D).getDouble(100.0D);
 		minTemp = config.get("spawning", "Min Spawn Temp", 0.1D).getDouble(0.1D);
-		blacklistSpawn = config.get("spawning", "Blacklist Spawn Biomes", FileManager.defaultNetherBlacklist).getIntList();
+		biomeListType = config.get("spawning", "Biome List Type", "Whitelist").getString();
+		biomeList = config.get("spawning", "Biome List", FileManager.defaultNetherWhitelist.clone()).getStringList();
 		config.get("8", "Spawn Probability", 5).getInt(5);
 		config.get("8", "Min Spawn Group Size", 1).getInt(1);
 		config.get("8", "Max Spawn Group Size", 4).getInt(4);

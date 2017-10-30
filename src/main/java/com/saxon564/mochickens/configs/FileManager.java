@@ -1,5 +1,6 @@
 package com.saxon564.mochickens.configs;
 
+import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.biome.BiomeProvider;
@@ -36,11 +37,11 @@ import com.saxon564.mochickens.configs.chickens.SnowChickenConfig;
 public class FileManager {
 
 	public static int biomeListLength;
-	public static int[] defaultBlacklist = {8, 9};
-	public static int[] defaultNetherBlacklist;
-	public static int[] defaultEndBlacklist;
-	public static int[] allowedNether = {8};
-	public static int[] allowedEnd = {9};
+	public static String[] defaultBlacklist = {"minecraft:hell", "minecraft:sky"};
+	public static String[] defaultNetherWhitelist = {"minecraft:hell"};
+	public static String[] defaultEndBlacklist = {"minecraft:hell"};
+	public static String[] allowedNether = {"minecraft:hell"};
+	public static String[] allowedEnd = {"minecraft:sky"};
 	
 	public static void PreInit(FMLPreInitializationEvent event) {
 		DimensionConfigs.setId(event);
@@ -72,14 +73,7 @@ public class FileManager {
 
 	public static void PostInit(FMLPostInitializationEvent event) {
 		
-		biomeListLength = generateList() -1;
-		
-		defaultNetherBlacklist = new int[biomeListLength];
-		defaultEndBlacklist = new int[biomeListLength];
-
-		// Blacklists
-		defaultNetherBlacklist = generateBlackLists(allowedNether, "nether");
-		defaultEndBlacklist = generateBlackLists(allowedEnd, "end");
+		biomeListLength = generateList();
 
 		// Create Configs
 		GeneralConfig.setConfigs(event);
@@ -106,39 +100,36 @@ public class FileManager {
 		NuuwChickenConfig.setConfigs(event);
 	}
 
-	public static int[] generateBlackLists(int[] allowed, String type) {
-		int[] ret = new int[biomeListLength];
+	/*public static String[] generateBlackLists(String[] allowed, String type) {
+		String[] ret = new String[biomeListLength];
 		int loop = 0;
-		for (int i = 0; i < Biome.REGISTRY.hashCode(); i++) {
-			Biome biome = Biome.getBiome(i);
-			if ((biome != null) && (!biome.getBiomeName().toLowerCase().equalsIgnoreCase("chicken forest")) && (!biome.getBiomeName().toLowerCase().equalsIgnoreCase("chicken plains")))
-				if (biome.getBiomeName() == null) {
-					System.out.println("[Mo' Chickens] Biome (id " + i + ") has null name, could not build spawn information.");
-				} else {
-					String name = biome.getBiomeName().toLowerCase();
-					for (int k = 0; k < allowed.length; k++) {
-						if (allowed[k] != i) {
-							//System.out.println("BiomeGenBase Length    " + BiomeGenBase.getBiomeGenArray().length);
-							ret[loop] = i;
-							loop++;
-						}
+		for (Object obj : Biome.REGISTRY.getKeys()) {
+			String biome = (String) obj.toString().toLowerCase();
+			if ((biome != null) && (!biome.equalsIgnoreCase("mochickens:chicken_forest")) && (!biome.equalsIgnoreCase("mochickens:chicken_plains"))) {
+				for (int k = 0; k < allowed.length; k++) {
+					if (!allowed[k].toLowerCase().equals(biome)) {
+						ret[loop] = biome;
+						loop++;
+					} else {
+						System.out.println("Generating " + type + " list! " + allowed[k] + " compared to " + biome);
 					}
 				}
+			} else {
+				System.out.println("[Mo' Chickens] Biome (id " + biome + ") has null name, could not build spawn information.");
+			}
 		}
 		return ret;
-	}
+	}*/
 	
 	public static int generateList() {
 		int loop = 0;
-		for (int i = 0; i < Biome.REGISTRY.hashCode(); i++) {
-			Biome biome = Biome.getBiome(i);
-			if ((biome != null) && (!biome.getBiomeName().toLowerCase().equalsIgnoreCase("chicken forest")) && (!biome.getBiomeName().toLowerCase().equalsIgnoreCase("chicken plains")))
-				if (biome.getBiomeName() == null) {
-					System.out.println("[Mo' Chickens] Biome (id " + i + ") has null name, could not build spawn information.");
-				} else {
-					String name = biome.getBiomeName().toLowerCase();
-							loop++;
-				}
+		for (Object obj : Biome.REGISTRY.getKeys()) {
+			String biome = (String) obj.toString().toLowerCase();
+			if ((biome != null) && (!biome.equalsIgnoreCase("mochickens:chicken_forest")) && (!biome.equalsIgnoreCase("mochickens:chicken_plains"))) {
+					loop++;
+			} else {
+				System.out.println("[Mo' Chickens] Biome (id " + biome + ") has null name, could not build spawn information.");
+			}
 		}
 		return loop;
 	}

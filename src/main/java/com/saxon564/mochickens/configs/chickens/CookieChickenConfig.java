@@ -25,9 +25,12 @@ public class CookieChickenConfig {
 	public static int spawnProb;
 	public static int minSpawn;
 	public static int maxSpawn;
+	public static int minSpawnLight;
+	public static int maxSpawnLight;
 	public static boolean emitsParticles;
 	public static String particleType;
-	public static int[] blacklistSpawn;
+	public static String biomeListType;
+	public static String[] biomeList;
 	public static double health;
 	public static double speed;
 	public static boolean spawn;
@@ -113,12 +116,15 @@ public class CookieChickenConfig {
 	public static void spawning() { 
 		ConfigComments.spawningComments(config);
 		spawn = config.get("spawning", "Can Spawn", true).getBoolean(true);
-		spawnProb = config.get("spawning", "Spawn Probability", 8).getInt(8);
+		spawnProb = config.get("spawning", "Spawn Probability", 80).getInt(80);
 		minSpawn = config.get("spawning", "Min Spawn Group Size", 2).getInt(2);
 		maxSpawn = config.get("spawning", "Max Spawn Group Size", 4).getInt(4);
+		minSpawnLight = config.get("spawning", "Min Spawn Light Level", 7).getInt(7);
+		maxSpawnLight = config.get("spawning", "Max Spawn Light Level", 12).getInt(12);
 		maxTemp = config.get("spawning", "Max Spawn Temp", 100.0D).getDouble(100.0D);
 		minTemp = config.get("spawning", "Min Spawn Temp", 0.1D).getDouble(0.1D);
-		blacklistSpawn = config.get("spawning", "Blacklist Spawn Biomes", FileManager.defaultBlacklist).getIntList();
+		biomeListType = config.get("spawning", "Biome List Type", "Blacklist").getString();
+		biomeList = config.get("spawning", "Biome List", FileManager.defaultBlacklist.clone()).getStringList();
 	}
 		
 	public static void entityData()	{

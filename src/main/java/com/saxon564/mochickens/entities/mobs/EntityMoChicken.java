@@ -1,6 +1,7 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
@@ -11,6 +12,7 @@ import net.minecraft.enchantment.EnchantmentThorns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -32,6 +34,7 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -59,6 +62,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
@@ -97,81 +101,84 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	/**********************************/
 	/*********config variables*********/
 	/**********************************/
-	private Configuration config;
+	protected Configuration config;
 	
 	// Attack Data
-	private String[] effectIDs;
-	private int[] effectAmplifiers;
-	private int[] effectDurations;
-	private int arrowShootSpeed;
-	private double attackDamage;
-	private double attackSpeed;
-	private double attackTrackingRange;
-	private boolean canBlowUp;
-	private boolean canShootArrows;
-	private int explosionRadius;
-	private int fireDuration;
-	private int fuseTime;
-	private boolean setTargetOnFire;
+	protected String[] effectIDs;
+	protected int[] effectAmplifiers;
+	protected int[] effectDurations;
+	protected int arrowShootSpeed;
+	protected double attackDamage;
+	protected double attackSpeed;
+	protected double attackTrackingRange;
+	protected boolean canBlowUp;
+	protected boolean canShootArrows;
+	protected int explosionRadius;
+	protected int fireDuration;
+	protected int fuseTime;
+	protected boolean setTargetOnFire;
 	
 	// Breeding
-	private Item breedingItem;
-	private int breedingItemData;
-	private boolean breedingItemUsesData;
+	protected Item breedingItem;
+	protected int breedingItemData;
+	protected boolean breedingItemUsesData;
 	
 	// Entity Data
-	private boolean allowBreeding;
-	private boolean allowTeleporting;
-	private boolean burnsInSun;
-	private double damageFromWater;
-	private boolean despawnTamed;
-	private boolean despawnUntamed;
-	private boolean emitsLight;
-	private boolean emitsParticles;
-	private boolean getsHurtByWater;
-	private double health;
-	private double hitBoxSizeX;
-	private double hitBoxSizeZ;
-	private boolean hostile;
-	private int id;
-	private boolean immuneToFire;
-	private int lightLevelEmited;
-	private EnumParticleTypes particleType;
-	private int particlesPerTick;
-	private double walkSpeed;
+	protected boolean allowBreeding;
+	protected boolean allowTeleporting;
+	protected boolean burnsInSun;
+	protected double damageFromWater;
+	protected boolean despawnTamed;
+	protected boolean despawnUntamed;
+	protected boolean emitsLight;
+	protected boolean emitsParticles;
+	protected boolean getsHurtByWater;
+	protected double health;
+	protected double hitBoxSizeX;
+	protected double hitBoxSizeZ;
+	protected boolean hostile;
+	protected int id;
+	protected boolean immuneToFire;
+	protected int lightLevelEmited;
+	protected EnumParticleTypes particleType;
+	protected int particlesPerTick;
+	protected double walkSpeed;
 	
 	// Laying
-	private Item layingItem;
-	private int layingItemAmount;
-	private int layingItemData;
-	private int layingItemMaxData;
-	private int layingItemMinData;
-	private boolean layingItemUsesData;
-	private boolean layingItemUsesRandomData;
-	private SoundEvent layingSound;
-	private int minItemLayTime;
-	private int variableItemLayTime;
+	protected Item layingItem;
+	protected int layingItemAmount;
+	protected int layingItemData;
+	protected int layingItemMaxData;
+	protected int layingItemMinData;
+	protected boolean layingItemUsesData;
+	protected boolean layingItemUsesRandomData;
+	protected SoundEvent layingSound;
+	protected int minItemLayTime;
+	protected int variableItemLayTime;
 	
 	// Spawning
-	private int[] blacklistSpawnBiomes;
-	private boolean canSpawn;
-	private int maxSpawnGroupSize;
-	private double maxSpawnTemp;
-	private int minSpawnGroupSize;
-	private double minSpawnTemp;
-	private int spawnProbability;
+	protected String biomeListType;
+	protected String[] biomeList;
+	protected boolean canSpawn;
+	protected int maxSpawnGroupSize;
+	protected double maxSpawnTemp;
+	protected int minSpawnGroupSize;
+	protected double minSpawnTemp;
+	protected int spawnProbability;
+	protected static int minSpawnLightLevel;
+	protected static int maxSpawnLightLevel;
 	
 	// Taming
-	private int tamingChance;
-	private Item tamingItem;
-	private int tamingItemData;
-	private boolean tamingItemUsesData;
+	protected int tamingChance;
+	protected Item tamingItem;
+	protected int tamingItemData;
+	protected boolean tamingItemUsesData;
 	
 	// Tempting
-	private int delayFollowingBetweenItemHoldings;
-	private Item temptingItem;
-	private int temptingItemData;
-	private boolean temptingItemUsesData;
+	protected int delayFollowingBetweenItemHoldings;
+	protected Item temptingItem;
+	protected int temptingItemData;
+	protected boolean temptingItemUsesData;
 	
 	
 
@@ -341,30 +348,27 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	/**
      * Checks to make sure the light is not too bright where the mob is spawning
      */
-    protected boolean isValidLightLevel()
+	protected boolean isValidLightLevel()
     {
-        int i = MathHelper.floor(this.posX);
-        int j = MathHelper.floor(this.getEntityBoundingBox().minY);
-        int k = MathHelper.floor(this.posZ);
+        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-        if (this.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
-                .nextInt(32))
+        if (this.world.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32))
         {
             return false;
         }
         else
         {
-            int l = this.world.getLight(new BlockPos(i, j, k));
+            int i = this.world.getLightFromNeighbors(blockpos);
 
             if (this.world.isThundering())
             {
-                int i1 = this.world.getSkylightSubtracted();
+                int j = this.world.getSkylightSubtracted();
                 this.world.setSkylightSubtracted(10);
-                l = this.world.getLight(new BlockPos(i, j, k));
-                this.world.setSkylightSubtracted(i1);
+                i = this.world.getLightFromNeighbors(blockpos);
+                this.world.setSkylightSubtracted(j);
             }
 
-            return l <= this.rand.nextInt(8);
+            return i <= this.rand.nextInt(8);
         }
     }
 	
@@ -373,8 +377,27 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     {
 		super.getCanSpawnHere();
 		BlockPos pos = new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ);
-		if (!this.world.getBlockState(pos).getBlock().isBlockSolid(world, pos, EnumFacing.UP) && (this.world.getLight(pos) >= 7)) {
-			//System.out.println("Chicken:" + this.chicken.toString() + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
+		Block block = this.world.getBlockState(pos).getBlock();
+		int light = this.world.getLightFromNeighbors(pos);
+		/*List<SpawnListEntry> list = this.world.getBiome(pos).getSpawnableList(EnumCreatureType.MONSTER);
+		list.forEach((temp) -> {
+			System.out.println("Chicken:" + this.chicken.toString().substring(44) + " Could be: " + temp);
+		});
+		List<SpawnListEntry> list2 = Biomes.HELL.getSpawnableList(EnumCreatureType.MONSTER);
+		list2.forEach((temp) -> {
+			System.out.println("Chicken:" + this.chicken.toString().substring(44) + " Could be: " + temp);
+		});
+		List<SpawnListEntry> list3 = Biomes.SKY.getSpawnableList(EnumCreatureType.MONSTER);
+		list3.forEach((temp) -> {
+			System.out.println("Chicken:" + this.chicken.toString().substring(44) + " Could be: " + temp);
+		});*/
+		//do {
+		//	System.out.println("Chicken:" + this.chicken.toString() + " Could be: " + list.listIterator().next().entityClass.toString() + " with Spawn Probability: " + list.listIterator().next().itemWeight + "and a min/max of" + list.listIterator().next().minGroupCount + "/" + list.listIterator().next().maxGroupCount);
+		//} while(list.listIterator().hasNext());
+		//System.out.println("Chicken:" + this.chicken.toString() + " Spawn Probability: " + list.get(index).itemWeight);
+		if (!block.isBlockSolid(world, pos, EnumFacing.UP) && (light >= minSpawnLightLevel) && (light <= maxSpawnLightLevel)) {
+			System.out.println("Chicken:" + this.chicken.toString() + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
+			System.out.println("Chicken:" + this.chicken.toString() + " Light data: current: " + light + " min: " + minSpawnLightLevel + " max: " + maxSpawnLightLevel);
 			return true;
 		} else {
 			return false;
@@ -522,13 +545,13 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	 * required. For example, zombies and skeletons use this to react to
 	 * sunlight and start to burn.
 	 */
-	//private int loc = 0;
+	private int loc = 0;
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		//if (loc == 0) {
-		//	System.out.println(this.chicken + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
-		//	loc ++;
-		//}
+		if (loc == 0) {
+			//System.out.println(this.chicken + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
+			loc ++;
+		}
 		if (this.world.isDaytime() && !this.world.isRemote && burnsInSun) {
 			float f = this.getBrightness(1.0F);
 
@@ -1080,13 +1103,16 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		variableItemLayTime = config.getCategory("laying").get("Variable Item Lay Time").getInt();
 		
 		// Spawning
-		blacklistSpawnBiomes = config.getCategory("spawning").get("Blacklist Spawn Biomes").getIntList();
+		biomeListType = config.getCategory("spawning").get("Biome List Type").getString();
+		biomeList = config.getCategory("spawning").get("Biome List").getStringList();
 		canSpawn = config.getCategory("spawning").get("Can Spawn").getBoolean();
 		maxSpawnGroupSize = config.getCategory("spawning").get("Max Spawn Group Size").getInt();
 		maxSpawnTemp = config.getCategory("spawning").get("Max Spawn Temp").getDouble();
 		minSpawnGroupSize = config.getCategory("spawning").get("Min Spawn Group Size").getInt();
 		minSpawnTemp = config.getCategory("spawning").get("Min Spawn Temp").getDouble();
 		spawnProbability = config.getCategory("spawning").get("Spawn Probability").getInt();
+		minSpawnLightLevel = config.getCategory("spawning").get("Min Spawn Light Level").getInt();
+		maxSpawnLightLevel = config.getCategory("spawning").get("Max Spawn Light Level").getInt();
 		
 		// Taming
 		tamingChance = config.getCategory("taming").get("Taming Chance").getInt();

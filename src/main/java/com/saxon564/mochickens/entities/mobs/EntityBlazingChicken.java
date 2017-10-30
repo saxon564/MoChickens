@@ -2,6 +2,7 @@ package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
@@ -24,11 +25,9 @@ public class EntityBlazingChicken extends EntityMoChicken
 
     public boolean getCanSpawnHere()
     {
-    	int i = MathHelper.floor(this.posX);
-        int j = MathHelper.floor(this.getEntityBoundingBox().minY);
-        int k = MathHelper.floor(this.posZ);
-
-        if ((this.world.getBlockState(new BlockPos(i, j - 1, k)).getBlock() != Blocks.LAVA) && (this.world.getBlockState(new BlockPos(i, j - 1, k)).getBlock() != Blocks.FLOWING_LAVA))
+    	BlockPos pos = this.getPosition();
+    	Block block = this.world.getBlockState(pos.down()).getBlock();
+        /*if ((this.world.getBlockState(pos.down()).getBlock() != Blocks.LAVA) && (this.world.getBlockState(pos.down()).getBlock() != Blocks.FLOWING_LAVA) && (this.world.getLight(pos) >= this.minSpawnLightLevel) && (this.world.getLight(pos) <= this.maxSpawnLightLevel))
         {
         	//System.out.println("Chicken: Blazing X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
             return true;
@@ -36,7 +35,8 @@ public class EntityBlazingChicken extends EntityMoChicken
         else
         {
             return false;
-        }
+        }*/
+    	return !block.equals(Blocks.LAVA) && !block.equals(Blocks.FLOWING_LAVA) && super.getCanSpawnHere();
     }
     
     /**

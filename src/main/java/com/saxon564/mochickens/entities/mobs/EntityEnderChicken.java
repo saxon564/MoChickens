@@ -2,6 +2,8 @@ package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.configs.chickens.EnderChickenConfig;
 
+import net.minecraft.init.Biomes;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -19,38 +21,38 @@ public class EntityEnderChicken extends EntityMoChicken {
 		super.applyEntityAttributes(EnderChickenConfig.config, this.getClass());
 	}
     
-    protected boolean isValidLightLevel()
+	/*protected boolean isValidLightLevel()
     {
-    	int i = MathHelper.floor(this.posX);
-        int j = MathHelper.floor(this.getEntityBoundingBox().minY);
-        int k = MathHelper.floor(this.posZ);
+        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-        if (this.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
-                .nextInt(32))
+        if (this.world.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32))
         {
             return false;
         }
         else
         {
-        	int l = this.world.getLightFromNeighbors(new BlockPos(i, j, k));
+            int i = this.world.getLightFromNeighbors(blockpos);
 
             if (this.world.isThundering())
             {
-                int i1 = this.world.getSkylightSubtracted();
+                int j = this.world.getSkylightSubtracted();
                 this.world.setSkylightSubtracted(10);
-                l = this.world.getLight(new BlockPos(i, j, k));
-                this.world.setSkylightSubtracted(i1);
+                i = this.world.getLightFromNeighbors(blockpos);
+                this.world.setSkylightSubtracted(j);
             }
 
-            return l <= 7;
+            return i <= this.rand.nextInt(8);
         }
-    }
+    }*/
 
     @Override
     public boolean getCanSpawnHere()
     {
-    		//System.out.println("Chicken: Ender X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
-        	return this.world.getDifficulty().toString() != "PEACEFUL" && this.isValidLightLevel();
+    	BlockPos pos = this.getPosition();
+		//System.out.println("Chicken: Ender X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
+		//System.out.println("Ender Chicken " + (this.world.getDifficulty().toString() != "PEACEFUL" && this.isValidLightLevel()));
+    	//return this.world.getDifficulty().toString() != "PEACEFUL" && this.isValidLightLevel();
+    	return !this.world.getDifficulty().toString().equalsIgnoreCase("PEACEFUL") && super.getCanSpawnHere();
     }
 
 	/**

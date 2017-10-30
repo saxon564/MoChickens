@@ -22,38 +22,37 @@ public class EntityCreeperChicken extends EntityMoChicken
         super.applyEntityAttributes(CreeperChickenConfig.config, this.getClass());
     }
     
-    protected boolean isValidLightLevel()
+    /*protected boolean isValidLightLevel()
     {
-    	int i = MathHelper.floor(this.posX);
-        int j = MathHelper.floor(this.getEntityBoundingBox().minY);
-        int k = MathHelper.floor(this.posZ);
+        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-        if (this.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(i, j, k)) > this.rand
-                .nextInt(32))
+        if (this.world.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32))
         {
             return false;
         }
         else
         {
-        	int l = this.world.getLightFromNeighbors(new BlockPos(i, j, k));
+            int i = this.world.getLightFromNeighbors(blockpos);
 
             if (this.world.isThundering())
             {
-                int i1 = this.world.getSkylightSubtracted();
+                int j = this.world.getSkylightSubtracted();
                 this.world.setSkylightSubtracted(10);
-                l = this.world.getLight(new BlockPos(i, j, k));
-                this.world.setSkylightSubtracted(i1);
+                i = this.world.getLightFromNeighbors(blockpos);
+                this.world.setSkylightSubtracted(j);
             }
 
-            return l <= 7;
+            return i <= this.rand.nextInt(8);
         }
-    }
+    }*/
 
     @Override
     public boolean getCanSpawnHere()
     {
     		//System.out.println("Chicken: Creeper X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
-        	return this.world.getDifficulty().toString() != "PEACEFUL" && this.isValidLightLevel();
+			//System.out.println("Creeper Chicken " + (this.world.getDifficulty().toString() != "PEACEFUL" && this.isValidLightLevel()));
+        	//return this.world.getDifficulty().toString() != "PEACEFUL" && this.isValidLightLevel();
+    		return !this.world.getDifficulty().toString().equalsIgnoreCase("PEACEFUL") && super.getCanSpawnHere();
     }
 
     /**

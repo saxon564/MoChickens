@@ -25,9 +25,12 @@ public class EnderChickenConfig {
 	public static int spawnProb;
 	public static int minSpawn;
 	public static int maxSpawn;
+	public static int minSpawnLight;
+	public static int maxSpawnLight;
 	public static boolean emitsParticles;
 	public static String particleType;
-	public static int[] blacklistSpawn;
+	public static String biomeListType;
+	public static String[] biomeList;
 	public static double health;
 	public static double speed;
 	public static boolean spawn;
@@ -113,15 +116,18 @@ public class EnderChickenConfig {
 	public static void spawning() { 
 		ConfigComments.spawningComments(config);
 		spawn = config.get("spawning", "Can Spawn", true).getBoolean(true);
-		spawnProb = config.get("spawning", "Spawn Probability", 3).getInt(3);
+		spawnProb = config.get("spawning", "Spawn Probability", 40).getInt(40);
 		minSpawn = config.get("spawning", "Min Spawn Group Size", 1).getInt(1);
 		maxSpawn = config.get("spawning", "Max Spawn Group Size", 4).getInt(4);
+		minSpawnLight = config.get("spawning", "Min Spawn Light Level", 0).getInt(0);
+		maxSpawnLight = config.get("spawning", "Max Spawn Light Level", 7).getInt(7);
 		maxTemp = config.get("spawning", "Max Spawn Temp", 100.0D).getDouble(100.0D);
 		minTemp = config.get("spawning", "Min Spawn Temp", 0.1D).getDouble(0.1D);
-		blacklistSpawn = config.get("spawning", "Blacklist Spawn Biomes", FileManager.defaultEndBlacklist.clone()).getIntList();
-		config.get("9", "Spawn Probability", 10).getInt(10);
-		config.get("9", "Min Spawn Group Size", 3).getInt(3);
-		config.get("9", "Max Spawn Group Size", 4).getInt(4);;
+		biomeListType = config.get("spawning", "Biome List Type", "Blacklist").getString();
+		biomeList = config.get("spawning", "Biome List", FileManager.defaultEndBlacklist.clone()).getStringList();
+		config.get("minecraft:sky", "Spawn Probability", 10).getInt(10);
+		config.get("minecraft:sky", "Min Spawn Group Size", 3).getInt(3);
+		config.get("minecraft:sky", "Max Spawn Group Size", 4).getInt(4);;
 	}
 		
 	public static void entityData()	{

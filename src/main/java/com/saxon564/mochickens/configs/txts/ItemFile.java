@@ -5,28 +5,28 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameData;
 
 import com.saxon564.mochickens.MoChickens;
 
 public class ItemFile {
-
-	private static File file;
-
-	public static void generate(FMLPostInitializationEvent event) {
-		file = new File(MoChickens.path, "Items.txt");
-
+	
+	public static void generateResourceLocation(String fileName, Set<ResourceLocation> set) {
 		try {
+			File file = new File(MoChickens.path, fileName);
+			ArrayList<String> list = new ArrayList();
 
-			ArrayList<String> itemList = new ArrayList();
-
-			for (Object obj : GameData.getItemRegistry().getKeys()) {
-				itemList.add((String) obj);
+			for (Object obj : set) {
+				list.add((String) obj.toString());
 			}
 
-			Collections.sort(itemList);
+			Collections.sort(list);
 			if (file.exists()) {
 				file.delete();
 			}
@@ -34,15 +34,41 @@ public class ItemFile {
 
 			PrintWriter out = new PrintWriter(new FileWriter(file));
 
-			for (String s : itemList) {
+			for (String s : list) {
 				out.println(s);
 			}
-			
+
 			out.close();
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
+	}
+	
+	public static void generateString(String fileName, Set<String> set) {
+		try {
+			File file = new File(MoChickens.path, fileName);
+			ArrayList<String> list = new ArrayList();
 
+			for (Object obj : set) {
+				list.add((String) obj.toString());
+			}
+
+			Collections.sort(list);
+			if (file.exists()) {
+				file.delete();
+			}
+			file.createNewFile();
+
+			PrintWriter out = new PrintWriter(new FileWriter(file));
+
+			for (String s : list) {
+				out.println(s);
+			}
+
+			out.close();
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
 	}
 
 }
