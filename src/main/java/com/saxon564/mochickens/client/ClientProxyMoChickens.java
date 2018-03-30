@@ -89,6 +89,7 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
     }
     
     public void modelExceptions() {
+    	System.out.println(MoChickens.chicken_fire.getLocalizedName());
     	ModelLoader.setCustomStateMapper(MoChickens.chicken_fire, (new StateMap.Builder()).ignore(BlockChickenFireBlock.AGE).build());
     }
     
@@ -120,7 +121,7 @@ public class ClientProxyMoChickens extends CommonProxyMoChickens
 		RegisterHelper.registerItemRenders(MoChickens.chicken_steel, 0, "chicken_steel");
 		
 		//Blocks
-		RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.coal_gem_ore), 0, "coal_gem_ore");
+		//RegisterHelper.registerItemRenders(Item.getItemFromBlock(MoChickens.coal_gem_ore), 0, "coal_gem_ore");
 		
 	}
 

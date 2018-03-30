@@ -10,8 +10,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.biomes.ChickenForestConfig;
-import com.saxon564.mochickens.configs.biomes.ChickenPlainsConfig;
 import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
 import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
 import com.saxon564.mochickens.configs.chickens.ClayChickenConfig;
@@ -44,9 +42,9 @@ public class FileManager {
 	public static String[] allowedEnd = {"minecraft:sky"};
 	
 	public static void PreInit(FMLPreInitializationEvent event) {
-		DimensionConfigs.setId(event);
-		ChickenPlainsConfig.setId(event);
-		ChickenForestConfig.setId(event);
+		//DimensionConfigs.setId(event);
+		//ChickenPlainsConfig.setId(event);
+		//ChickenForestConfig.setId(event);
 		CoalChickenConfig.setId(event);
 		IronChickenConfig.setId(event);
 		GoldChickenConfig.setId(event);

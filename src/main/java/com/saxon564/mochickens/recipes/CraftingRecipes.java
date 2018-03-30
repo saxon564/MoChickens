@@ -1,4 +1,4 @@
-package com.saxon564.mochickens.recipes;
+/*package com.saxon564.mochickens.recipes;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -98,4 +98,4 @@ public class CraftingRecipes
         GameRegistry.addRecipe(new ItemStack(MoChickens.taming_disc), new Object[] { " T ", "LCR", " B ", 'T', new ItemStack(MoChickens.disc_stick, 2, 7), 'L', new ItemStack(MoChickens.disc_stick, 2, 4), 'R', new ItemStack(MoChickens.disc_stick, 2, 0), 'B', new ItemStack(MoChickens.disc_stick, 2, 2), 'C', MoChickens.inner_taming_disc});
         GameRegistry.addRecipe(new ItemStack(MoChickens.taming_disc), new Object[] { " T ", "LCR", " B ", 'T', new ItemStack(MoChickens.disc_stick, 2, 7), 'L', new ItemStack(MoChickens.disc_stick, 2, 0), 'R', new ItemStack(MoChickens.disc_stick, 2, 4), 'B', new ItemStack(MoChickens.disc_stick, 2, 2), 'C', MoChickens.inner_taming_disc});
     }
-}
+}*/

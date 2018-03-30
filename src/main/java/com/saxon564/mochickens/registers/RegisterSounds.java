@@ -21,7 +21,7 @@ public class RegisterSounds {
 		ResourceLocation location = new ResourceLocation(Reference.MOD_ID, name);
 		SoundEvent e = new SoundEvent(location);
 		
-		SoundEvent.REGISTRY.register(size, location, e);
+		//SoundEvent.REGISTRY.register(size, location, e);
 		size++;
 		return e;
 	}

@@ -12,12 +12,12 @@ public class PlayerDamageHandler {
 	@SubscribeEvent
 	public void onEvent(LivingHurtEvent event)
 	{
-		Entity entitysource = event.getSource().getSourceOfDamage();
+		Entity entitysource = event.getSource().getTrueSource();
 		if (entitysource instanceof EntityLivingBase)
 		{
 			if (event.getSource().isProjectile())
 			{
-				System.out.println(event.getSource().getEntity().toString());
+				System.out.println(event.getSource().getImmediateSource().toString());
 			}
 		}
 	}

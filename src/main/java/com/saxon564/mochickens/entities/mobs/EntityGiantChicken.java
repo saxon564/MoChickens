@@ -6,6 +6,7 @@ import com.saxon564.mochickens.configs.chickens.GiantChickenConfig;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -47,10 +48,10 @@ public class EntityGiantChicken extends EntityMoChicken
      * Returns the sound this mob makes when it is hurt.
      */
     @Override
-    protected SoundEvent getHurtSound()
+    protected void playHurtSound(DamageSource source)
     {
     	this.playSound(MoChickens.GIANT_HURT, 1.0f, 1.0f);
-    	return MoChickens.GIANT_HURT;
+    	super.playHurtSound(source);
     }
 
     /**

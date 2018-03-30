@@ -10,16 +10,16 @@ import net.minecraft.entity.monster.EntityCreeper;
 public class ChickAISwell extends EntityAIBase
 {
     /** The creeper that is swelling. */
-    EntityMoChicken swellingCreeper;
+    EntityMoChicken swellingChicken;
 
     /**
      * The creeper's attack target. This is used for the changing of the creeper's state.
      */
-    EntityLivingBase creeperAttackTarget;
+    EntityLivingBase chickenAttackTarget;
 
-    public ChickAISwell(EntityMoChicken par1EntityCreeper)
+    public ChickAISwell(EntityMoChicken par1EntityChicken)
     {
-        this.swellingCreeper = par1EntityCreeper;
+        this.swellingChicken = par1EntityChicken;
         this.setMutexBits(1);
     }
 
@@ -28,8 +28,8 @@ public class ChickAISwell extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLivingBase entitylivingbase = this.swellingCreeper.getAttackTarget();
-        return this.swellingCreeper.getCreeperState() > 0 || entitylivingbase != null && this.swellingCreeper.getDistanceSqToEntity(entitylivingbase) < 9.0D;
+        EntityLivingBase entitylivingbase = this.swellingChicken.getAttackTarget();
+        return this.swellingChicken.getChickenState() > 0 || entitylivingbase != null && this.swellingChicken.getDistanceSq(entitylivingbase) < 9.0D;
     }
 
     /**
@@ -37,8 +37,8 @@ public class ChickAISwell extends EntityAIBase
      */
     public void startExecuting()
     {
-        this.swellingCreeper.getNavigator().clearPathEntity();
-        this.creeperAttackTarget = this.swellingCreeper.getAttackTarget();
+        this.swellingChicken.getNavigator().clearPath();
+        this.chickenAttackTarget = this.swellingChicken.getAttackTarget();
     }
 
     /**
@@ -46,7 +46,7 @@ public class ChickAISwell extends EntityAIBase
      */
     public void resetTask()
     {
-        this.creeperAttackTarget = null;
+        this.chickenAttackTarget = null;
     }
 
     /**
@@ -54,21 +54,21 @@ public class ChickAISwell extends EntityAIBase
      */
     public void updateTask()
     {
-        if (this.creeperAttackTarget == null)
+        if (this.chickenAttackTarget == null)
         {
-            this.swellingCreeper.setCreeperState(-1);
+            this.swellingChicken.setChickenState(-1);
         }
-        else if (this.swellingCreeper.getDistanceSqToEntity(this.creeperAttackTarget) > 49.0D)
+        else if (this.swellingChicken.getDistanceSq(this.chickenAttackTarget) > 49.0D)
         {
-            this.swellingCreeper.setCreeperState(-1);
+            this.swellingChicken.setChickenState(-1);
         }
-        else if (!this.swellingCreeper.getEntitySenses().canSee(this.creeperAttackTarget))
+        else if (!this.swellingChicken.getEntitySenses().canSee(this.chickenAttackTarget))
         {
-            this.swellingCreeper.setCreeperState(-1);
+            this.swellingChicken.setChickenState(-1);
         }
         else
         {
-            this.swellingCreeper.setCreeperState(1);
+            this.swellingChicken.setChickenState(1);
         }
     }
 }

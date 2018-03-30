@@ -33,14 +33,16 @@ public class ItemDiscStick extends Item
     }
     
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> items) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
     	
     	for (EnumResourceTypes types : EnumResourceTypes.values()) {
     		
-    		int typeBits = types.getID();
-    		int metadata = typeBits;
-    		ItemStack subItemStack = new ItemStack(item, 1, metadata);
-    		items.add(subItemStack);
+    		if (this.isInCreativeTab(tab)) {
+	    		int typeBits = types.getID();
+	    		int metadata = typeBits;
+	    		ItemStack subItemStack = new ItemStack(this, 1, metadata);
+	    		items.add(subItemStack);
+    		}
     		
     	}
     	

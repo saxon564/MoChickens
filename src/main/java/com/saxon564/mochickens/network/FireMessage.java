@@ -59,7 +59,7 @@ public class FireMessage implements IMessage {
         public IMessage onMessage(FireMessage message, MessageContext ctx) {
             //System.out.println(String.format("Received %s from %s", message.face, ctx.getServerHandler().playerEntity.getDisplayName()));
             EnumFacing face = EnumFacing.getFront(message.face);
-            EntityPlayer player = ctx.getServerHandler().playerEntity;
+            EntityPlayer player = ctx.getServerHandler().player;
             World world = player.world;
     		BlockPos pos = new BlockPos(message.x, message.y, message.z);
     		

@@ -91,6 +91,22 @@ public class GoldChickenConfig {
 	public static boolean breedModded;
 	public static boolean tameModded;
 	public static boolean temptModded;
+	public static boolean explodingChickenSyndrome;
+	public static boolean eCSNotifyOwnerWhenInfected;
+	public static boolean eCSInfectedWhenWild;
+	public static boolean eCSInfectedWhenTamed;
+	public static boolean eCSClearInfectionWhenTamed;
+	public static int eCSBabyInfectionChance;
+	public static int eCSInfectionChance;
+	public static int eCSFalseFuseChance;
+	public static int eCSExplosionChance;
+	public static boolean madChickenDisease;
+	public static boolean mCDNotifyOwnerWhenInfected;
+	public static boolean mCDInfectedWhenWild;
+	public static boolean mCDInfectedWhenTamed;
+	public static boolean mCDClearInfectionWhenTamed;
+	public static int mCDBabyInfectionChance;
+	public static int mCDInfectionChance;
 
 	public static void setConfigs(FMLPostInitializationEvent event) {
 		spawning();
@@ -100,6 +116,7 @@ public class GoldChickenConfig {
 		breeding();
 		laying();
 		attackData();
+		illnesses();
 		config.save();
 	}
 	
@@ -116,7 +133,7 @@ public class GoldChickenConfig {
 	public static void spawning() { 
 		ConfigComments.spawningComments(config);
 		spawn = config.get("spawning", "Can Spawn", true).getBoolean(true);
-		spawnProb = config.get("spawning", "Spawn Probability", 45).getInt(45);
+		spawnProb = config.get("spawning", "Spawn Probability", 7).getInt(7);
 		minSpawn = config.get("spawning", "Min Spawn Group Size", 1).getInt(1);
 		maxSpawn = config.get("spawning", "Max Spawn Group Size", 2).getInt(2);
 		minSpawnLight = config.get("spawning", "Min Spawn Light Level", 7).getInt(7);
@@ -201,5 +218,29 @@ public class GoldChickenConfig {
 		explosionRadius = config.get("attack data", "Explosion Radius", 0).getInt(0);
 		shootsArrows = config.get("attack data", "Can Shoot Arrows", false).getBoolean(false);
 		shootSpeed = config.get("attack data", "Arrow Shoot Speed", 0).getInt(0);
+	}
+	
+	public static void illnesses() {
+		ConfigComments.illnessesComments(config);
+		
+		// Exploding Chicken Syndrome
+		explodingChickenSyndrome = config.get("exploding chicken syndrome", "Exploding Chicken Syndrome", false).getBoolean(false);
+		eCSNotifyOwnerWhenInfected = config.get("exploding chicken syndrome", "Notify Owner When Infected", false).getBoolean(false);
+		eCSInfectedWhenTamed = config.get("exploding chicken syndrome", "Can Be Infected While Tamed", false).getBoolean(false);
+		eCSInfectedWhenWild = config.get("exploding chicken syndrome", "Can Be Infected While Wild", false).getBoolean(false);
+		eCSClearInfectionWhenTamed = config.get("exploding chicken syndrome", "Clear Infection When Tamed", false).getBoolean(false);
+		eCSInfectionChance = config.get("exploding chicken syndrome", "Infection Chance", 0).getInt(0);
+		eCSBabyInfectionChance = config.get("exploding chicken syndrome", "Infection Chance When Baby", 0).getInt(0);
+		eCSFalseFuseChance = config.get("exploding chicken syndrome", "False Fuse Chance", 0).getInt(0);
+		eCSExplosionChance = config.get("exploding chicken syndrome", "Explosion Chance", 0).getInt(0);
+		
+		// Mad Chicken Disease
+		madChickenDisease = config.get("mad chicken disease", "Mad Chicken Disease", true).getBoolean(true);
+		mCDNotifyOwnerWhenInfected = config.get("mad chicken disease", "Notify Owner When Infected", false).getBoolean(false);
+		mCDInfectedWhenTamed = config.get("mad chicken disease", "Can Be Infected While Tamed", true).getBoolean(true);
+		mCDInfectedWhenWild = config.get("mad chicken disease", "Can Be Infected While Wild", true).getBoolean(true);
+		mCDClearInfectionWhenTamed = config.get("mad chicken disease", "Clear Infection When Tamed", false).getBoolean(false);
+		mCDInfectionChance = config.get("mad chicken disease", "Infection Chance", 50000).getInt(50000);
+		mCDBabyInfectionChance = config.get("mad chicken disease", "Infection Chance When Baby", 37500).getInt(37500);
 	}
 }

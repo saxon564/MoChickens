@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
-import com.saxon564.mochickens.configs.DimensionConfigs;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;

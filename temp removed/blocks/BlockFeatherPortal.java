@@ -217,10 +217,10 @@ public class BlockFeatherPortal extends BlockPortal
             	player.timeUntilPortal = 10;
             } else if (player.dimension != DimensionConfigs.chickenDimId) {
             	player.timeUntilPortal = 10;
-            	player.mcServer.getPlayerList().transferPlayerToDimension(player, DimensionConfigs.chickenDimId, new ChickenTeleporter(server.worldServerForDimension(DimensionConfigs.chickenDimId)));
+            	player.mcServer.getPlayerList().transferPlayerToDimension(player, DimensionConfigs.chickenDimId, new ChickenTeleporter(server.getWorld(DimensionConfigs.chickenDimId)));
             } else {
             	player.timeUntilPortal = 10;
-            	player.mcServer.getPlayerList().transferPlayerToDimension(player, 0, new ChickenTeleporter(server.worldServerForDimension(0)));
+            	player.mcServer.getPlayerList().transferPlayerToDimension(player, 0, new ChickenTeleporter(server.getWorld(0)));
             }
         }
     }

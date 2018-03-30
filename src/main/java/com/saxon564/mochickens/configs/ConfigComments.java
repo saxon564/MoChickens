@@ -134,5 +134,42 @@ public class ConfigComments {
 				+ "ATTACK SPEED CURRENTLY IS NOT WORKING! I AM WORKING ON GETTING THIS FIXED."
 				);
 	}
+	
+	public static void illnessesComments(Configuration config) {
+		config.addCustomCategoryComment("exploding chicken syndrome", 
+				"Exploding Chicken Syndrome: The chicken can catch \"Exploding Chicken Syndrome\"."
+				+ config.NEW_LINE
+				+ "Notify Owner When Infected: Notifies the owner of a tamed chicken when their chicken is infected with \"Exploding Chicken Syndrome\"."
+				+ config.NEW_LINE
+				+ "Can Be Infected While Tamed: If chicken can get \"Exploding Chicken Syndrome\" while it is tamed."
+				+ config.NEW_LINE
+				+ "Can Be Infected While Wild: If chicken can get \"Exploding Chicken Syndrome\" while it is wild."
+				+ config.NEW_LINE
+				+ "Clear Infection When Tamed: Cures chicken of \"Exploding Chicken Syndrome\" when it is tamed."
+				+ config.NEW_LINE
+				+ "Infection Chance When Baby: 1 in */tick chance the chicken will become infected with \"Exploding Chicken Syndrome\" when a baby."
+				+ config.NEW_LINE
+				+ "Infection Chance: 1 in */tick chance the chicken will become infected with \"Exploding Chicken Syndrome\"."
+				+ config.NEW_LINE
+				+ "False Fuse Chance: 1 in */tick chance of a chicken infected with \"Exploding Chicken Syndrome\" will falsely prime itself to explode."
+				+ config.NEW_LINE
+				+ "Explosion Chance: 1 in */tick chance of the chicken blowing up from \"Exploding Chicken Syndrome\".");
+		
+		config.addCustomCategoryComment("mad chicken disease", 
+				"Mad Chicken Disease: The chicken can catch \"Mad Chicken Disease\"."
+				+ config.NEW_LINE
+				+ "Notify Owner When Infected: Notifies the owner of a tamed chicken when their chicken is infected with \"Mad Chicken Disease\"."
+				+ config.NEW_LINE
+				+ "Can Be Infected While Tamed: If chicken can get \"Mad Chicken Disease\" while it is tamed."
+				+ config.NEW_LINE
+				+ "Can Be Infected While Wild: If chicken can get \"Mad Chicken Disease\" while it is wild."
+				+ config.NEW_LINE
+				+ "Clear Infection When Tamed: Cures chicken of \"Mad Chicken Disease\" when it is tamed."
+				+ config.NEW_LINE
+				+ "Infection Chance When Baby: 1 in */tick chance the chicken will become infected with \"Mad Chicken Disease\" when a baby."
+				+ config.NEW_LINE
+				+ "Infection Chance: 1 in */tick chance the chicken will become infected with \"Mad Chicken Disease\".");
+				
+	}
 
 }

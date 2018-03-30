@@ -1,0 +1,28 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"I ",
+		" C"
+	],
+	
+	"key":
+	{
+		"I":
+		{
+			"item":"minecraft:iron_ingot"
+		},
+		
+		"C":
+		{
+			"item":"minecraft:cooked_chicken"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:chicken_steel"
+	}
+}

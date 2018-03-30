@@ -181,12 +181,12 @@ public class RegisterSpawns {
 					&& (!biomeResource.equalsIgnoreCase(
 							"mochcickens:chicken_plains"))) {
 				Biome biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeResource));
-				float E = biome.getTemperature();
+				float E = biome.getDefaultTemperature();
 				float F = biome.getRainfall();
-				int I = biome.theBiomeDecorator.flowersPerChunk;
-				int J = biome.theBiomeDecorator.grassPerChunk;
-				int K = biome.theBiomeDecorator.treesPerChunk;
-				int C = biome.theBiomeDecorator.clayPerChunk;
+				int I = biome.decorator.flowersPerChunk;
+				int J = biome.decorator.grassPerChunk;
+				int K = biome.decorator.treesPerChunk;
+				int C = biome.decorator.clayPerChunk;
 				if (!customCategory.isEmpty()) {
 					EntityRegistry.addSpawn(entity, customCategory.get("Spawn Probability").getInt(), customCategory.get("Min Spawn Group Size").getInt(), customCategory.get("Max Spawn Group Size").getInt(), type, Biome.REGISTRY.getObject(new ResourceLocation(biomeResource)));
 				} else if ((E <= (float)category.get("Max Spawn Temp").getDouble()) && (E >= (float)category.get("Min Spawn Temp").getDouble())) {
@@ -194,7 +194,7 @@ public class RegisterSpawns {
 						if (listType.equalsIgnoreCase("whitelist")) {
 							if (!biomeList[k].equals(biomeResource)) {
 								//if (entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityEnderChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityCreeperChicken")) {
-									System.out.println(entity.getName() + " whitelist biome " + biomeList[k] + " compared to " + biomeResource);
+									//System.out.println(entity.getName() + " whitelist biome " + biomeList[k] + " compared to " + biomeResource);
 								//}
 								allowed = false;
 								break;
@@ -202,7 +202,7 @@ public class RegisterSpawns {
 						} else {
 							if (biomeList[k].equals(biomeResource)) {
 								//if (entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityEnderChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntitySkeletonChicken") || entity.getName().equals("com.saxon564.mochickens.entities.mobs.EntityCreeperChicken")) {
-									System.out.println(entity.getName() + " blacklist biome " + biomeList[k] + " compared to " + biomeResource);
+									//System.out.println(entity.getName() + " blacklist biome " + biomeList[k] + " compared to " + biomeResource);
 								//}
 								allowed = false;
 								break;

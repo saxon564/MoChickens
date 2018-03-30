@@ -78,19 +78,12 @@ import com.saxon564.mochickens.events.FireEventHandlerClient;
 import com.saxon564.mochickens.events.FireEventHandlerServer;
 import com.saxon564.mochickens.network.FireMessage;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
-import com.saxon564.mochickens.recipes.CraftingRecipes;
-import com.saxon564.mochickens.registers.RegisterBiomes;
 import com.saxon564.mochickens.registers.RegisterBlocks;
 import com.saxon564.mochickens.registers.RegisterChickens;
-import com.saxon564.mochickens.registers.RegisterDimensions;
 import com.saxon564.mochickens.registers.RegisterItems;
 import com.saxon564.mochickens.registers.RegisterOreDict;
 import com.saxon564.mochickens.registers.RegisterSounds;
 import com.saxon564.mochickens.registers.RegisterSpawns;
-import com.saxon564.mochickens.world.dimensions.chicken.biomes.BiomeGenChickenForest;
-import com.saxon564.mochickens.world.dimensions.chicken.biomes.BiomeGenChickenPlains;
-import com.saxon564.mochickens.world.dimensions.chicken.structures.MapGenChickenVillage;
-import com.saxon564.mochickens.world.dimensions.chicken.structures.VillageBuildings;
 
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MODNAME, version = Reference.VERSION)
@@ -117,9 +110,9 @@ public class MoChickens {
 	public static Item item_feather_block;
 	
 	// Initialize Blocks
-	public static Block feather_portal;
+	//public static Block feather_portal;
 	public static Block feather_block;
-	public static Block coal_gem_ore;
+	//public static Block coal_gem_ore;
 	public static Block chicken_fire;
 	
 	// Initialize Sounds
@@ -130,8 +123,8 @@ public class MoChickens {
 	public static String path;
 	
 	//Biomes
-	public static BiomeGenChickenForest chicken_forest;
-	public static BiomeGenChickenPlains chicken_plains;
+	//public static BiomeGenChickenForest chicken_forest;
+	//public static BiomeGenChickenPlains chicken_plains;
 
 	public static int startEntityId = 300;
 	
@@ -154,13 +147,12 @@ public class MoChickens {
 		RegisterChickens.entityRegisters();
 		//RegisterDimensions.dimensionRegisters();
 		//RegisterBiomes.biomeRegisters();
-		proxy.modelExceptions();
 		proxy.eventHandlers();
 		proxy.registerRenders();
 		
 		//Structures
-		MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");
-		VillageBuildings.registerVillagePieces();
+		//MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");
+		//VillageBuildings.registerVillagePieces();
 		
 		/*if (Loader.isModLoaded(Thaumcraft.id)) {
 			loadThaumcraft();
@@ -174,7 +166,7 @@ public class MoChickens {
 
 	@EventHandler
 	public void load(FMLInitializationEvent event) { 
-		CraftingRecipes.CraftingRecipieManager();
+		//CraftingRecipes.CraftingRecipieManager();
 		RegisterOreDict.AddOres();
 		RegisterSounds.init();
 	}

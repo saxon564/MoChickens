@@ -6,17 +6,20 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundList;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentThorns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
+import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -30,6 +33,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -59,6 +63,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -66,7 +71,6 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import net.minecraftforge.fml.common.registry.GameData;
 
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
@@ -79,6 +83,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private static final UUID attackingSpeedBoostModifierUUID = UUID
 			.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
 	private static AttributeModifier attackingSpeedBoostModifier;
+	
+	private final Minecraft mc = Minecraft.getMinecraft();
 
 	private Entity entityToAttack;
 	private Entity lastEntityToAttack;
@@ -86,7 +92,10 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private int teleportDelay;
 	private static final DataParameter<Integer> STATE = EntityDataManager.<Integer>createKey(EntityMoChicken.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> SCREAMING = EntityDataManager.<Boolean>createKey(EntityMoChicken.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Boolean> EXPLODINGCHICKENSYNDROME = EntityDataManager.<Boolean>createKey(EntityMoChicken.class, DataSerializers.BOOLEAN);
+	public static final DataParameter<Boolean> MADCHICKENDISEASE = EntityDataManager.<Boolean>createKey(EntityMoChicken.class, DataSerializers.BOOLEAN);
 	public static final DataParameter<String> OWNER = EntityDataManager.<String>createKey(EntityMoChicken.class, DataSerializers.STRING);
+	
 
 	public float field_70886_e = 0.0F;
 	public float destPos = 0.0F;
@@ -180,6 +189,28 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	protected int temptingItemData;
 	protected boolean temptingItemUsesData;
 	
+	//~~~~~~~~~~~~~~~~~Infections~~~~~~~~~~~~~~~~~\\
+	// Exploding Chicken Syndrome
+	protected boolean explodingChickenSyndrome;
+	protected boolean eCSNotifyOwnerWhenInfected;
+	protected boolean eCSInfectedWhenWild;
+	protected boolean eCSInfectedWhenTamed;
+	protected boolean eCSClearInfectionWhenTamed;
+	protected int eCSBabyInfectionChance;
+	protected int eCSInfectionChance;
+	protected int eCSFalseFuseChance;
+	protected int eCSExplosionChance;
+	
+	//Mad Chicken Disease
+	protected boolean madChickenDisease;
+	protected boolean mCDNotifyOwnerWhenInfected;
+	protected boolean mCDInfectedWhenWild;
+	protected boolean mCDInfectedWhenTamed;
+	protected boolean mCDClearInfectionWhenTamed;
+	protected int mCDBabyInfectionChance;
+	protected int mCDInfectionChance;
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\\
+	
 	
 
 	private int lastActiveTime;
@@ -226,6 +257,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		this.dataManager.register(STATE, Integer.valueOf(-1));
 		this.dataManager.register(SCREAMING, false);
 		this.dataManager.register(OWNER, "");
+		this.dataManager.register(EXPLODINGCHICKENSYNDROME, false);
+		this.dataManager.register(MADCHICKENDISEASE, false);
 	}
 
 	/**
@@ -243,17 +276,25 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	}
 
 	@Override
-	public final void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readEntityFromNBT(par1NBTTagCompound);
+	public final void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
 		UUID s = null;
 
-		if (par1NBTTagCompound.hasKey("OwnerUUID", 8)) {
-			s = par1NBTTagCompound.getUniqueId("OwnerUUID");
+		if (compound.hasKey("OwnerUUID", 8)) {
+			s = compound.getUniqueId("OwnerUUID");
 		} else {
-			String s1 = par1NBTTagCompound.getString("Owner");
+			String s1 = compound.getString("Owner");
 			if (s1 != null && s1 != "") {
 				s = UUID.fromString(PreYggdrasilConverter.convertMobOwnerIfNeeded(getServer(), s1));
 			}
+		}
+		
+		if (compound.hasKey("ExplodingChickenSyndrome")) {
+			setExplodingChickenSyndrome(compound.getBoolean("ExplodingChickenSyndrome"));
+		}
+		
+		if (compound.hasKey("MadChickenDisease")) {
+			setMadChickenDisease(compound.getBoolean("MadChickenDisease"));
 		}
 		
 		if (s != null && s.toString().length() > 0 && !s.toString().equals("00000000-0000-0000-0000-000000000000")) {
@@ -261,6 +302,30 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			this.setOwnerId(s);
 		}
 	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound compound)
+    {
+        super.writeEntityToNBT(compound);
+
+        if (this.getOwnerId() == null)
+        {
+            compound.setString("OwnerUUID", "");
+        } else {
+            compound.setString("OwnerUUID", this.getOwnerId().toString());
+        }
+        if (this.getExplodingChickenSyndrome()) {
+        	compound.setBoolean("ExplodingChickenSyndrome", true);
+        } else {
+        	compound.setBoolean("ExplodingChickenSyndrome", false);
+        }
+        
+        if (this.getMadChickenDisease()) {
+        	compound.setBoolean("MadChickenDisease", true);
+        } else {
+        	compound.setBoolean("MadChickenDisease", false);
+        }
+    }
 
 	protected boolean canDespawn() {
 		if (ran == 0) {
@@ -298,12 +363,20 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	
 	public void setupTaimedAI(boolean tamed) {
 		if (tamed) {
+			if (getExplodingChickenSyndrome() && eCSClearInfectionWhenTamed) {
+				setExplodingChickenSyndrome(false);
+			}
+			if (getMadChickenDisease() && mCDClearInfectionWhenTamed) {
+				setMadChickenDisease(false);
+				this.tasks.removeTask(new EntityAIAttackMelee(this, 1.0D, false));
+			}
 			this.world.setEntityState(this, (byte) 7);
-			this.tasks.removeTask(new EntityAIAttackMelee(this, 1.0D, false));
+			this.targetTasks.removeTask(new EntityAINearestAttackableTarget(
+					this, EntityPlayer.class, true));
 			if (canShootArrows) {
 				this.tasks.removeTask(this.aiArrowAttack);
 			}
-			this.targetTasks.taskEntries.clear();
+			//this.targetTasks.taskEntries.clear();
 			if (temptingItemUsesData) {
 				this.tasks.addTask(
 						3,
@@ -325,11 +398,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			if (canShootArrows) {
 				this.tasks.addTask(4, this.aiArrowAttack);
 			} else {
-				this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
+				this.tasks.addTask(2, new EntityAIAttackMelee(this, attackSpeed, false));
 			}
 			this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(
-					this, EntityPlayer.class, 0, true, tamed, null));
-			setCreeperState(-1);
+					this, EntityPlayer.class, true));
+			setChickenState(-1);
 			despawn = despawnUntamed;
 			ran = 0;
 			this.canDespawn();
@@ -379,6 +452,8 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		BlockPos pos = new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ);
 		Block block = this.world.getBlockState(pos).getBlock();
 		int light = this.world.getLightFromNeighbors(pos);
+		IBlockState iBlockState = this.world.getBlockState((new BlockPos(this)));
+		IBlockState iBlockStateDown = this.world.getBlockState((new BlockPos(this)).down());
 		/*List<SpawnListEntry> list = this.world.getBiome(pos).getSpawnableList(EnumCreatureType.MONSTER);
 		list.forEach((temp) -> {
 			System.out.println("Chicken:" + this.chicken.toString().substring(44) + " Could be: " + temp);
@@ -395,9 +470,9 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		//	System.out.println("Chicken:" + this.chicken.toString() + " Could be: " + list.listIterator().next().entityClass.toString() + " with Spawn Probability: " + list.listIterator().next().itemWeight + "and a min/max of" + list.listIterator().next().minGroupCount + "/" + list.listIterator().next().maxGroupCount);
 		//} while(list.listIterator().hasNext());
 		//System.out.println("Chicken:" + this.chicken.toString() + " Spawn Probability: " + list.get(index).itemWeight);
-		if (!block.isBlockSolid(world, pos, EnumFacing.UP) && (light >= minSpawnLightLevel) && (light <= maxSpawnLightLevel)) {
-			System.out.println("Chicken:" + this.chicken.toString() + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
-			System.out.println("Chicken:" + this.chicken.toString() + " Light data: current: " + light + " min: " + minSpawnLightLevel + " max: " + maxSpawnLightLevel);
+		if (iBlockStateDown.canEntitySpawn(this)/*!block.isPassable(world, pos.down())*/ && (light >= minSpawnLightLevel) && (light <= maxSpawnLightLevel)) {
+			//System.out.println("Chicken:" + this.chicken.toString() + " X:" + this.posX + " Y:" + this.posY + " Z:" + this.posZ);
+			//System.out.println("Chicken:" + this.chicken.toString() + " Light data: current: " + light + " min: " + minSpawnLightLevel + " max: " + maxSpawnLightLevel);
 			return true;
 		} else {
 			return false;
@@ -411,7 +486,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			this.setScreaming(true);
 
 			if (par1DamageSource instanceof EntityDamageSource
-					&& par1DamageSource.getEntity() instanceof EntityPlayer) {
+					&& par1DamageSource.getTrueSource() instanceof EntityPlayer) {
 				this.isAggressive = true;
 			}
 
@@ -553,7 +628,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			loc ++;
 		}
 		if (this.world.isDaytime() && !this.world.isRemote && burnsInSun) {
-			float f = this.getBrightness(1.0F);
+			float f = this.getBrightness();
 
 			if (f > 0.5F
 					&& this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
@@ -583,7 +658,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 
 		if (allowTeleporting) {
 			if (this.world.isDaytime() && !this.world.isRemote) {
-				float f = this.getBrightness(1.0F);
+				float f = this.getBrightness();
 
 				if (f > 0.5F && this.world.canBlockSeeSky(new BlockPos(
 								MathHelper.floor(this.posX),
@@ -618,12 +693,12 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			if (!this.world.isRemote && this.isEntityAlive()) {
 				if (this.entityToAttack != null) {
 					if (this.entityToAttack instanceof EntityPlayer) {
-						if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D) {
+						if (this.entityToAttack.getDistanceSq(this) < 16.0D) {
 							this.teleportRandomly();
 						}
 
 						this.teleportDelay = 0;
-					} else if (this.entityToAttack.getDistanceSqToEntity(this) > 256.0D
+					} else if (this.entityToAttack.getDistanceSq(this) > 256.0D
 							&& this.teleportDelay++ >= 30
 							&& this.teleportToEntity(this.entityToAttack)) {
 						this.teleportDelay = 0;
@@ -636,38 +711,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		}
 
 		if ((!this.isTamed()) && (canBlowUp) && (hostile)) {
-			if (this.isEntityAlive()) {
-				this.lastActiveTime = this.timeSinceIgnited;
-				int i = this.getCreeperState();
-
-				if (i > 0 && this.timeSinceIgnited == 0) {
-					this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
-				}
-
-				this.timeSinceIgnited += i;
-
-				if (this.timeSinceIgnited < 0) {
-					this.timeSinceIgnited = 0;
-				}
-
-				if (this.timeSinceIgnited >= fuseTime) {
-					this.timeSinceIgnited = fuseTime;
-
-					if (!this.world.isRemote) {
-						EntityPlayer entityplayer = this.world
-								.getClosestPlayerToEntity(this, 5.0D);
-						boolean flag = this.world.getGameRules()
-								.getBoolean("mobGriefing");
-						this.world.createExplosion(
-								this, this.posX, this.posY, this.posZ,
-								(float) explosionRadius, flag);
-						if (entityplayer != null) {
-							applyEffects(entityplayer);
-						}
-						this.setDead();
-					}
-				}
-			}
+			blowUp();
 		}
 
 		this.field_70888_h = this.field_70886_e;
@@ -746,10 +790,144 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			this.timeUntilNextEgg = this.rand.nextInt(variableItemLayTime) 
 					+ minItemLayTime;
 		}
+		
+		manageInfections();
 
 		if (this.isDead) {
 			this.world.checkLightFor(EnumSkyBlock.BLOCK,
 					new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ));
+		}
+	}
+	
+	public void manageInfections() {
+	
+		if (explodingChickenSyndrome && !getExplodingChickenSyndrome()) {
+			System.out.println(getName() + " is trying to get Exploding Chicken Syndrome! " + getExplodingChickenSyndrome());
+			int rand;
+			if (isChild()) {
+				rand = randomInt(1, eCSBabyInfectionChance);
+			} else {
+				rand = randomInt(1, eCSInfectionChance);
+			}
+			if (rand == 1) {
+				if (isTamed() && eCSInfectedWhenTamed) {
+					setExplodingChickenSyndrome(true);
+					if (eCSNotifyOwnerWhenInfected) {
+						//for (int i = 0; i < world.playerEntities.length; i++) {
+							if (world.playerEntities.contains(getOwner())) {
+								getOwner().sendMessage(getDisplayName().appendText(" has been infected with Exploding Chicken Syndrome!"));
+							}
+						//}
+					}
+				}
+				if (!isTamed() && eCSInfectedWhenWild) {
+					setExplodingChickenSyndrome(true);
+				}
+			}
+		}
+		
+		if (getExplodingChickenSyndrome()) {
+			int rand = randomInt(1, eCSFalseFuseChance);
+			int rand2 = randomInt(1, eCSExplosionChance);
+			if (rand == 1) {
+				this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
+			}
+			if (rand2 == 1) {
+				mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" should be blowing up now!"));
+				setChickenState(1);
+			}
+		 	blowUp();
+		}
+		
+		if (madChickenDisease && !getMadChickenDisease()) {
+			//System.out.println(getName() + " is trying to get Mad Chicken Disease!");
+			int rand;
+			if (isChild()) {
+				rand = randomInt(1, mCDBabyInfectionChance);
+			} else {
+				rand = randomInt(1, mCDInfectionChance);
+			}
+			if (rand == 1) {
+				if (isTamed() && mCDInfectedWhenTamed) {
+					setMadChickenDisease(true);
+					if (mCDNotifyOwnerWhenInfected) {
+						getOwner().sendMessage(getDisplayName().appendText(" has been infected with Mad Chicken Disease!"));
+					}
+				}
+				if (!isTamed() && mCDInfectedWhenWild) {
+					setMadChickenDisease(true);
+				}
+			}
+		}
+	}
+	
+	public boolean getExplodingChickenSyndrome() {
+		return dataManager.get(EXPLODINGCHICKENSYNDROME);
+	}
+	
+	public void setExplodingChickenSyndrome(boolean bool) {
+		mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" Should be infectioned!" + bool));
+		dataManager.set(EXPLODINGCHICKENSYNDROME, bool);
+	}
+	
+	public boolean getMadChickenDisease() {
+		return dataManager.get(MADCHICKENDISEASE);
+	}
+	
+	public void setMadChickenDisease(boolean bool) {
+		if (bool) {
+			System.out.println(this.getName() + " Should by mad!");
+			this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
+			EntityAIBase base = new EntityAINearestAttackableTarget(
+					this, EntityMoChicken.class, true);
+			this.targetTasks.addTask(1, base);
+			System.out.println(base.toString());
+			System.out.println("Target Set 1: " + targetTasks.taskEntries.toArray()[0] + " Target Set2: " + targetTasks.taskEntries.toArray()[1]);
+		}
+		dataManager.set(MADCHICKENDISEASE, bool);
+	}
+	
+	public void blowUp() {
+		System.out.println(getName() + " is trying to blow up!");
+		if (this.isEntityAlive()) {
+			System.out.println(getName() + " is confirmed alive with state " + getChickenState());
+			this.lastActiveTime = this.timeSinceIgnited;
+			int i = this.getChickenState();
+
+			if (i > 0 && this.timeSinceIgnited == 0) {
+				mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" has been primed!"));
+				this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
+			}
+
+			this.timeSinceIgnited += i;
+
+			if (this.timeSinceIgnited < 0) {
+				System.out.println(getName() + " ignition has been reset!");
+				this.timeSinceIgnited = 0;
+			}
+
+			if (this.timeSinceIgnited >= fuseTime) {
+				mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" has exceeded its fuse time and should blow up!"));
+				this.timeSinceIgnited = fuseTime;
+
+				if (!this.world.isRemote) {
+					mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" Goodbye!!!"));
+					EntityPlayer entityplayer = this.world
+							.getClosestPlayerToEntity(this, 5.0D);
+					boolean flag = this.world.getGameRules()
+							.getBoolean("mobGriefing");
+					this.world.createExplosion(
+							this, this.posX, this.posY, this.posZ,
+							(float) explosionRadius, flag);
+					if (dataManager.get(EXPLODINGCHICKENSYNDROME)) {
+						mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" has blown up from Exploding Chicken Syndrome!"));
+					}
+					if (entityplayer != null) {
+						applyEffects(entityplayer);
+					}
+					this.setDead();
+				}
+			}
 		}
 	}
 	
@@ -760,12 +938,12 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		return result;
 	}
 
-	public float getCreeperFlashIntensity(float par1) {
+	public float getChickenFlashIntensity(float par1) {
 		return ((float) this.lastActiveTime + (float) (this.timeSinceIgnited - this.lastActiveTime)
 				* par1) / (float) (fuseTime - 2);
 	}
 
-	public int getCreeperState()
+	public int getChickenState()
     {
         return ((Integer)this.dataManager.get(this.STATE)).intValue();
     }
@@ -773,7 +951,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
     /**
      * Sets the state of creeper, -1 to idle and 1 to be 'in fuse'
      */
-    public void setCreeperState(int state)
+    public void setChickenState(int state)
     {
         this.dataManager.set(this.STATE, Integer.valueOf(state));
     }
@@ -781,7 +959,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	private void difficultyChange() {
 		if (this.world.getDifficulty().toString().equalsIgnoreCase(
 				"peaceful")) {
-			this.navigator.clearPathEntity();
+			this.navigator.clearPath();
 			this.setAttackTarget((EntityLivingBase) null);
 			this.setAttackTarget(null);
 			this.tasks.removeTask(new EntityAIAttackMelee(this, 1.0D, false));
@@ -857,7 +1035,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 					if (!this.world.isRemote) {
 						if (this.rand.nextInt(tamingChance) == 0) {
 							this.setTamed(true);
-							this.navigator.clearPathEntity();
+							this.navigator.clearPath();
 							this.setAttackTarget((EntityLivingBase) null);
 							this.setAttackTarget(null);
 							this.setOwnerId(player.getUniqueID());
@@ -884,7 +1062,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 				if (!this.world.isRemote) {
 					if (this.rand.nextInt(tamingChance) == 0) {
 						this.setTamed(true);
-						this.navigator.clearPathEntity();
+						this.navigator.clearPath();
 						this.setAttackTarget((EntityLivingBase) null);
 						this.setAttackTarget(null);
 						this.setOwnerId(player.getUniqueID());
@@ -991,11 +1169,11 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		vec3 = vec3.normalize();
 		double d0 = 16.0D;
 		double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D
-				- vec3.xCoord * d0;
+				- vec3.x * d0;
 		double d2 = this.posY + (double) (this.rand.nextInt(16) - 8)
-				- vec3.yCoord * d0;
+				- vec3.y * d0;
 		double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D
-				- vec3.zCoord * d0;
+				- vec3.z * d0;
 		return this.teleportTo(d1, d2, d3);
 	}
 
@@ -1022,7 +1200,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
         double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entityarrow.posY;
         double d2 = target.posZ - this.posZ;
         double d3 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
-        entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.world.getDifficulty().getDifficultyId() * 4));
+        entityarrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.world.getDifficulty().getDifficultyId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(entityarrow);
         
@@ -1125,5 +1303,42 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		temptingItem = Item.REGISTRY.getObject(new ResourceLocation(config.getCategory("tempting").get("Tempting Item").getString()));
 		temptingItemData = config.getCategory("tempting").get("Tempting Item Data").getInt();
 		temptingItemUsesData = config.getCategory("tempting").get("Tempting Item Uses Data").getBoolean();
+		
+		// Exploding Chicken Syndrome
+		explodingChickenSyndrome = config.getCategory("exploding chicken syndrome").get("Exploding Chicken Syndrome").getBoolean();
+		eCSNotifyOwnerWhenInfected = config.getCategory("exploding chicken syndrome").get("Notify Owner When Infected").getBoolean();
+		eCSInfectedWhenTamed = config.getCategory("exploding chicken syndrome").get("Can Be Infected While Tamed").getBoolean();
+		eCSInfectedWhenWild = config.getCategory("exploding chicken syndrome").get("Can Be Infected While Wild").getBoolean();
+		eCSClearInfectionWhenTamed = config.getCategory("exploding chicken syndrome").get("Clear Infection When Tamed").getBoolean();
+		eCSInfectionChance = config.getCategory("exploding chicken syndrome").get("Infection Chance").getInt();
+		eCSBabyInfectionChance = config.getCategory("exploding chicken syndrome").get("Infection Chance When Baby").getInt();
+		eCSExplosionChance = config.getCategory("exploding chicken syndrome").get("Explosion Chance").getInt();
+		eCSFalseFuseChance = config.getCategory("exploding chicken syndrome").get("False Fuse Chance").getInt();
+		
+		// Mad Chicken Disease
+		madChickenDisease = config.getCategory("mad chicken disease").get("Mad Chicken Disease").getBoolean();
+		mCDNotifyOwnerWhenInfected = config.getCategory("mad chicken disease").get("Notify Owner When Infected").getBoolean();
+		mCDInfectedWhenTamed = config.getCategory("mad chicken disease").get("Can Be Infected While Tamed").getBoolean();
+		mCDInfectedWhenWild = config.getCategory("mad chicken disease").get("Can Be Infected While Wild").getBoolean();
+		mCDClearInfectionWhenTamed = config.getCategory("mad chicken disease").get("Clear Infection When Tamed").getBoolean();
+		mCDInfectionChance = config.getCategory("mad chicken disease").get("Infection Chance").getInt();
+		mCDBabyInfectionChance = config.getCategory("mad chicken disease").get("Infection Chance When Baby").getInt();
+	}
+
+	@Override
+	public void setSwingingArms(boolean swingingArms) {
+		
+	}
+	
+	@Override
+	public void onDeath(DamageSource cause) {
+		super.onDeath(cause);
+		Entity source = cause.getTrueSource();
+		if (source.isEntityEqual(this)) {
+			EntityMoChicken chicken = (EntityMoChicken) source;
+			if (chicken.getMadChickenDisease()) {
+				mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" was killed by " + source.getDisplayName() + " infected with Mad Chicken Disease."));
+			}
+		}
 	}
 }

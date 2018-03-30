@@ -41,13 +41,15 @@ public class ItemFeatherBlock extends ItemBlock {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		for (EnumBlockTypes types : EnumBlockTypes.values()) {
     		
-    		int typeBits = types.getID();
-    		int metadata = typeBits;
-    		ItemStack subItemStack = new ItemStack(item, 1, metadata);
-    		subItems.add(subItemStack);
+			if (this.isInCreativeTab(tab)) {
+	    		int typeBits = types.getID();
+	    		int metadata = typeBits;
+	    		ItemStack subItemStack = new ItemStack(this, 1, metadata);
+	    		items.add(subItemStack);
+    		}
     		
     	}
 	}
