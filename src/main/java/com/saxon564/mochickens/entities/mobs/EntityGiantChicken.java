@@ -2,7 +2,7 @@ package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
-import com.saxon564.mochickens.configs.chickens.GiantChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -24,7 +24,7 @@ public class EntityGiantChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(GiantChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.giantConfig, this.getClass());
     }
     
     public boolean getCanSpawnHere()

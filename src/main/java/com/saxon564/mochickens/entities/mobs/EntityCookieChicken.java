@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.CookieChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -20,7 +20,7 @@ public class EntityCookieChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(CookieChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.cookieConfig, this.getClass());
     }
     
     public boolean getCanSpawnHere()

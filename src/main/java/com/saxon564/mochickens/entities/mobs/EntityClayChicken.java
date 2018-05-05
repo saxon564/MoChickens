@@ -1,7 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.ClayChickenConfig;
-
+import com.saxon564.mochickens.configs.FileManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
@@ -20,7 +19,7 @@ public class EntityClayChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(ClayChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.clayConfig, this.getClass());
     }
     
     public boolean getCanSpawnHere()

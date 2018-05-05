@@ -1,7 +1,7 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.RedstoneChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -23,7 +23,7 @@ public class EntityRedstoneChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(RedstoneChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.redstoneConfig, this.getClass());
     }
     
     public boolean getCanSpawnHere()

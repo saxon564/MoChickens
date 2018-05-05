@@ -54,21 +54,24 @@ public class ChickAISwell extends EntityAIBase
      */
     public void updateTask()
     {
-        if (this.chickenAttackTarget == null)
-        {
-            this.swellingChicken.setChickenState(-1);
-        }
-        else if (this.swellingChicken.getDistanceSq(this.chickenAttackTarget) > 49.0D)
-        {
-            this.swellingChicken.setChickenState(-1);
-        }
-        else if (!this.swellingChicken.getEntitySenses().canSee(this.chickenAttackTarget))
-        {
-            this.swellingChicken.setChickenState(-1);
-        }
-        else
-        {
-            this.swellingChicken.setChickenState(1);
-        }
+    	if (!this.swellingChicken.explodingByECS) {
+	        if (this.chickenAttackTarget == null)
+	        {
+	        	System.out.println("Cleared Chicken State!");
+	            this.swellingChicken.setChickenState(-1);
+	        }
+	        else if (this.swellingChicken.getDistanceSq(this.chickenAttackTarget) > 49.0D)
+	        {
+	            this.swellingChicken.setChickenState(-1);
+	        }
+	        else if (!this.swellingChicken.getEntitySenses().canSee(this.chickenAttackTarget))
+	        {
+	            this.swellingChicken.setChickenState(-1);
+	        }
+	        else
+	        {
+	            this.swellingChicken.setChickenState(1);
+	        }
+    	}
     }
 }

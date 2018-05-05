@@ -7,28 +7,9 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
+import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.configs.FileManager;
 import com.saxon564.mochickens.configs.GeneralConfig;
-import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
-import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
-import com.saxon564.mochickens.configs.chickens.ClayChickenConfig;
-import com.saxon564.mochickens.configs.chickens.CoalChickenConfig;
-import com.saxon564.mochickens.configs.chickens.CookieChickenConfig;
-import com.saxon564.mochickens.configs.chickens.CreeperChickenConfig;
-import com.saxon564.mochickens.configs.chickens.DiamondChickenConfig;
-import com.saxon564.mochickens.configs.chickens.EmeraldChickenConfig;
-import com.saxon564.mochickens.configs.chickens.EnchantedChickenConfig;
-import com.saxon564.mochickens.configs.chickens.EnderChickenConfig;
-import com.saxon564.mochickens.configs.chickens.GiantChickenConfig;
-import com.saxon564.mochickens.configs.chickens.GlowingChickenConfig;
-import com.saxon564.mochickens.configs.chickens.GoldChickenConfig;
-import com.saxon564.mochickens.configs.chickens.IronChickenConfig;
-import com.saxon564.mochickens.configs.chickens.LapisChickenConfig;
-import com.saxon564.mochickens.configs.chickens.NuuwChickenConfig;
-import com.saxon564.mochickens.configs.chickens.QuartzChickenConfig;
-import com.saxon564.mochickens.configs.chickens.RainbowChickenConfig;
-import com.saxon564.mochickens.configs.chickens.RedstoneChickenConfig;
-import com.saxon564.mochickens.configs.chickens.SkeletonChickenConfig;
-import com.saxon564.mochickens.configs.chickens.SnowChickenConfig;
 import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
 import com.saxon564.mochickens.entities.mobs.EntityBlazingChicken;
 import com.saxon564.mochickens.entities.mobs.EntityClayChicken;
@@ -56,109 +37,109 @@ public class RegisterSpawns {
 
 	// Add Spawns
 	public static void entitySpawns() {
-		if (DiamondChickenConfig.spawn == true) {
+		if (FileManager.diamondConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityDiamondChicken.class,
-					EnumCreatureType.MONSTER, DiamondChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.diamondConfig);
 		}
 
-		if (CoalChickenConfig.spawn == true) {
+		if (FileManager.coalConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityCoalChicken.class,
-					EnumCreatureType.MONSTER, CoalChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.coalConfig);
 		}
 
-		if (IronChickenConfig.spawn == true) {
+		if (FileManager.ironConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityIronChicken.class,
-					EnumCreatureType.MONSTER, IronChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.ironConfig);
 		}
 
-		if (GoldChickenConfig.spawn == true) {
+		if (FileManager.goldConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityGoldChicken.class,
-					EnumCreatureType.MONSTER, GoldChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.goldConfig);
 		}
 
-		if (LapisChickenConfig.spawn == true) {
+		if (FileManager.lapisConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityLapisChicken.class,
-					EnumCreatureType.MONSTER, LapisChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.lapisConfig);
 		}
 
-		if (RedstoneChickenConfig.spawn == true) {
+		if (FileManager.redstoneConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityRedstoneChicken.class,
-					EnumCreatureType.MONSTER, RedstoneChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.redstoneConfig);
 		}
 
-		if (EmeraldChickenConfig.spawn == true) {
+		if (FileManager.emeraldConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityEmeraldChicken.class,
-					EnumCreatureType.MONSTER, EmeraldChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.emeraldConfig);
 		}
 
-		if (GiantChickenConfig.spawn == true) {
+		if (FileManager.giantConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityGiantChicken.class,
-					EnumCreatureType.MONSTER, GiantChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.giantConfig);
 		}
 
-		if (QuartzChickenConfig.spawn == true) {
+		if (FileManager.quartzConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityQuartzChicken.class,
-					EnumCreatureType.MONSTER, QuartzChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.quartzConfig);
 		}
 
-		if (CookieChickenConfig.spawn == true) {
+		if (FileManager.cookieConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityCookieChicken.class,
-					EnumCreatureType.MONSTER, CookieChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.cookieConfig);
 		}
 
-		if (SnowChickenConfig.spawn == true) {
+		if (FileManager.snowConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntitySnowChicken.class,
-					EnumCreatureType.MONSTER, SnowChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.snowConfig);
 		}
 
-		if (ClayChickenConfig.spawn == true) {
+		if (FileManager.clayConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityClayChicken.class,
-					EnumCreatureType.MONSTER, ClayChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.clayConfig);
 		}
 
-		if (RainbowChickenConfig.spawn == true) {
+		if (FileManager.rainbowConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityRainbowChicken.class,
-					EnumCreatureType.MONSTER, RainbowChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.redstoneConfig);
 		}
 
-		if (SkeletonChickenConfig.spawn == true) {
+		if (FileManager.skeletonConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntitySkeletonChicken.class,
-					EnumCreatureType.MONSTER, SkeletonChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.skeletonConfig);
 		}
 
-		if (EnderChickenConfig.spawn == true) {
+		if (FileManager.enderConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityEnderChicken.class,
-					EnumCreatureType.MONSTER, EnderChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.enderConfig);
 		}
 
-		if (CreeperChickenConfig.spawn == true) {
+		if (FileManager.creeperConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityCreeperChicken.class,
-					EnumCreatureType.MONSTER, CreeperChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.creeperConfig);
 		}
 
-		if (BeefyChickenConfig.spawn == true) {
+		if (FileManager.beefyConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityBeefyChicken.class,
-					EnumCreatureType.MONSTER, BeefyChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.beefyConfig);
 		}
 
-		if (GlowingChickenConfig.spawn == true) {
+		if (FileManager.glowingConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityGlowingChicken.class,
-					EnumCreatureType.MONSTER, GlowingChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.glowingConfig);
 		}
 
-		if (BlazingChickenConfig.spawn == true) {
+		if (FileManager.blazingConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityBlazingChicken.class,
-					EnumCreatureType.MONSTER, BlazingChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.blazingConfig);
 		}
 
-		if (EnchantedChickenConfig.spawn == true) {
+		if (FileManager.enchantedConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityEnchantedChicken.class,
-					EnumCreatureType.MONSTER, EnchantedChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.enchantedConfig);
 		}
 
-		if (NuuwChickenConfig.spawn == true) {
+		if (FileManager.nuuwConfig.getCategory("spawning").get("Can Spawn").getBoolean() == true) {
 			generateSpawning(EntityNuuwChicken.class,
-					EnumCreatureType.MONSTER, NuuwChickenConfig.config);
+					EnumCreatureType.MONSTER, FileManager.nuuwConfig);
 		}
 	}
 
@@ -175,21 +156,12 @@ public class RegisterSpawns {
 			ConfigCategory customCategory = config.getCategory(biomeResource);
 			ConfigCategory category = config.getCategory("spawning");
 			
-			if ((biomeResource != null)
-					&& (!biomeResource.equalsIgnoreCase(
-							"mochickens:chicken_forest"))
-					&& (!biomeResource.equalsIgnoreCase(
-							"mochcickens:chicken_plains"))) {
+			if (biomeResource != null) {
 				Biome biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeResource));
-				float E = biome.getDefaultTemperature();
-				float F = biome.getRainfall();
-				int I = biome.decorator.flowersPerChunk;
-				int J = biome.decorator.grassPerChunk;
-				int K = biome.decorator.treesPerChunk;
-				int C = biome.decorator.clayPerChunk;
+				float temp = biome.getDefaultTemperature();
 				if (!customCategory.isEmpty()) {
 					EntityRegistry.addSpawn(entity, customCategory.get("Spawn Probability").getInt(), customCategory.get("Min Spawn Group Size").getInt(), customCategory.get("Max Spawn Group Size").getInt(), type, Biome.REGISTRY.getObject(new ResourceLocation(biomeResource)));
-				} else if ((E <= (float)category.get("Max Spawn Temp").getDouble()) && (E >= (float)category.get("Min Spawn Temp").getDouble())) {
+				} else if ((temp <= (float)category.get("Max Spawn Temp").getDouble()) && (temp >= (float)category.get("Min Spawn Temp").getDouble())) {
 					for (int k = 0; k < biomeList.length; k++) {
 						if (listType.equalsIgnoreCase("whitelist")) {
 							if (!biomeList[k].equals(biomeResource)) {
@@ -214,7 +186,7 @@ public class RegisterSpawns {
 					}
 				}
 			} else {
-				System.out.println("[Mo' Chickens] Biome (id "
+				MoChickens.logger.error("[Mo' Chickens] Biome (id "
 								+ biomeResource
 								+ ") has null name, could not build spawn information.");
 			}

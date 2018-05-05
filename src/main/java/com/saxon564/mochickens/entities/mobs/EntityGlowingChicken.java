@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.GlowingChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -20,7 +20,7 @@ public class EntityGlowingChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(GlowingChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.glowingConfig, this.getClass());
     }
     
     @Override

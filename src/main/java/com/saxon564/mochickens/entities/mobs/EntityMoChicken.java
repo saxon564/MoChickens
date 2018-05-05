@@ -192,6 +192,7 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	//~~~~~~~~~~~~~~~~~Infections~~~~~~~~~~~~~~~~~\\
 	// Exploding Chicken Syndrome
 	protected boolean explodingChickenSyndrome;
+	public boolean explodingByECS;
 	protected boolean eCSNotifyOwnerWhenInfected;
 	protected boolean eCSInfectedWhenWild;
 	protected boolean eCSInfectedWhenTamed;
@@ -800,62 +801,59 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	}
 	
 	public void manageInfections() {
-	
-		if (explodingChickenSyndrome && !getExplodingChickenSyndrome()) {
-			System.out.println(getName() + " is trying to get Exploding Chicken Syndrome! " + getExplodingChickenSyndrome());
-			int rand;
-			if (isChild()) {
-				rand = randomInt(1, eCSBabyInfectionChance);
-			} else {
-				rand = randomInt(1, eCSInfectionChance);
-			}
-			if (rand == 1) {
-				if (isTamed() && eCSInfectedWhenTamed) {
-					setExplodingChickenSyndrome(true);
-					if (eCSNotifyOwnerWhenInfected) {
-						//for (int i = 0; i < world.playerEntities.length; i++) {
+		if (!world.isRemote) {
+			if (explodingChickenSyndrome && !getExplodingChickenSyndrome()) {
+				int rand;
+				if (isChild()) {
+					rand = randomInt(1, eCSBabyInfectionChance);
+				} else {
+					rand = randomInt(1, eCSInfectionChance);
+				}
+				if (rand == 1) {
+					if (isTamed() && eCSInfectedWhenTamed) {
+						setExplodingChickenSyndrome(true);
+						if (eCSNotifyOwnerWhenInfected) {
 							if (world.playerEntities.contains(getOwner())) {
 								getOwner().sendMessage(getDisplayName().appendText(" has been infected with Exploding Chicken Syndrome!"));
 							}
-						//}
+						}
+					}
+					if (!isTamed() && eCSInfectedWhenWild) {
+						setExplodingChickenSyndrome(true);
 					}
 				}
-				if (!isTamed() && eCSInfectedWhenWild) {
-					setExplodingChickenSyndrome(true);
+			}
+			
+			if (getExplodingChickenSyndrome()) {
+				int rand = randomInt(1, eCSFalseFuseChance);
+				int rand2 = randomInt(1, eCSExplosionChance);
+				if (rand == 1) {
+					this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
 				}
+				if (rand2 == 1) {
+					explodingByECS = true;
+					setChickenState(1);
+				}
+			 	blowUp();
 			}
-		}
-		
-		if (getExplodingChickenSyndrome()) {
-			int rand = randomInt(1, eCSFalseFuseChance);
-			int rand2 = randomInt(1, eCSExplosionChance);
-			if (rand == 1) {
-				this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
-			}
-			if (rand2 == 1) {
-				mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" should be blowing up now!"));
-				setChickenState(1);
-			}
-		 	blowUp();
-		}
-		
-		if (madChickenDisease && !getMadChickenDisease()) {
-			//System.out.println(getName() + " is trying to get Mad Chicken Disease!");
-			int rand;
-			if (isChild()) {
-				rand = randomInt(1, mCDBabyInfectionChance);
-			} else {
-				rand = randomInt(1, mCDInfectionChance);
-			}
-			if (rand == 1) {
-				if (isTamed() && mCDInfectedWhenTamed) {
-					setMadChickenDisease(true);
-					if (mCDNotifyOwnerWhenInfected) {
-						getOwner().sendMessage(getDisplayName().appendText(" has been infected with Mad Chicken Disease!"));
+			
+			if (madChickenDisease && !getMadChickenDisease()) {
+				int rand;
+				if (isChild()) {
+					rand = randomInt(1, mCDBabyInfectionChance);
+				} else {
+					rand = randomInt(1, mCDInfectionChance);
+				}
+				if (rand == 1) {
+					if (isTamed() && mCDInfectedWhenTamed) {
+						setMadChickenDisease(true);
+						if (mCDNotifyOwnerWhenInfected) {
+							getOwner().sendMessage(getDisplayName().appendText(" has been infected with Mad Chicken Disease!"));
+						}
 					}
-				}
-				if (!isTamed() && mCDInfectedWhenWild) {
-					setMadChickenDisease(true);
+					if (!isTamed() && mCDInfectedWhenWild) {
+						setMadChickenDisease(true);
+					}
 				}
 			}
 		}
@@ -866,7 +864,6 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 	}
 	
 	public void setExplodingChickenSyndrome(boolean bool) {
-		mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" Should be infectioned!" + bool));
 		dataManager.set(EXPLODINGCHICKENSYNDROME, bool);
 	}
 	
@@ -878,40 +875,34 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		if (bool) {
 			System.out.println(this.getName() + " Should by mad!");
 			this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
-			EntityAIBase base = new EntityAINearestAttackableTarget(
-					this, EntityMoChicken.class, true);
-			this.targetTasks.addTask(1, base);
-			System.out.println(base.toString());
-			System.out.println("Target Set 1: " + targetTasks.taskEntries.toArray()[0] + " Target Set2: " + targetTasks.taskEntries.toArray()[1]);
+			if (canShootArrows) {
+				this.tasks.addTask(4, this.aiArrowAttack);
+			}
+			this.targetTasks.addTask(0, new EntityAINearestAttackableTarget(
+					this, EntityMoChicken.class, true));
 		}
 		dataManager.set(MADCHICKENDISEASE, bool);
 	}
 	
 	public void blowUp() {
-		System.out.println(getName() + " is trying to blow up!");
 		if (this.isEntityAlive()) {
-			System.out.println(getName() + " is confirmed alive with state " + getChickenState());
 			this.lastActiveTime = this.timeSinceIgnited;
 			int i = this.getChickenState();
 
 			if (i > 0 && this.timeSinceIgnited == 0) {
-				mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" has been primed!"));
 				this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
 			}
 
 			this.timeSinceIgnited += i;
 
 			if (this.timeSinceIgnited < 0) {
-				System.out.println(getName() + " ignition has been reset!");
 				this.timeSinceIgnited = 0;
 			}
 
 			if (this.timeSinceIgnited >= fuseTime) {
-				mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" has exceeded its fuse time and should blow up!"));
 				this.timeSinceIgnited = fuseTime;
 
 				if (!this.world.isRemote) {
-					mc.ingameGUI.getChatGUI().printChatMessage(this.getDisplayName().appendText(" Goodbye!!!"));
 					EntityPlayer entityplayer = this.world
 							.getClosestPlayerToEntity(this, 5.0D);
 					boolean flag = this.world.getGameRules()
@@ -962,7 +953,6 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 			this.navigator.clearPath();
 			this.setAttackTarget((EntityLivingBase) null);
 			this.setAttackTarget(null);
-			this.tasks.removeTask(new EntityAIAttackMelee(this, 1.0D, false));
 			this.targetTasks.taskEntries.clear();
 		} else {
 			if (this.getOwner() != null) {
@@ -1330,15 +1320,18 @@ public class EntityMoChicken extends EntityTameable implements IRangedAttackMob 
 		
 	}
 	
-	@Override
+	/*@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
-		Entity source = cause.getTrueSource();
-		if (source.isEntityEqual(this)) {
-			EntityMoChicken chicken = (EntityMoChicken) source;
-			if (chicken.getMadChickenDisease()) {
-				mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" was killed by " + source.getDisplayName() + " infected with Mad Chicken Disease."));
+		Entity source = cause.getImmediateSource();
+		System.out.println(cause.getImmediateSource());
+		if (source.toString().isEmpty()) {
+			if (source.isEntityEqual(this)) {
+				EntityMoChicken chicken = (EntityMoChicken) source;
+				if (chicken.getMadChickenDisease()) {
+					mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" was killed by " + source.getDisplayName() + " infected with Mad Chicken Disease."));
+				}
 			}
 		}
-	}
+	}*/
 }

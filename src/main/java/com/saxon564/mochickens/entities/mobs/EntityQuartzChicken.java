@@ -1,7 +1,7 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.QuartzChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -24,7 +24,7 @@ public class EntityQuartzChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(QuartzChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.quartzConfig, this.getClass());
     }
 
     @Override

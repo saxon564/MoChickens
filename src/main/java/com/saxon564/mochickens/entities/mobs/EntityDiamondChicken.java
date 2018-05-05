@@ -1,7 +1,7 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.DiamondChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -22,7 +22,7 @@ public class EntityDiamondChicken extends EntityMoChicken
     
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(DiamondChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.diamondConfig, this.getClass());
     }
     
     public boolean getCanSpawnHere()

@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.CreeperChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
@@ -19,7 +19,7 @@ public class EntityCreeperChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(CreeperChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.creeperConfig, this.getClass());
     }
     
     /*protected boolean isValidLightLevel()

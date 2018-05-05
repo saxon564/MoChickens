@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.EnderChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
@@ -18,7 +18,7 @@ public class EntityEnderChicken extends EntityMoChicken {
 	}
 
 	public void applyEntityAttributes() {
-		super.applyEntityAttributes(EnderChickenConfig.config, this.getClass());
+		super.applyEntityAttributes(FileManager.enderConfig, this.getClass());
 	}
     
 	/*protected boolean isValidLightLevel()

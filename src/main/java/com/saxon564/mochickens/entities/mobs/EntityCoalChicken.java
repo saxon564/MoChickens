@@ -1,7 +1,7 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.CoalChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -28,7 +28,7 @@ public class EntityCoalChicken extends EntityMoChicken {
 	}*/
 
 	public void applyEntityAttributes() {
-		super.applyEntityAttributes(CoalChickenConfig.config, this.getClass());
+		super.applyEntityAttributes(FileManager.coalConfig, this.getClass());
 	}
     
     public boolean getCanSpawnHere()

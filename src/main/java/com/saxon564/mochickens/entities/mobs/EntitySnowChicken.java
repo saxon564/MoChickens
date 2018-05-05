@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.SnowChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -19,7 +19,7 @@ public class EntitySnowChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(SnowChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.snowConfig, this.getClass());
     }
     
     public boolean getCanSpawnHere()

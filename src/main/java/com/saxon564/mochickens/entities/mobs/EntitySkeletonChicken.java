@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.SkeletonChickenConfig;
+import com.saxon564.mochickens.configs.FileManager;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
@@ -19,7 +19,7 @@ public class EntitySkeletonChicken extends EntityMoChicken
 
     public void applyEntityAttributes()
     {
-        super.applyEntityAttributes(SkeletonChickenConfig.config, this.getClass());
+        super.applyEntityAttributes(FileManager.skeletonConfig, this.getClass());
     }
 
     /**
