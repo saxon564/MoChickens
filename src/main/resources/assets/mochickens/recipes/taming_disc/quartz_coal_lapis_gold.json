@@ -1,0 +1,48 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" T ",
+		"LIR",
+		" B "
+	],
+	
+	"key":
+	{
+		"T":
+		{
+			"item": "mochickens:disc_stick",
+			"data": 7
+		},
+		
+		"L":
+		{
+			"item": "mochickens:disc_stick",
+			"data": 0
+		},
+		
+		"R":
+		{
+			"item": "mochickens:disc_stick",
+			"data": 4
+		},
+		
+		"B":
+		{
+			"item": "mochickens:disc_stick",
+			"data": 2
+		},
+		
+		"I":
+		{
+			"item":"mochickens:inner_taming_disc"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:taming_disc"
+	}
+}

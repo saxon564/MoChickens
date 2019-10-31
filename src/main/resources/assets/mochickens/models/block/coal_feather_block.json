@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "mochickens:blocks/coal_feather_block"
+    }
+}

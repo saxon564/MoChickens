@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "mochickens:blocks/emerald_feather_block"
+    }
+}
