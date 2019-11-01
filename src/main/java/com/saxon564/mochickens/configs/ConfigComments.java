@@ -38,7 +38,7 @@ public class ConfigComments {
 				+ "Default: \"";
 
 	/************* Entity Data Comments *************/
-	protected final String HEALTH = "How much health the chicken has (1.0 = half a heart)\n"
+	protected final String HEALTH = "How much health the chicken has (1.0 = 0.5 Hearts)\n"
 				+ "Default: ";
 	protected final String SPEED = "How many blocks per tick the chicken walks (1.0 = 1 Block)\n"
 				+ "Default: ";
@@ -82,64 +82,109 @@ public class ConfigComments {
 	protected final String STEP_SOUND = "Sound chicken makes when walking around\n"
 				+ "Default: \"";
 	protected final String IGNITEABLE = "Chicken can get ignited by flint and steel like Creepers\n"
-			+ "Default: ";
+				+ "Default: ";
 
 	/************* Taming Comments *************/
-	protected final String TAMABLE = "Chicken can get ignited by flint and steel like Creepers\n"
+	protected final String TAMABLE = "Can chicken be tamed\n"
 				+ "Default: ";
-	protected final String TAMING_ITEMS = "Items used to taming chicken\n"
+	protected final String TAMING_ITEMS = "Items used to tame the chicken\n"
 				+ "Taming Item MUST be all lowercase\n"
-				+"Taming Item must be one of the items in the \"Items.txt\" list\n"
+				+ "Taming Item must be one of the items in the \"Items.txt\" list\n"
 				+ "Default: \"";
 	protected final String TAMING_CHANCE = "Taming Chance is a 1 in \"number\" chance of being tamed\n"
 				+ "Default: ";
 
 	/************* Tempting Comments *************/
-	protected final String TEMPTING_COMMENT = "Tempting\n"
-				+"Tempting Item MUST be all lowercase\n"
-				+"Tempting Item must be one of the items in the \"Items.txt\" list\n"
-				+"Delay Following Between Item Holdings must be in seconds";
+	protected final String TEMPTABLE_WILD = "Can chicken be tempted when wild\n"
+				+ "Default: ";
+	protected final String TEMPTABLE_TAMED = "Can chicken be tempted when tamed\n"
+				+ "Default: ";
+	protected final String TEMPTING_ITEMS = "Items used to tempt the chicken\n"
+				+ "Tempting Item MUST be all lowercase\n"
+				+ "Tempting Item must be one of the items in the \"Items.txt\" list\n"
+				+ "Default: \"";
+	protected final String TEMPTING_COOLDOWN = "Time in ticks the chicken ignores tempting item\n"
+				+ "when item gets put away\n"
+				+ "Default: ";
+	protected final String OWNER_TEMPTING = "Can chicken only be tempted by its owner\n"
+				+ "Default: ";
+	protected final String TEMPTING_SPEED = "Speed in which the chicken moves when tempted\n"
+				+ "in blocks (1.0 = 1 block)\n"
+				+ "Default: ";
+	protected final String TEMPTING_SCARE = "Chicken can be scared away from being tempted\n"
+				+ "Default: ";
 	
 	/************* Breeding Comments *************/
-	protected final String BREEDING_COMMENT = "Breeding\n"
-				+"Breeding Item MUST be all lowercase\n"
-				+"Breeding Item must be one of the items in the \"Items.txt\" list";
+	protected final String BREEDING_WILD = "Can chicken be bred when wild\n"
+				+ "Default: ";
+	protected final String BREEDING_TAMED = "Can chicken be bred when tamed\n"
+				+ "Default: ";
+	protected final String BREEDING_ITEMS = "Items used to breed the chicken\n"
+				+ "Breeding Item MUST be all lowercase\n"
+				+ "Breeding Item must be one of the items in the \"Items.txt\" list\n"
+				+ "Default: \"";
+	protected final String BREEDING_GROW_TIME = "Time in ticks for the baby chicken\n"
+				+ "to grow into an adult\n"
+				+ "Default: ";
+	protected final String CHILD_TAMED_BREEDING = "Chicken is tamed when spawned by breeding\n"
+				+ "Default: ";
+	protected final String OWNER_BREEDING = "Can chicken only be bred by its owner\n"
+				+ "Default: ";
 	
 	/************* Laying Comments *************/
-	protected final String LAYING_COMMENT = "Laying\n"
-				+"Laying Item MUST be all lowercase\n"
-				+"Laying Item must be one of the items in the \"Items.txt\" list\n"
-				+"\"Variable Lay Time\" causes the lay time to vary in seconds by that amount\n"
-				+"e.g. \"Min Lay Time\" is 6000 with a \"Variable Lay Time\" of 2500\n"
-				+"will cause the lay time to be anywhere between 6000 and 8500 seconds";
+	protected final String LAYING_WILD = "Can chicken lay items when wild\n"
+				+ "Default: ";
+	protected final String LAYING_TAMED = "Can chicken lay items when tamed\n"
+				+ "Default: ";
+	protected final String LAYING_ITEMS = "Items for the chicken to lay\n"
+				+ "Laying Item MUST be all lowercase\n"
+				+ "Laying Item must be one of the items in the \"Items.txt\" list\n"
+				+ "Default: \"";
+	protected final String LAYING_NUMBER = "How many of any item may be layed\n"
+				+ "Default: ";
+	protected final String LAYING_MIN_TIME = "Minimum time in seconds between each\n"
+				+ "time the chicken lays an item\n"
+				+ "Default: ";
+	protected final String LAYING_VAR_TIME = "Time in second for the lay time to vary"
+				+ "e.g. \"Min Lay Time\" is 6000 with a \"Variable Lay Time\" of 2500\n"
+				+ "will cause the lay time to be anywhere between 6000 and 8500 seconds\n"
+				+ "Default: ";
+	protected final String LAYING_SOUND = "Sound chicken makes when chicken lays items\n"
+				+ "Default: \"";
 	
 	/************* Attack Data Comments *************/
-	protected final String ATTACK_DATA_COMMENT = "Attack Data\n"
-				+"Attack damage is based on each half heart, so 1 attack damage equals 0.5 hearts.\n"
-				+"Effect Ids, durations, and amplifiers must all have the same number of variables to work.\n"
-				+"Effect duration MUST be seconds times 20.\n"
-				+"Amplifier is the level of the effect.\n"
-				+"The other of the numbers do matter, for example to have speed 3 for 20 seconds\n"
-				+"and Strength 2 for 5 seconds each of them MUST be laid out as so.\n\n"
-				+"\"attack data\" {\n"
-				+"    I:\"Effect Amplifiers\" <\n"
-				+"        3\n"
-				+"        2\n"
-				+"    >\n"
-				+"    I:\"Effect Durations\" <\n"
-				+"       400\n"
-				+"      100\n"
-				+"    >\n"
-				+"   I:\"Effect IDs\" <\n"
-				+"        1\n"
-				+"        5\n"
-				+"   >\n"
-				+"}\n\n"
-				+"So the numbers 1, 400, and 3 are in the same spot, id 1 is speed, 400 is 20 seconds at level 3.\n"
-				+"Same goes with the second one. Strength is id 5, duration is 100 (5 seconds) and level is 2\n"
-				+"Fire Duration is set in seconds, so if you put in 20, it will be 20 seconds.\n"
-				+"Arrow Shoot Speed is in ticks (20 ticks = 1 second)\n"
-				+"ATTACK SPEED CURRENTLY IS NOT WORKING! I AM WORKING ON GETTING THIS FIXED.";
+	protected final String HOSTILE = "Chicken is hostile toward players\n"
+				+ "Default: ";
+	protected final String ATTACK_DAMAGE = "How much damage chicken down in physical damage (1.0 = 0.5 Hearts)\n"
+				+ "Deafult: ";
+	protected final String ATTACK_TARGET_FIRE = "Chicken set target player on fire\n"
+				+ "Default: ";
+	protected final String ATTACK_FIRE_TIME = "How long the target is set on fire\n"
+				+ "Default: ";
+	protected final String ATTACK_SPEED = "How fast the chicken moves when it is attacking (1.0 = 1 Block)\n"
+				+ "Default: ";
+	protected final String ATTACK_EFFECTS = "Effects chicken give target when it hurts target\n"
+				+ "Default: \"";
+	protected final String ATTACK_EFFECT_DURATIONS = "Time in seconds the effects last\n"
+				+ "Default: \"";
+	protected final String ATTACK_EFFECT_AMPLIFIERS = "Level of effects\n"
+				+ "Default: \"";
+	protected final String ATTACK_DISTANCE = "Distance in blocks the chicken can find a target (1.0 = 1 Block)\n"
+				+ "Default: ";
+	protected final String ATTACK_EXPLODING = "Will chicken explode when close to target\n"
+				+ "Default: ";
+	protected final String ATTACK_EXPLODING_FUSE = "How long does it take for chicken to explode\n"
+				+ "Default: ";
+	protected final String ATTACK_EXPLODING_RADIUS = "How large of a radius is the explosion in blocks (1.0 = 1 Block)\n"
+				+ "Default: ";
+	protected final String ATTACK_PRIMED_MOVEMENT = "Chicken can still move when exploding\n"
+				+ "Default: ";
+	protected final String ATTACK_PRIMED_SPEED = "How fast does the chicken move in blocks when exploding (1.0 = 1 Block)\n"
+				+ "Default: ";
+	protected final String ATTACK_ARROWS = "Attacks by shooting arrows\n"
+				+ "Default: ";
+	protected final String ATTACK_ARROWS_RATE = "How many ticks between each arrow fired\n"
+				+ "Default: ";
 	
 	/************* ECS Comments *************/
 	protected final String EXPLODING_CHICKEN_COMMENT = "Exploding Chicken Syndrome\n"

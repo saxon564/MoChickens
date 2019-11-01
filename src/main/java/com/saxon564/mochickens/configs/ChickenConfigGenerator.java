@@ -252,63 +252,63 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		
 	public void tempting(boolean canTemptTamed, boolean canTemptWild, List<String> itemTempt, int delay, boolean ownerOnlyTempting,
 			double temptedWalkingSpeed, boolean temptScareByPlayer) {
-		CONFIG.comment(com.TEMPTING_COMMENT).push("Tempting");
-		CAN_BE_TEMPTED_TAMED = CONFIG.translation("canTemptTamed").define("Can_Be_Tempted_When_Tamed", canTemptTamed);
-		CAN_BE_TEMPTED_WILD = CONFIG.translation("canTemptWild").define("Can_Be_Tempted_When_Wild", canTemptWild);
-		TAMING_ITEMS = CONFIG.translation("temptingItems").define("Tempting_Items", itemTempt.toString());
-		FOLLOWING_DELAY_BETWEEN_ITEM_HOLDINGS = CONFIG.translation("temptingDelay").define("Delay_Following_Between_Item_Holdings", delay);
-		OWNER_ONLY_TEMPTING = CONFIG.translation("ownerOnlyTempting").define("Only_Owner_Can_Tempt", ownerOnlyTempting);
-		TEMPTED_WALKING_SPEED = CONFIG.translation("temptedWalkingSpeed").define("Walking_Speed_When_Tempted", temptedWalkingSpeed);
-		TEMPT_SCARED_BY_PLAYER = CONFIG.translation("temptScaredByPlayer").define("Can_Be_Scared_By_Player_While_Tempting", temptScareByPlayer);
+		CONFIG.push("Tempting");
+		CAN_BE_TEMPTED_TAMED = CONFIG.translation("canTemptTamed").comment(com.TEMPTABLE_TAMED + canTemptTamed).define("Can_Be_Tempted_When_Tamed", canTemptTamed);
+		CAN_BE_TEMPTED_WILD = CONFIG.translation("canTemptWild").comment(com.TEMPTABLE_WILD + canTemptWild).define("Can_Be_Tempted_When_Wild", canTemptWild);
+		TAMING_ITEMS = CONFIG.translation("temptingItems").comment(com.TEMPTING_ITEMS + itemTempt + "\"").define("Tempting_Items", itemTempt.toString());
+		FOLLOWING_DELAY_BETWEEN_ITEM_HOLDINGS = CONFIG.translation("temptingDelay").comment(com.TEMPTING_COOLDOWN + delay).define("Delay_Following_Between_Item_Holdings", delay);
+		OWNER_ONLY_TEMPTING = CONFIG.translation("ownerOnlyTempting").comment(com.OWNER_TEMPTING + ownerOnlyTempting).define("Only_Owner_Can_Tempt", ownerOnlyTempting);
+		TEMPTED_WALKING_SPEED = CONFIG.translation("temptedWalkingSpeed").comment(com.TEMPTING_SPEED + temptedWalkingSpeed).define("Walking_Speed_When_Tempted", temptedWalkingSpeed);
+		TEMPT_SCARED_BY_PLAYER = CONFIG.translation("temptScaredByPlayer").comment(com.TEMPTING_SCARE + temptScareByPlayer).define("Can_Be_Scared_By_Player_While_Tempting", temptScareByPlayer);
 		CONFIG.pop();
 	}
 		
 	public void breeding(boolean canBreedTamed, boolean canBreedWild, List<String> itemBreed, int growTime,
 			boolean childSpawnsTamed, boolean ownerOnlyBreeding) {	
-		CONFIG.comment(com.BREEDING_COMMENT).push("Breeding");
-		CAN_BREED_TAMED = CONFIG.translation("allowBreedingTamed").define("Allow_Breeding_When_Tamed", canBreedTamed);
-		CAN_BREED_WILD = CONFIG.translation("allowBreedingWild").define("Allow_Breeding_When_Tamed", canBreedWild);
-		BREEDING_ITEMS = CONFIG.translation("breedingItems").define("Breeding_Items", itemBreed.toString());
-		BABY_TO_ADULT_TIME = CONFIG.translation("growTime").define("Growing_Time", growTime);
-		CHILD_SPAWNS_TAMED = CONFIG.translation("childSpawnsTamed").define("Child_Spawns_Tamed", childSpawnsTamed);
-		OWNER_ONLY_BREEDING = CONFIG.translation("ownerOnlyBreeding").define("Only_Owner_Can_Breed", ownerOnlyBreeding);
+		CONFIG.push("Breeding");
+		CAN_BREED_TAMED = CONFIG.translation("allowBreedingTamed").comment(com.BREEDING_TAMED + canBreedTamed).define("Allow_Breeding_When_Tamed", canBreedTamed);
+		CAN_BREED_WILD = CONFIG.translation("allowBreedingWild").comment(com.BREEDING_WILD + canBreedWild).define("Allow_Breeding_When_Tamed", canBreedWild);
+		BREEDING_ITEMS = CONFIG.translation("breedingItems").comment(com.BREEDING_ITEMS + itemBreed + "\"").define("Breeding_Items", itemBreed.toString());
+		BABY_TO_ADULT_TIME = CONFIG.translation("growTime").comment(com.BREEDING_GROW_TIME + growTime).define("Growing_Time", growTime);
+		CHILD_SPAWNS_TAMED = CONFIG.translation("childSpawnsTamed").comment(com.CHILD_TAMED_BREEDING + childSpawnsTamed).define("Child_Spawns_Tamed", childSpawnsTamed);
+		OWNER_ONLY_BREEDING = CONFIG.translation("ownerOnlyBreeding").comment(com.OWNER_BREEDING + ownerOnlyBreeding).define("Only_Owner_Can_Breed", ownerOnlyBreeding);
 		CONFIG.pop();
 	}
 		
 	public void laying(boolean laysItemsTamed, boolean laysItemsWild, List<String> itemLay, int amount, int minLayTime, int varLayTime, String sound) {
-		CONFIG.comment(com.LAYING_COMMENT).push("Laying");
-		CAN_LAY_ITEMS_TAMED = CONFIG.translation("laysItemsTamed").define("Can_Lay_Items_When_Tamed", laysItemsTamed);
-		CAN_LAY_ITEMS_WILD = CONFIG.translation("laysItemsWild").define("Can_Lay_Items_When_Wild", laysItemsWild);
-		LAYING_ITEMS = CONFIG.translation("layingItems").define("Laying_Items", itemLay.toString());
-		NUMBER_OF_ITEMS_TO_LAY = CONFIG.translation("layingAmounts").define("Laying_Item_Amounts", amount);
-		MINIMUM_LAYING_TIME = CONFIG.translation("minLayTime").define("Min_Item_Lay_Time", minLayTime);
-		VARIABLE_LAYING_TIME = CONFIG.translation("varLayTime").define("Variable_Item_Lay_Time", varLayTime);
-		LAYING_SOUND = CONFIG.translation("layingSounds").define("Laying_Sounds", sound.toString());
+		CONFIG.push("Laying");
+		CAN_LAY_ITEMS_TAMED = CONFIG.translation("laysItemsTamed").comment(com.LAYING_TAMED + laysItemsTamed).define("Can_Lay_Items_When_Tamed", laysItemsTamed);
+		CAN_LAY_ITEMS_WILD = CONFIG.translation("laysItemsWild").comment(com.LAYING_WILD + laysItemsWild).define("Can_Lay_Items_When_Wild", laysItemsWild);
+		LAYING_ITEMS = CONFIG.translation("layingItems").comment(com.LAYING_ITEMS + itemLay + "\"").define("Laying_Items", itemLay.toString());
+		NUMBER_OF_ITEMS_TO_LAY = CONFIG.translation("layingAmounts").comment(com.LAYING_NUMBER + amount).define("Laying_Item_Amounts", amount);
+		MINIMUM_LAYING_TIME = CONFIG.translation("minLayTime").comment(com.LAYING_MIN_TIME + minLayTime).define("Min_Item_Lay_Time", minLayTime);
+		VARIABLE_LAYING_TIME = CONFIG.translation("varLayTime").comment(com.LAYING_VAR_TIME + varLayTime).define("Variable_Item_Lay_Time", varLayTime);
+		LAYING_SOUND = CONFIG.translation("layingSounds").comment(com.LAYING_SOUND + sound).define("Laying_Sounds", sound.toString());
 		CONFIG.pop();
 	}
 	
 	public void attackData(boolean hostile, float damage, boolean createFire, int fireLength,
-			double speedAttack, List<String> effects, List<String> effectDurationsIn,
-			List<String> effectAmplifiersIn, double attackRange, boolean exploding, int fuse,
+			double speedAttack, List<String> effects, List<String> effectDurations,
+			List<String> effectAmplifiers, double attackRange, boolean exploding, int fuse,
 			int explodingRadius, boolean chickenMovesPrimed, double primedMovementSpeed,
 			boolean shootArrows, int arrowSpeed) {
-		CONFIG.comment(com.ATTACK_DATA_COMMENT).push("Attack_Data");
-		IS_HOSTILE = CONFIG.translation("hostile").define("Hostile", hostile);
-		ATTACK_DAMAGE = CONFIG.translation("attackDamage").define("Attack_Damage", damage);
-		SET_TARGET_ON_FIRE = CONFIG.translation("targetOnFire").define("Set_Target_On_Fire", createFire);
-		DURATION_OF_FIRE_ON_TARGET = CONFIG.translation("fireLength").define("Fire_Duration", fireLength);
-		ATTACK_MOVEMENT_SPEED = CONFIG.translation("attackSpeed").define("Attack_Speed", speedAttack);
-		ATTACK_EFFECTS = CONFIG.translation("effects").define("Effects", effects.toString());
-		ATTACK_EFFECT_DURATIONS = CONFIG.translation("effectDurations").define("Effect_Durations", effectDurationsIn.toString());
-		ATTACK_EFFECT_AMPLIFIERS = CONFIG.translation("effectAmplifiers").define("Effect_Amplifiers", effectAmplifiersIn.toString());
-		DISTANCE_TO_TRACK_TARGET = CONFIG.translation("attackTrackingRange").define("Attack_Tracking_Range", attackRange);
-		CAN_EXPLODE = CONFIG.translation("canBlowUp").define("Can_Blow_Up", exploding);
-		EXPLOSION_FUSE_TIME = CONFIG.translation("fuseTime").define("Fuse_Time", fuse);
-		EXPLOSION_RADIUS = CONFIG.translation("explosionRadius").define("Explosion_Radius", explodingRadius);
-		MOVES_WHEN_PRIMED = CONFIG.translation("chickenMovesWhenPrimed").define("Chicken_Moved_When_Primed", chickenMovesPrimed);
-		PRIMED_MOVEMENT_SPEED = CONFIG.translation("primedChickenMovementSpeed").define("Movement_Speed_When_Primed", primedMovementSpeed);
-		CAN_SHOOT_ARROWS = CONFIG.translation("shootsArrows").define("Can_Shoot_Arrows", shootArrows);
-		TIME_BETWEEN_ARROWS = CONFIG.translation("arrowRate").define("Arrow_Shoot_Speed", arrowSpeed);
+		CONFIG.push("Attack_Data");
+		IS_HOSTILE = CONFIG.translation("hostile").comment(com.HOSTILE + hostile).define("Hostile", hostile);
+		ATTACK_DAMAGE = CONFIG.translation("attackDamage").comment(com.ATTACK_DAMAGE + damage).define("Attack_Damage", damage);
+		SET_TARGET_ON_FIRE = CONFIG.translation("targetOnFire").comment(com.ATTACK_TARGET_FIRE + createFire).define("Set_Target_On_Fire", createFire);
+		DURATION_OF_FIRE_ON_TARGET = CONFIG.translation("fireLength").comment(com.ATTACK_FIRE_TIME + fireLength).define("Fire_Duration", fireLength);
+		ATTACK_MOVEMENT_SPEED = CONFIG.translation("attackSpeed").comment(com.ATTACK_SPEED + speedAttack).define("Attack_Speed", speedAttack);
+		ATTACK_EFFECTS = CONFIG.translation("effects").comment(com.ATTACK_EFFECTS + effects.toString() + "\"").define("Effects", effects.toString());
+		ATTACK_EFFECT_DURATIONS = CONFIG.translation("effectDurations").comment(com.ATTACK_EFFECT_DURATIONS + effectDurations.toString() + "\"").define("Effect_Durations", effectDurations.toString());
+		ATTACK_EFFECT_AMPLIFIERS = CONFIG.translation("effectAmplifiers").comment(com.ATTACK_EFFECT_AMPLIFIERS + effectAmplifiers.toString() + "\"").define("Effect_Amplifiers", effectAmplifiers.toString());
+		DISTANCE_TO_TRACK_TARGET = CONFIG.translation("attackTrackingRange").comment(com.ATTACK_DISTANCE + attackRange).define("Attack_Tracking_Range", attackRange);
+		CAN_EXPLODE = CONFIG.translation("canBlowUp").comment(com.ATTACK_EXPLODING + exploding).define("Can_Blow_Up", exploding);
+		EXPLOSION_FUSE_TIME = CONFIG.translation("fuseTime").comment(com.ATTACK_EXPLODING_FUSE + fuse).define("Fuse_Time", fuse);
+		EXPLOSION_RADIUS = CONFIG.translation("explosionRadius").comment(com.ATTACK_EXPLODING_RADIUS + explodingRadius).define("Explosion_Radius", explodingRadius);
+		MOVES_WHEN_PRIMED = CONFIG.translation("chickenMovesWhenPrimed").comment(com.ATTACK_PRIMED_MOVEMENT + chickenMovesPrimed).define("Chicken_Moved_When_Primed", chickenMovesPrimed);
+		PRIMED_MOVEMENT_SPEED = CONFIG.translation("primedChickenMovementSpeed").comment(com.ATTACK_PRIMED_SPEED + primedMovementSpeed).define("Movement_Speed_When_Primed", primedMovementSpeed);
+		CAN_SHOOT_ARROWS = CONFIG.translation("shootsArrows").comment(com.ATTACK_ARROWS + shootArrows).define("Can_Shoot_Arrows", shootArrows);
+		TIME_BETWEEN_ARROWS = CONFIG.translation("arrowRate").comment(com.ATTACK_ARROWS_RATE + arrowSpeed).define("Arrow_Shoot_Speed", arrowSpeed);
 		CONFIG.pop();
 	}
 	
