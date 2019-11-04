@@ -1,13 +1,20 @@
 package com.saxon564.mochickens.configs;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.saxon564.mochickens.MoChickens;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
@@ -15,6 +22,9 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 	private static ConfigComments com = new ConfigComments();
 
 	public static ForgeConfigSpec.Builder CONFIG;
+	protected static CommentedFileConfig CONFIG_DATA;
+	
+	protected static Path TOML_PATH;
 
 	public BooleanValue IMMUNE_TO_FIRE;
 	public BooleanValue HYPOALERGENIC;
@@ -118,7 +128,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 	public BooleanValue TEMPT_SCARED_BY_PLAYER;
 
 		
-	public ForgeConfigSpec.Builder buildConfig(ForgeConfigSpec.Builder builder,
+	public Builder buildConfig(ForgeConfigSpec.Builder builder, String name, File dir, String toml,
 //			< ----- Spawning ----- >
 			boolean canSpawn, int probability, int minGroup, int maxGroup,
 			int minLight, int maxLight, double minTempIn, double maxTempIn,
@@ -162,7 +172,9 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 			boolean tCDWhenWild, boolean tCDClearWhenTamed,
 			int tCDChance, int tCDBabyChance, double tCDBaseFactor, double tCDMaxFactor,
 			int tCDAdjustChance, double tCDAdjustFactor) {
+		if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug("Generating Configs for " + name);
 		CONFIG = builder;
+		CONFIG_DATA = CommentedFileConfig.builder(dir.toPath().resolve(toml)).sync().autosave().preserveInsertionOrder().build();
 		
 		spawning(canSpawn, probability, minGroup, maxGroup, minLight, maxLight, minTempIn, maxTempIn, 
 				blacklistWhitelist, biomeListIn, customBiomes);
@@ -187,7 +199,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		return CONFIG;
 	}
 
-	public void spawning(boolean canSpawn, int probability, int minGroup, int maxGroup, 
+	private void spawning(boolean canSpawn, int probability, int minGroup, int maxGroup, 
 			int minLight, int maxLight, double minTemp, double maxTemp, 
 			String blacklistWhitelist, List<String> biomeList, Map<String, Map<String, Integer>> customBiomes) {
 		CONFIG.comment(com.SPAWNING_COMMENT).push("Spawning");
@@ -201,16 +213,22 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		MAXIMUM_SPAWN_TEMP = CONFIG.translation("maxSpawnTemp").comment(com.MAX_TEMP + maxTemp).define("Max_Spawn_Temp", (float) maxTemp);
 		BIOME_WHITELIST_OR_BLACKLIST = CONFIG.translation("biomeListType").comment(com.BIOME_LIST_TYPE + blacklistWhitelist + "\"").define("Biome_List_Type", blacklistWhitelist);
 		BIOME_LIST = CONFIG.translation("biomeList").comment(com.BIOME_LIST + biomeList.toString() + "\"").define("Biome_List", biomeList.toString());
+
+		CUSTOM_BIOMES = customBiomes;
 		Set<String> biomes = customBiomes.keySet();
 		for (String b:biomes) {
-			CONFIG.translation(b + "_spawnProbability").comment(com.SPAWNING_PROBABILITY + customBiomes.get(b).get("probability")).define(b + ".Spawn_Probability", customBiomes.get(b).get("probability"));
-			CONFIG.translation(b + "_minSpawnGroupSize").comment(com.MIN_GROUP + customBiomes.get(b).get("max_group")).define(b + ".Min_Spawn_Group_Size", customBiomes.get(b).get("max_group"));
-			CONFIG.translation(b + "_maxSpawnGroupSize").comment(com.MAX_GROUP + customBiomes.get(b).get("min_group")).define(b + ".Max_Spawn_Group_Size", customBiomes.get(b).get("min_group"));
+			CONFIG.translation(b + "_spawnProbability").comment(com.SPAWNING_PROBABILITY + customBiomes.get(b).get("probability")).define("Biomes." + b + ".Spawn_Probability", customBiomes.get(b).get("probability"));
+			CONFIG.translation(b + "_minSpawnGroupSize").comment(com.MIN_GROUP + customBiomes.get(b).get("max_group")).define("Biomes." + b + ".Min_Spawn_Group_Size", customBiomes.get(b).get("max_group"));
+			CONFIG.translation(b + "_maxSpawnGroupSize").comment(com.MAX_GROUP + customBiomes.get(b).get("max_group")).define("Biomes." + b + ".Max_Spawn_Group_Size", customBiomes.get(b).get("max_group"));
 		}
+		readConfig();
+
+		if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.error("Internal Stored Biome Values: " + CUSTOM_BIOMES.toString());
+		
 		CONFIG.pop();
 	}
 		
-	public void entityData(double health, double speed, double hitX, double hitZ, 
+	private void entityData(double health, double speed, double hitX, double hitZ, 
 			boolean despawnUntamed, boolean despawnTamed, boolean silent, 
 			boolean teleport, boolean emitLight, int light, boolean immuneFire, boolean fireInLight, 
 			boolean waterHurt, double waterDamaged, boolean emitParticles, List<String> particle, 
@@ -242,7 +260,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CONFIG.pop();
 	}
 		
-	public void taming(boolean canTame, List<String> itemTame, int chance) {
+	private void taming(boolean canTame, List<String> itemTame, int chance) {
 		CONFIG.push("Taming");
 		CAN_BE_TAMED = CONFIG.translation("canTame").comment(com.TAMABLE + canTame).define("Can_Be_Tamed", canTame);
 		TAMING_ITEMS = CONFIG.translation("tamingItems").comment(com.TAMING_ITEMS + itemTame.toString() + "\"").define("Taming_Items", itemTame.toString());
@@ -250,7 +268,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CONFIG.pop();
 	}
 		
-	public void tempting(boolean canTemptTamed, boolean canTemptWild, List<String> itemTempt, int delay, boolean ownerOnlyTempting,
+	private void tempting(boolean canTemptTamed, boolean canTemptWild, List<String> itemTempt, int delay, boolean ownerOnlyTempting,
 			double temptedWalkingSpeed, boolean temptScareByPlayer) {
 		CONFIG.push("Tempting");
 		CAN_BE_TEMPTED_TAMED = CONFIG.translation("canTemptTamed").comment(com.TEMPTABLE_TAMED + canTemptTamed).define("Can_Be_Tempted_When_Tamed", canTemptTamed);
@@ -263,7 +281,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CONFIG.pop();
 	}
 		
-	public void breeding(boolean canBreedTamed, boolean canBreedWild, List<String> itemBreed, int growTime,
+	private void breeding(boolean canBreedTamed, boolean canBreedWild, List<String> itemBreed, int growTime,
 			boolean childSpawnsTamed, boolean ownerOnlyBreeding) {	
 		CONFIG.push("Breeding");
 		CAN_BREED_TAMED = CONFIG.translation("allowBreedingTamed").comment(com.BREEDING_TAMED + canBreedTamed).define("Allow_Breeding_When_Tamed", canBreedTamed);
@@ -275,7 +293,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CONFIG.pop();
 	}
 		
-	public void laying(boolean laysItemsTamed, boolean laysItemsWild, List<String> itemLay, int amount, int minLayTime, int varLayTime, String sound) {
+	private void laying(boolean laysItemsTamed, boolean laysItemsWild, List<String> itemLay, int amount, int minLayTime, int varLayTime, String sound) {
 		CONFIG.push("Laying");
 		CAN_LAY_ITEMS_TAMED = CONFIG.translation("laysItemsTamed").comment(com.LAYING_TAMED + laysItemsTamed).define("Can_Lay_Items_When_Tamed", laysItemsTamed);
 		CAN_LAY_ITEMS_WILD = CONFIG.translation("laysItemsWild").comment(com.LAYING_WILD + laysItemsWild).define("Can_Lay_Items_When_Wild", laysItemsWild);
@@ -287,7 +305,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CONFIG.pop();
 	}
 	
-	public void attackData(boolean hostile, float damage, boolean createFire, int fireLength,
+	private void attackData(boolean hostile, float damage, boolean createFire, int fireLength,
 			double speedAttack, List<String> effects, List<String> effectDurations,
 			List<String> effectAmplifiers, double attackRange, boolean exploding, int fuse,
 			int explodingRadius, boolean chickenMovesPrimed, double primedMovementSpeed,
@@ -312,53 +330,111 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CONFIG.pop();
 	}
 	
-	public void explodingChickenSyndrome(boolean explodingSyndrome, boolean eCSNotifyInfectedOwner, 
+	private void explodingChickenSyndrome(boolean explodingSyndrome, boolean eCSNotifyInfectedOwner, 
 			boolean eCSWhenTamed, boolean eCSWhenWild, boolean eCSClearWhenTamed, int eCSChance,
 			int eCSBabyChance, boolean eCSDoesFalseFuse, int eCSFalseFuse, int eCSExplode ) {
-		CONFIG.comment(com.EXPLODING_CHICKEN_COMMENT).push("Exploding_Chicken_Syndrome");
-		CAN_GET_EXPLODING_CHICKEN_SYNDROME = CONFIG.translation("eCS").define("Exploding_Chicken_Syndrome", explodingSyndrome);
-		ECS_NOTIFY_OWNER_WHEN_INFECTED = CONFIG.translation("eCSNotifyOwner").define("Notify_Owner_When_Infected", eCSNotifyInfectedOwner);
-		ECS_CAN_BE_INFECTED_WHEN_TAMED = CONFIG.translation("eCSWhenTamed").define("Can_Be_Infected_While_Tamed", eCSWhenTamed);
-		ECS_CAN_BE_INFECTED_WHEN_WILD = CONFIG.translation("eCSWhenWild").define("Can_Be_Infected_While_Wild", eCSWhenWild);
-		ECS_CLEAR_INFECTION_UPON_TAMING = CONFIG.translation("eCSClearWhenTamed").define("Clear_Infection_When_Tamed", eCSClearWhenTamed);
-		ECS_ADULT_INFECTION_CHANCE = CONFIG.translation("eCSChance").define("Infection_Chance", eCSChance);
-		ECS_BABY_INFECTION_CHANCE = CONFIG.translation("eCSBabyChance").define("Infection_Chance_When_Baby", eCSBabyChance);
-		ECS_DOES_FALSE_FUSE = CONFIG.translation("eCSDoesFalseFuse").define("Does_False_Fuse", eCSDoesFalseFuse);
-		ECS_FALSE_FUSE_CHANCE = CONFIG.translation("eCSFalseFuse").define("False_Fuse_Chance", eCSFalseFuse);
-		ECS_EXPLOSION_CHANCE = CONFIG.translation("eCSExplodeChance").define("Explosion_Chance", eCSExplode);
+		CONFIG.push("Exploding_Chicken_Syndrome");
+		CAN_GET_EXPLODING_CHICKEN_SYNDROME = CONFIG.translation("eCS").comment(com.ECS + explodingSyndrome).define("Exploding_Chicken_Syndrome", explodingSyndrome);
+		ECS_NOTIFY_OWNER_WHEN_INFECTED = CONFIG.translation("eCSNotifyOwner").comment(com.ECS_NOTIFY + eCSNotifyInfectedOwner).define("Notify_Owner_When_Infected", eCSNotifyInfectedOwner);
+		ECS_CAN_BE_INFECTED_WHEN_TAMED = CONFIG.translation("eCSWhenTamed").comment(com.ECS_TAMED + eCSWhenTamed).define("Can_Be_Infected_While_Tamed", eCSWhenTamed);
+		ECS_CAN_BE_INFECTED_WHEN_WILD = CONFIG.translation("eCSWhenWild").comment(com.ECS_WILD + eCSWhenWild).define("Can_Be_Infected_While_Wild", eCSWhenWild);
+		ECS_CLEAR_INFECTION_UPON_TAMING = CONFIG.translation("eCSClearWhenTamed").comment(com.ECS_CLEAR + eCSClearWhenTamed).define("Clear_Infection_When_Tamed", eCSClearWhenTamed);
+		ECS_ADULT_INFECTION_CHANCE = CONFIG.translation("eCSChance").comment(com.ECS_ADULT + eCSChance).define("Infection_Chance", eCSChance);
+		ECS_BABY_INFECTION_CHANCE = CONFIG.translation("eCSBabyChance").comment(com.ECS_BABY + eCSBabyChance).define("Infection_Chance_When_Baby", eCSBabyChance);
+		ECS_DOES_FALSE_FUSE = CONFIG.translation("eCSDoesFalseFuse").comment(com.ECS_FUSE + eCSDoesFalseFuse).define("Does_False_Fuse", eCSDoesFalseFuse);
+		ECS_FALSE_FUSE_CHANCE = CONFIG.translation("eCSFalseFuse").comment(com.ECS_FUSE_CHANCE + eCSFalseFuse).define("False_Fuse_Chance", eCSFalseFuse);
+		ECS_EXPLOSION_CHANCE = CONFIG.translation("eCSExplodeChance").comment(com.ECS_EXPLODE + eCSExplode).define("Explosion_Chance", eCSExplode);
 		CONFIG.pop();
 	}
 	
-	public void madChickenDisease(boolean madChicken, 
+	private void madChickenDisease(boolean madChicken, 
 			boolean mCDNotifyInfectedOwner, boolean mCDWhenTamed, boolean mCDWhenWild, 
 			boolean mCDClearWhenTamed, int mCDChance, int mCDBabyChance) {
-		CONFIG.comment(com.MAD_CHICKEN_COMMENT).push("Mad_Chicken_Disease");
-		CAN_GET_MAD_CHICKEN_DISEASE = CONFIG.translation("mCD").define("Mad_Chicken_Disease", madChicken);
-		MCD_NOTIFY_OWNER_WHEN_INFECTED = CONFIG.translation("mCDNotifyOwner").define("Notify_Owner_When_Infected", mCDNotifyInfectedOwner);
-		MCD_CAN_BE_INFECTED_WHEN_TAMED = CONFIG.translation("mCDWhenTamed").define("Can_Be_Infected_While_Tamed", mCDWhenTamed);
-		MCD_CAN_BE_INFECTED_WHEN_WILD = CONFIG.translation("mCDWhenWild").define("Can_Be_Infected_While_Wild", mCDWhenWild);
-		MCD_CLEAR_INFECTION_UPON_TAMING = CONFIG.translation("mCDClearWhenTamed").define("Clear_Infection_When_Tamed", mCDClearWhenTamed);
-		MCD_ADULT_INFECTION_CHANCE = CONFIG.translation("mCDChance").define("Infection_Chance", mCDChance);
-		MCD_BABY_INFECTION_CHANCE = CONFIG.translation("mCDBabyChance").define("Infection_Chance_When_Baby", mCDBabyChance);
+		CONFIG.push("Mad_Chicken_Disease");
+		CAN_GET_MAD_CHICKEN_DISEASE = CONFIG.translation("mCD").comment(com.MCD + madChicken).define("Mad_Chicken_Disease", madChicken);
+		MCD_NOTIFY_OWNER_WHEN_INFECTED = CONFIG.translation("mCDNotifyOwner").comment(com.MCD_NOTIFY + mCDNotifyInfectedOwner).define("Notify_Owner_When_Infected", mCDNotifyInfectedOwner);
+		MCD_CAN_BE_INFECTED_WHEN_TAMED = CONFIG.translation("mCDWhenTamed").comment(com.MCD_TAMED + mCDWhenTamed).define("Can_Be_Infected_While_Tamed", mCDWhenTamed);
+		MCD_CAN_BE_INFECTED_WHEN_WILD = CONFIG.translation("mCDWhenWild").comment(com.MCD_WILD + mCDWhenWild).define("Can_Be_Infected_While_Wild", mCDWhenWild);
+		MCD_CLEAR_INFECTION_UPON_TAMING = CONFIG.translation("mCDClearWhenTamed").comment(com.MCD_CLEAR + mCDClearWhenTamed).define("Clear_Infection_When_Tamed", mCDClearWhenTamed);
+		MCD_ADULT_INFECTION_CHANCE = CONFIG.translation("mCDChance").comment(com.MCD_ADULT + mCDChance).define("Infection_Chance", mCDChance);
+		MCD_BABY_INFECTION_CHANCE = CONFIG.translation("mCDBabyChance").comment(com.MCD_BABY + mCDBabyChance).define("Infection_Chance_When_Baby", mCDBabyChance);
 		CONFIG.pop();
 	}
 		
-	public void trickleChickenDisorder(boolean trickleChicken, boolean tCDNotifyInfectedOwner,
+	private void trickleChickenDisorder(boolean trickleChicken, boolean tCDNotifyInfectedOwner,
 			boolean tCDWhenTamed, boolean tCDWhenWild, boolean tCDClearWhenTamed, int tCDChance,
 			int tCDBabyChance, double tCDBaseFactor, double tCDMaxFactor,int tCDAdjustChance,
 			double tCDAdjustFactor) {
-		CONFIG.comment(com.TRICKLE_CHICKEN_COMMENT).push("Trickle_Chicken_Disorder");
-		CAN_GET_TRICKLE_CHICKEN_DISORDER = CONFIG.translation("tCD").define("Trickle_Chicken_Disorder", trickleChicken);
-		TCD_NOTIFY_OWNER_WHEN_INFECTED = CONFIG.translation("tCDNotifyOwner").define("Notify_Owner_When_Infected", tCDNotifyInfectedOwner);
-		TCD_CAN_BE_INFECTED_WHEN_TAMED = CONFIG.translation("tCDWhenTamed").define("Can_Be_Infected_While_Tamed", tCDWhenTamed);
-		TCD_CAN_BE_INFECTED_WHEN_WILD = CONFIG.translation("tCDWhenWild").define("Can_Be_Infected_While_Wild", tCDWhenWild);
-		TCD_CLEAR_INFECTION_UPON_TAMING = CONFIG.translation("tCDClearWhenTamed").define("Clear_Infection_When_Tamed", tCDClearWhenTamed);
-		TCD_ADULT_INFECTION_CHANCE = CONFIG.translation("tCDChance").define("Infection_Chance", tCDChance);
-		TCD_BABY_INFECTION_CHANCE = CONFIG.translation("tCDBabyChance").define("Infection_Chance_When_Baby", tCDBabyChance);
-		TCD_BASE_SLOWNESS_FACTOR = CONFIG.translation("tCDBaseFactor").define("Base_Trickle_Factor", (float) tCDBaseFactor);
-		TCD_MAXIMUM_SLOWNESS_FACTOR = CONFIG.translation("tCDMaxFactor").define("Max_Trickle_Factor", (float) tCDMaxFactor);
-		TCD_SLOWNESS_FACTOR_CHANGE_CHANCE = CONFIG.translation("tCDAdjustChance").define("Trickle_Adjustment_Chance", tCDAdjustChance);
-		TCD_SLOWNESS_FACTOR_CHANGE_FACTOR = CONFIG.translation("tCDAdjustFactor").define("Trickle_Adjustment_Factor", (float) tCDAdjustFactor);
+		CONFIG.push("Trickle_Chicken_Disorder");
+		CAN_GET_TRICKLE_CHICKEN_DISORDER = CONFIG.translation("tCD").comment(com.TCD + trickleChicken).define("Trickle_Chicken_Disorder", trickleChicken);
+		TCD_NOTIFY_OWNER_WHEN_INFECTED = CONFIG.translation("tCDNotifyOwner").comment(com.TCD_NOTIFY + tCDNotifyInfectedOwner).define("Notify_Owner_When_Infected", tCDNotifyInfectedOwner);
+		TCD_CAN_BE_INFECTED_WHEN_TAMED = CONFIG.translation("tCDWhenTamed").comment(com.TCD_TAMED + tCDWhenTamed).define("Can_Be_Infected_While_Tamed", tCDWhenTamed);
+		TCD_CAN_BE_INFECTED_WHEN_WILD = CONFIG.translation("tCDWhenWild").comment(com.TCD_WILD + tCDWhenWild).define("Can_Be_Infected_While_Wild", tCDWhenWild);
+		TCD_CLEAR_INFECTION_UPON_TAMING = CONFIG.translation("tCDClearWhenTamed").comment(com.TCD_CLEAR + tCDClearWhenTamed).define("Clear_Infection_When_Tamed", tCDClearWhenTamed);
+		TCD_ADULT_INFECTION_CHANCE = CONFIG.translation("tCDChance").comment(com.TCD_ADULT + tCDChance).define("Infection_Chance", tCDChance);
+		TCD_BABY_INFECTION_CHANCE = CONFIG.translation("tCDBabyChance").comment(com.TCD_BABY + tCDBabyChance).define("Infection_Chance_When_Baby", tCDBabyChance);
+		TCD_BASE_SLOWNESS_FACTOR = CONFIG.translation("tCDBaseFactor").comment(com.TCD_BASE + tCDBaseFactor).define("Base_Trickle_Factor", (float) tCDBaseFactor);
+		TCD_MAXIMUM_SLOWNESS_FACTOR = CONFIG.translation("tCDMaxFactor").comment(com.TCD_FINAL + tCDMaxFactor).define("Max_Trickle_Factor", (float) tCDMaxFactor);
+		TCD_SLOWNESS_FACTOR_CHANGE_CHANCE = CONFIG.translation("tCDAdjustChance").comment(com.TCD_ADJUST_CHANCE + tCDAdjustChance).define("Trickle_Adjustment_Chance", tCDAdjustChance);
+		TCD_SLOWNESS_FACTOR_CHANGE_FACTOR = CONFIG.translation("tCDAdjustFactor").comment(com.TCD_ADJUST + tCDAdjustFactor).define("Trickle_Adjustment_Factor", (float) tCDAdjustFactor);
 		CONFIG.pop();
+	}
+	
+	private void readConfig() {
+		CONFIG_DATA.load();
+        Map<String, Object> configMap = CONFIG_DATA.valueMap();
+        if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.error("Checking for user add biome configurations");
+        
+		for (Iterator<Map.Entry<String, Object>> ittr = configMap.entrySet().iterator(); ittr.hasNext();) {
+			// Find Config Sections Here
+			Map.Entry<String, Object> entry = ittr.next();
+            
+            if (entry.getKey().toString().equalsIgnoreCase("spawning")) {
+            	
+            	CommentedConfig spawningKeys = (CommentedConfig) entry.getValue();
+            	Map<String, Object> spawningMap = spawningKeys.valueMap();
+            	
+            	for (Iterator<Map.Entry<String, Object>> spawning_ittr = spawningMap.entrySet().iterator(); spawning_ittr.hasNext();) {
+            		// Find Spawning Keys Here
+            		Map.Entry<String, Object> options = spawning_ittr.next();
+            		
+            		if (options.getKey().toString().equalsIgnoreCase("biomes")) {
+            			
+                    	CommentedConfig biomes = (CommentedConfig) options.getValue();
+                    	Map<String, Object> biomesMap = biomes.valueMap();
+                    	
+                    	for (Iterator<Map.Entry<String, Object>> biome_ittr = biomesMap.entrySet().iterator(); biome_ittr.hasNext();) {
+                    		// Find Biomes Here
+                    		Map.Entry<String, Object> biomeKeys = biome_ittr.next();
+                        	if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.error("Current Working Biome: " + biomeKeys.getKey());
+                    		
+                    		if (!CUSTOM_BIOMES.containsKey(biomeKeys.getKey())) {
+                    			
+                    			if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug("Found user added biome! Biome: " + biomeKeys.getKey());
+                    			
+                    			CommentedConfig spawnOptions = (CommentedConfig) biomeKeys.getValue();
+                            	Map<String, Object> spawnOptionsMap = spawnOptions.valueMap();
+                            	
+                        		CONFIG.translation(biomeKeys.getKey() + "_spawnProbability").comment(com.SPAWNING_PROBABILITY + "Manually added by user").define("Biomes." + biomeKeys.getKey() + ".Spawn_Probability", spawnOptionsMap.get("Spawn_Probability"));
+                    			CONFIG.translation(biomeKeys.getKey() + "_minSpawnGroupSize").comment(com.MIN_GROUP + "Manually added by user").define("Biomes." + biomeKeys.getKey() + ".Min_Spawn_Group_Size", spawnOptionsMap.get("Min_Spawn_Group_Size"));
+                    			CONFIG.translation(biomeKeys.getKey() + "_maxSpawnGroupSize").comment(com.MAX_GROUP + "Manually added by user").define("Biomes." + biomeKeys.getKey() + ".Max_Spawn_Group_Size", spawnOptionsMap.get("Max_Spawn_Group_Size"));
+                    			Map<String, Integer> vars = new HashMap<String, Integer>();
+                				vars.put("probability", (Integer) spawnOptionsMap.get("Spawn_Probability"));
+                				vars.put("min_group", (Integer) spawnOptionsMap.get("Min_Spawn_Group_Size"));
+                				vars.put("max_group", (Integer) spawnOptionsMap.get("Max_Spawn_Group_Size"));
+                				CUSTOM_BIOMES.put(biomeKeys.getKey(), vars);
+                            	
+                    		}
+                    		
+                        }
+                    	
+            		}
+            		
+                }
+            	
+            }
+            
+        }
+		
 	}
 }

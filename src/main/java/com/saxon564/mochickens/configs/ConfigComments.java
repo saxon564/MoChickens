@@ -4,10 +4,11 @@ public class ConfigComments {
 
 	/************* Spawning Comments *************/
 	protected final String SPAWNING_COMMENT = "Custom configs for each biome can be created using:\n"
-				+ "[Spawning.minecraft_hell] \n"
-				+ "		Spawn_Probability = number\n"
-				+ "		Min_Spawn_Group_Size = number\n"
-				+ "		Min_Spawn_Group Size = number\n"
+				+ "[Spawning.Biomes] \n"
+				+ "		[Spawning.Biomes.minecraft_hell] \n"
+				+ "				Spawn_Probability = number\n"
+				+ "				Min_Spawn_Group_Size = number\n"
+				+ "				Min_Spawn_Group Size = number\n"
 				+ "If a biome has custom spawn settings,\n"
 				+ "it overrides the blacklist/whitelist for that biome\n"
 				+ "This does not override the 'Can_Spawn' option\n"
@@ -187,39 +188,74 @@ public class ConfigComments {
 				+ "Default: ";
 	
 	/************* ECS Comments *************/
-	protected final String EXPLODING_CHICKEN_COMMENT = "Exploding Chicken Syndrome\n"
-				+"Exploding Chicken Syndrome: The chicken can catch \"Exploding Chicken Syndrome\".\n"
-				+"Notify Owner When Infected: Notifies the owner of a tamed chicken when their chicken is infected with \"Exploding Chicken Syndrome\".\n"
-				+"Can Be Infected While Tamed: If chicken can get \"Exploding Chicken Syndrome\" while it is tamed.\n"
-				+"Can Be Infected While Wild: If chicken can get \"Exploding Chicken Syndrome\" while it is wild.\n"
-				+"Clear Infection When Tamed: Cures chicken of \"Exploding Chicken Syndrome\" when it is tamed.\n"
-				+"Infection Chance When Baby: 1 in */minute chance the chicken will become infected with \"Exploding Chicken Syndrome\" when a baby.\n"
-				+"Infection Chance: 1 in */minute chance the chicken will become infected with \"Exploding Chicken Syndrome\".\n"
-				+"False Fuse Chance: 1 in */minute chance of a chicken infected with \"Exploding Chicken Syndrome\" will falsely prime itself to explode.\n"
-				+"Explosion Chance: 1 in */minute chance of the chicken blowing up from \"Exploding Chicken Syndrome\".";
+	protected final String ECS = "Can chicken catch \"Exploding Chicken Syndrome\"\n"
+				+ "Default: ";
+	protected final String ECS_NOTIFY = "Notify chicken owner when chicken becomes infected with \"Exploding Chicken Syndrome\"\n"
+				+ "Default: ";
+	protected final String ECS_TAMED = "Can chicken get \"Exploding Chicken Syndrome\" while it is tamed\n"
+				+ "Default: ";
+	protected final String ECS_WILD = "Can chicken get \"Exploding Chicken Syndrome\" while it is wild\n"
+				+ "Default: ";
+	protected final String ECS_CLEAR = "Cure chicken of \"Exploding Chicken Syndrome\" when it is tamed\n"
+				+ "Default: ";
+	protected final String ECS_BABY = "Chance the chicken will get \"Exploding Chicken Syndrome\" when a baby\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
+	protected final String ECS_ADULT = "Chance the chicken will get \"Exploding Chicken Syndrome\" when an adult\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
+	protected final String ECS_FUSE = "Chicken can make fuse sound and not explode when infected with \"Exploding Chicken Syndrome\"\n"
+				+ "Default: ";
+	protected final String ECS_FUSE_CHANCE = "Chance of a chicken with \"Exploding Chicken Syndrome\" will make fuse sound and not explode\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
+	protected final String ECS_EXPLODE = "Chance of the chicken blowing up from \"Exploding Chicken Syndrome\""
+				+ "(1 in */tick)\n"
+				+ "Default: ";
 	
 	/************* MCD Comments *************/
-	protected final String MAD_CHICKEN_COMMENT = "Mad Chicken Disease\n"
-				+"Mad Chicken Disease: The chicken can catch \"Mad Chicken Disease\".\n"
-				+"Notify Owner When Infected: Notifies the owner of a tamed chicken when their chicken is infected with \"Mad Chicken Disease\".\n"
-				+"Can Be Infected While Tamed: If chicken can get \"Mad Chicken Disease\" while it is tamed.\n"
-				+"Can Be Infected While Wild: If chicken can get \"Mad Chicken Disease\" while it is wild.\n"
-				+"Clear Infection When Tamed: Cures chicken of \"Mad Chicken Disease\" when it is tamed.\n"
-				+"Infection Chance When Baby: 1 in */minute chance the chicken will become infected with \"Mad Chicken Disease\" when a baby.\n"
-				+"Infection Chance: 1 in */minute chance the chicken will become infected with \"Mad Chicken Disease\".";
+	protected final String MCD = "Can chicken catch \"Mad Chicken Disease\"\n"
+				+ "Default: ";
+	protected final String MCD_NOTIFY = "Notify chicken owner when chicken becomes infected with \"Mad Chicken Disease\"\n"
+				+ "Default: ";
+	protected final String MCD_TAMED = "Can chicken get \"Mad Chicken Disease\" while it is tamed\n"
+				+ "Default: ";
+	protected final String MCD_WILD = "Can chicken get \"Mad Chicken Disease\" while it is wild\n"
+				+ "Default: ";
+	protected final String MCD_CLEAR = "Cure chicken of \"Mad Chicken Disease\" when it is tamed\n"
+				+ "Default: ";
+	protected final String MCD_BABY = "Chance the chicken will get \"Mad Chicken Disease\" when a baby\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
+	protected final String MCD_ADULT = "Chance the chicken will get \"Mad Chicken Disease\" when an adult\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
 	
 	/************* TCD Comments *************/
-	protected final String TRICKLE_CHICKEN_COMMENT = "Trickle Chicken Disorder\n"
-				+"Trickle Chicken Disorder: The chicken can catch \"Trickle Chicken Disorder\".\n"
-				+"Notify Owner When Infected: Notifies the owner of a tamed chicken when their chicken is infected with \"Trickle Chicken Disorder\".\n"
-				+"Can Be Infected While Tamed: If chicken can get \"Trickle Chicken Disorder\" while it is tamed.\n"
-				+"Can Be Infected While Wild: If chicken can get \"Trickle Chicken Disorder\" while it is wild.\n"
-				+"Clear Infection When Tamed: Cures chicken of \"Trickle Chicken Disorder\" when it is tamed.\n"
-				+"Infection Chance When Baby: 1 in */minute chance the chicken will become infected with \"Trickle Chicken Disorder\" when a baby.\n"
-				+"Infection Chance: 1 in */minute chance the chicken will become infected with \"Trickle Chicken Disorder\".\n"
-				+"Base Trickle Factor: The base factor in which chicken laying will be affected.\n"
-				+"Final Trickle Factor: Final factor in which chicken laying will be affected.\n"
-				+"Trickle Adjustment Chance: 1 in * chance the trickle factor will be adjusted closer to the final factor.\n"
-				+"Trickle Adjustment Factor: How much the trickle factor will be adjusted toward the final factor";
+	protected final String TCD = "Can chicken catch \"Trickle Chicken Disorder\"\n"
+				+ "Default: ";
+	protected final String TCD_NOTIFY = "Notify chicken owner when chicken becomes infected with \"Trickle Chicken Disorder\"\n"
+				+ "Default: ";
+	protected final String TCD_TAMED = "Can chicken get \"Trickle Chicken Disorder\" while it is tamed\n"
+				+ "Default: ";
+	protected final String TCD_WILD = "Can chicken get \"Trickle Chicken Disorder\" while it is wild\n"
+				+ "Default: ";
+	protected final String TCD_CLEAR = "Cure chicken of \"Trickle Chicken Disorder\" when it is tamed\n"
+				+ "Default: ";
+	protected final String TCD_BABY = "Chance the chicken will get \"Trickle Chicken Disorder\" when a baby\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
+	protected final String TCD_ADULT = "Chance the chicken will get \"Trickle Chicken Disorder\" when an adult\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
+	protected final String TCD_BASE = "Base factor in which chicken laying will be affected\n"
+				+ "Default: ";
+	protected final String TCD_FINAL = "Final factor in which chicken laying will be affected\n"
+				+ "Default: ";
+	protected final String TCD_ADJUST_CHANCE = "Chance the trickle factor will be adjusted closer to the final factor.\n"
+				+ "(1 in */tick)\n"
+				+ "Default: ";
+	protected final String TCD_ADJUST = "How much the trickle factor will adjust to the final factor\n"
+				+ "Default: ";
 
 }
