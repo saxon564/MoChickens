@@ -3,28 +3,8 @@ package com.saxon564.mochickens;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.saxon564.mochickens.configs.ChickenConfigGenerator;
 import com.saxon564.mochickens.configs.ConfigHandler;
-import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
-import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
-import com.saxon564.mochickens.configs.chickens.ClayChickenConfig;
-import com.saxon564.mochickens.configs.chickens.CoalChickenConfig;
-import com.saxon564.mochickens.configs.chickens.CookieChickenConfig;
-import com.saxon564.mochickens.configs.chickens.CreeperChickenConfig;
-import com.saxon564.mochickens.configs.chickens.DiamondChickenConfig;
-import com.saxon564.mochickens.configs.chickens.EmeraldChickenConfig;
-import com.saxon564.mochickens.configs.chickens.EnchantedChickenConfig;
-import com.saxon564.mochickens.configs.chickens.EnderChickenConfig;
-import com.saxon564.mochickens.configs.chickens.GiantChickenConfig;
-import com.saxon564.mochickens.configs.chickens.GlowingChickenConfig;
-import com.saxon564.mochickens.configs.chickens.GoldChickenConfig;
-import com.saxon564.mochickens.configs.chickens.IronChickenConfig;
-import com.saxon564.mochickens.configs.chickens.LapisChickenConfig;
-import com.saxon564.mochickens.configs.chickens.NuuwChickenConfig;
-import com.saxon564.mochickens.configs.chickens.QuartzChickenConfig;
-import com.saxon564.mochickens.configs.chickens.RainbowChickenConfig;
-import com.saxon564.mochickens.configs.chickens.RedstoneChickenConfig;
-import com.saxon564.mochickens.configs.chickens.SkeletonChickenConfig;
-import com.saxon564.mochickens.configs.chickens.SnowChickenConfig;
 import com.saxon564.mochickens.configs.txts.ItemFile;
 import com.saxon564.mochickens.entities.mobs.EntityBeefyChicken;
 import com.saxon564.mochickens.entities.mobs.EntityBlazingChicken;
@@ -52,6 +32,7 @@ import com.saxon564.mochickens.misc.MoChickensCreativeTab;
 import com.saxon564.mochickens.proxies.ClientProxyMoChickens;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import com.saxon564.mochickens.proxies.IProxy;
+import com.saxon564.mochickens.registers.RegisterSpawns;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -81,7 +62,7 @@ public class MoChickens {
 	public static MoChickens instance;
 	
 	public static EntityType<?>[] egg = new EntityType<?>[500];
-	public static Class<?>[] configs = new Class<?>[500];
+	public static ChickenConfigGenerator[] configs = new ChickenConfigGenerator[500];
 	public static int eggNum = 0;
 	public static Logger CHICKEN_LOGGER = LogManager.getLogger("Mo' Chickens");
 	public static SimpleChannel network;
@@ -201,7 +182,7 @@ public class MoChickens {
 
 		ConfigHandler.loadConfig();
 		
-		CHICKEN_LOGGER.warn("Skeleton: " + ConfigHandler.SKELETON_CHICKEN_CONFIG.get("Spawning.Biomes.minecraft_nether.Spawn_Probability"));
+		//CHICKEN_LOGGER.warn("Skeleton: " + ConfigHandler.SKELETON_CHICKEN_CONFIG.get("Spawning.Biomes.minecraft_nether.Spawn_Probability"));
 		
 		registerRandomEgg();
 		
@@ -235,34 +216,34 @@ public class MoChickens {
 //		myProxy.eventHandlers();
 //		myProxy.registerRenders();
 //		myProxy.registerRenders();
-//		RegisterSpawns.entitySpawns();
+		RegisterSpawns.entitySpawns();
 //		RegisterOreDict.AddOres();
 //		RegisterSounds.init();
 	}
 	
 	private static void registerRandomEgg() {
 		// Register Random Spawn Egg Entries
-		randomSpawnEgg(COAL_CHICKEN, CoalChickenConfig.class);
-		randomSpawnEgg(IRON_CHICKEN, IronChickenConfig.class);
-		randomSpawnEgg(GOLD_CHICKEN, GoldChickenConfig.class);
-		randomSpawnEgg(LAPIS_CHICKEN, LapisChickenConfig.class);
-		randomSpawnEgg(REDSTONE_CHICKEN, RedstoneChickenConfig.class);
-		randomSpawnEgg(DIAMOND_CHICKEN, DiamondChickenConfig.class);
-		randomSpawnEgg(EMERALD_CHICKEN, EmeraldChickenConfig.class);
-		randomSpawnEgg(QUARTZ_CHICKEN, QuartzChickenConfig.class);
-		randomSpawnEgg(GIANT_CHICKEN, GiantChickenConfig.class);
-		randomSpawnEgg(CLAY_CHICKEN, ClayChickenConfig.class);
-		randomSpawnEgg(RAINBOW_CHICKEN, RainbowChickenConfig.class);
-		randomSpawnEgg(SNOW_CHICKEN, SnowChickenConfig.class);
-		randomSpawnEgg(COOKIE_CHICKEN, CookieChickenConfig.class);
-		randomSpawnEgg(SKELETON_CHICKEN, SkeletonChickenConfig.class);
-		randomSpawnEgg(CREEPER_CHICKEN, CreeperChickenConfig.class);
-		randomSpawnEgg(ENDER_CHICKEN, EnderChickenConfig.class);
-		randomSpawnEgg(BEEFY_CHICKEN, BeefyChickenConfig.class);
-		randomSpawnEgg(GLOWING_CHICKEN, GlowingChickenConfig.class);
-		randomSpawnEgg(BLAZING_CHICKEN, BlazingChickenConfig.class);
-		randomSpawnEgg(ENCHANTED_CHICKEN, EnchantedChickenConfig.class);
-		randomSpawnEgg(NUUW_CHICKEN, NuuwChickenConfig.class);
+		randomSpawnEgg(COAL_CHICKEN, ConfigHandler.COAL_CHICKEN_CONFIG);
+		randomSpawnEgg(IRON_CHICKEN, ConfigHandler.IRON_CHICKEN_CONFIG);
+		randomSpawnEgg(GOLD_CHICKEN, ConfigHandler.GOLD_CHICKEN_CONFIG);
+		randomSpawnEgg(LAPIS_CHICKEN, ConfigHandler.LAPIS_CHICKEN_CONFIG);
+		randomSpawnEgg(REDSTONE_CHICKEN, ConfigHandler.REDSTONE_CHICKEN_CONFIG);
+		randomSpawnEgg(DIAMOND_CHICKEN, ConfigHandler.DIAMOND_CHICKEN_CONFIG);
+		randomSpawnEgg(EMERALD_CHICKEN, ConfigHandler.EMERALD_CHICKEN_CONFIG);
+		randomSpawnEgg(QUARTZ_CHICKEN, ConfigHandler.QUARTZ_CHICKEN_CONFIG);
+		randomSpawnEgg(GIANT_CHICKEN, ConfigHandler.GIANT_CHICKEN_CONFIG);
+		randomSpawnEgg(CLAY_CHICKEN, ConfigHandler.CLAY_CHICKEN_CONFIG);
+		randomSpawnEgg(RAINBOW_CHICKEN, ConfigHandler.RAINBOW_CHICKEN_CONFIG);
+		randomSpawnEgg(SNOW_CHICKEN, ConfigHandler.SNOW_CHICKEN_CONFIG);
+		randomSpawnEgg(COOKIE_CHICKEN, ConfigHandler.COOKIE_CHICKEN_CONFIG);
+		randomSpawnEgg(SKELETON_CHICKEN, ConfigHandler.SKELETON_CHICKEN_CONFIG);
+		randomSpawnEgg(CREEPER_CHICKEN, ConfigHandler.CREEPER_CHICKEN_CONFIG);
+		randomSpawnEgg(ENDER_CHICKEN, ConfigHandler.ENDER_CHICKEN_CONFIG);
+		randomSpawnEgg(BEEFY_CHICKEN, ConfigHandler.BEEFY_CHICKEN_CONFIG);
+		randomSpawnEgg(GLOWING_CHICKEN, ConfigHandler.GLOWING_CHICKEN_CONFIG);
+		randomSpawnEgg(BLAZING_CHICKEN, ConfigHandler.BLAZING_CHICKEN_CONFIG);
+		randomSpawnEgg(ENCHANTED_CHICKEN, ConfigHandler.ENCHANTED_CHICKEN_CONFIG);
+		randomSpawnEgg(NUUW_CHICKEN, ConfigHandler.NUUW_CHICKEN_CONFIG);
 		randomSpawnEgg(EntityType.BAT, null);
 		randomSpawnEgg(EntityType.BAT, null);
 		randomSpawnEgg(EntityType.BAT, null);
@@ -282,13 +263,8 @@ public class MoChickens {
 	public void serverStartup(FMLServerStartingEvent event) {
 		
 	}
-	
-	/*@Optional.Method(modid = Thaumcraft.id)
-	private void loadThaumcraft() {
-		Thaumcraft.addAspects();
-	}*/
 
-	public static void randomSpawnEgg(EntityType<?> c, Class<?> class1) {
+	public static void randomSpawnEgg(EntityType<?> c, ChickenConfigGenerator class1) {
 		egg[eggNum] = c;
 		configs[eggNum] = class1;
 		eggNum++;

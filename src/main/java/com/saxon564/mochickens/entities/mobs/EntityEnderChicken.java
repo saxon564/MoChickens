@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.EnderChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -14,7 +14,7 @@ public class EntityEnderChicken extends EntityMoChicken {
 	}
 
 	public void registerAttributes() {
-		super.registerAttributes(EnderChickenConfig.class, getType());
+		super.registerAttributes(ConfigHandler.ENDER_CHICKEN_CONFIG, getType());
 	}
 
     @Override

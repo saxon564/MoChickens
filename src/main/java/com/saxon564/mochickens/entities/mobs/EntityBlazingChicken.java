@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.BlazingChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -20,7 +20,7 @@ public class EntityBlazingChicken extends EntityMoChicken
 
     public void registerAttributes()
     {
-        super.registerAttributes(BlazingChickenConfig.class, this.getType());
+        super.registerAttributes(ConfigHandler.BLAZING_CHICKEN_CONFIG, this.getType());
     }
 
     public boolean canSpawn(IWorld worldIn, SpawnReason reason)

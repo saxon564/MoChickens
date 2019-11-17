@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.SkeletonChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -17,7 +17,7 @@ public class EntitySkeletonChicken extends EntityMoChicken
 
     public void registerAttributes()
     {
-        super.registerAttributes(SkeletonChickenConfig.class, getType());
+        super.registerAttributes(ConfigHandler.SKELETON_CHICKEN_CONFIG, getType());
     }
 
     public boolean canSpawn(IWorld worldIn, SpawnReason reason)

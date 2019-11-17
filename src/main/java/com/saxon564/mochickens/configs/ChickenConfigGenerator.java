@@ -217,9 +217,11 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CUSTOM_BIOMES = customBiomes;
 		Set<String> biomes = customBiomes.keySet();
 		for (String b:biomes) {
-			CONFIG.translation(b + "_spawnProbability").comment(com.SPAWNING_PROBABILITY + customBiomes.get(b).get("probability")).define("Biomes." + b + ".Spawn_Probability", customBiomes.get(b).get("probability"));
-			CONFIG.translation(b + "_minSpawnGroupSize").comment(com.MIN_GROUP + customBiomes.get(b).get("max_group")).define("Biomes." + b + ".Min_Spawn_Group_Size", customBiomes.get(b).get("max_group"));
-			CONFIG.translation(b + "_maxSpawnGroupSize").comment(com.MAX_GROUP + customBiomes.get(b).get("max_group")).define("Biomes." + b + ".Max_Spawn_Group_Size", customBiomes.get(b).get("max_group"));
+			if (b != "") {
+				CONFIG.translation(b + "_spawnProbability").comment(com.SPAWNING_PROBABILITY + customBiomes.get(b).get("probability")).define("Biomes." + b + ".Spawn_Probability", customBiomes.get(b).get("probability"));
+				CONFIG.translation(b + "_minSpawnGroupSize").comment(com.MIN_GROUP + customBiomes.get(b).get("min_group")).define("Biomes." + b + ".Min_Spawn_Group_Size", customBiomes.get(b).get("min_group"));
+				CONFIG.translation(b + "_maxSpawnGroupSize").comment(com.MAX_GROUP + customBiomes.get(b).get("max_group")).define("Biomes." + b + ".Max_Spawn_Group_Size", customBiomes.get(b).get("max_group"));
+			}
 		}
 		readConfig();
 
@@ -273,7 +275,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		CONFIG.push("Tempting");
 		CAN_BE_TEMPTED_TAMED = CONFIG.translation("canTemptTamed").comment(com.TEMPTABLE_TAMED + canTemptTamed).define("Can_Be_Tempted_When_Tamed", canTemptTamed);
 		CAN_BE_TEMPTED_WILD = CONFIG.translation("canTemptWild").comment(com.TEMPTABLE_WILD + canTemptWild).define("Can_Be_Tempted_When_Wild", canTemptWild);
-		TAMING_ITEMS = CONFIG.translation("temptingItems").comment(com.TEMPTING_ITEMS + itemTempt + "\"").define("Tempting_Items", itemTempt.toString());
+		TEMPTING_ITEMS = CONFIG.translation("temptingItems").comment(com.TEMPTING_ITEMS + itemTempt + "\"").define("Tempting_Items", itemTempt.toString());
 		FOLLOWING_DELAY_BETWEEN_ITEM_HOLDINGS = CONFIG.translation("temptingDelay").comment(com.TEMPTING_COOLDOWN + delay).define("Delay_Following_Between_Item_Holdings", delay);
 		OWNER_ONLY_TEMPTING = CONFIG.translation("ownerOnlyTempting").comment(com.OWNER_TEMPTING + ownerOnlyTempting).define("Only_Owner_Can_Tempt", ownerOnlyTempting);
 		TEMPTED_WALKING_SPEED = CONFIG.translation("temptedWalkingSpeed").comment(com.TEMPTING_SPEED + temptedWalkingSpeed).define("Walking_Speed_When_Tempted", temptedWalkingSpeed);

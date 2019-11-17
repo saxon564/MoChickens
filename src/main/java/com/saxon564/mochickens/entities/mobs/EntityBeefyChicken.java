@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.BeefyChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -19,7 +19,7 @@ public class EntityBeefyChicken extends EntityMoChicken
 
     public void registerAttributes()
     {
-        super.registerAttributes(BeefyChickenConfig.class, this.getType());
+        super.registerAttributes(ConfigHandler.BEEFY_CHICKEN_CONFIG, this.getType());
     }
     
     public boolean canSpawn(IWorld worldIn, SpawnReason reason)

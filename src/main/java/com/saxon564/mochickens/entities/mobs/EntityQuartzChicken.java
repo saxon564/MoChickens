@@ -1,7 +1,7 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.QuartzChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -23,7 +23,7 @@ public class EntityQuartzChicken extends EntityMoChicken
 
     public void registerAttributes()
     {
-        super.registerAttributes(QuartzChickenConfig.class, getType());
+        super.registerAttributes(ConfigHandler.QUARTZ_CHICKEN_CONFIG, getType());
     }
 
     @Override

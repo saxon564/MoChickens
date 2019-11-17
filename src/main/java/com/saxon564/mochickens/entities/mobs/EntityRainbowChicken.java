@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.RainbowChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -19,7 +19,7 @@ public class EntityRainbowChicken extends EntityMoChicken
 
     public void registerAttributes()
     {
-        super.registerAttributes(RainbowChickenConfig.class, getType());
+        super.registerAttributes(ConfigHandler.RAINBOW_CHICKEN_CONFIG, getType());
     }
     
     public boolean canSpawn(IWorld worldIn, SpawnReason reason)

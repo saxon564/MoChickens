@@ -1,7 +1,7 @@
 package com.saxon564.mochickens.entities.mobs;
 
 import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.configs.chickens.EmeraldChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -22,7 +22,7 @@ public class EntityEmeraldChicken extends EntityMoChicken
 
     public void registerAttributes()
     {
-        super.registerAttributes(EmeraldChickenConfig.class, getType());
+        super.registerAttributes(ConfigHandler.EMERALD_CHICKEN_CONFIG, getType());
     }
     
     public boolean canSpawn(IWorld worldIn, SpawnReason reason)

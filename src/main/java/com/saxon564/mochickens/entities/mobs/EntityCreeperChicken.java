@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.entities.mobs;
 
-import com.saxon564.mochickens.configs.chickens.CreeperChickenConfig;
+import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -17,7 +17,7 @@ public class EntityCreeperChicken extends EntityMoChicken
 
     public void registerAttributes()
     {
-        super.registerAttributes(CreeperChickenConfig.class, getType());
+        super.registerAttributes(ConfigHandler.CREEPER_CHICKEN_CONFIG, getType());
     }
 
     @Override

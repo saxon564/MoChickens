@@ -7,10 +7,12 @@ import java.util.UUID;
 
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.configs.ChickenConfigGenerator;
+import com.saxon564.mochickens.configs.ConfigHandler;
 import com.saxon564.mochickens.entities.mobs.ai.ChickAIAttackRangedBow;
 import com.saxon564.mochickens.entities.mobs.ai.ChickAISwell;
 import com.saxon564.mochickens.entities.mobs.ai.ChickAITempt;
 import com.saxon564.mochickens.entities.mobs.ai.ChickNearestAttackableTarget;
+import com.saxon564.mochickens.misc.ObjectTranslators;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -45,7 +47,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -53,7 +55,6 @@ import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -66,7 +67,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class EntityMoChicken extends TameableEntity implements IRangedAttackMob {
 	private static final UUID attackingSpeedBoostModifierUUID = UUID
@@ -265,6 +265,8 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		dataManager.register(OWNER, "");
 		dataManager.register(EXPLODINGCHICKENSYNDROME, false);
 		dataManager.register(MADCHICKENDISEASE, false);
+		dataManager.register(TRICKLECHICKENDISORDER, false);
+		dataManager.register(TRICKLEFACTOR, 0.0F);
 	}
 
 	/**
@@ -274,7 +276,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		return true;
 	}
 
-	public void registerAttributes(Class<?> c, EntityType<?> cl) {
+	public void registerAttributes(ChickenConfigGenerator c, EntityType<?> cl) {
 		super.registerAttributes();
 		setupConfigVariables(c, cl);
 		getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(health);
@@ -635,7 +637,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	public void livingTick() {
 		super.livingTick();
 		if (loc == 0) {
-			//System.out.println(chicken + " X:" + posX + " Y:" + posY + " Z:" + posZ);
+			if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug(chicken + " X:" + posX + " Y:" + posY + " Z:" + posZ);
 			loc ++;
 		}
 		if (world.isDaytime() && !world.isRemote && burnsInSun) {
@@ -746,7 +748,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		if (emitsParticles) {
 			for (int p = 0; p < particleType.length; ++p) {
 				for (int i = 0; i < particlesPerTick[p]; ++i) {
-					world.addParticle((IParticleData) particleType[p],
+					world.addParticle(particleType[p],
 							posX + (rand.nextDouble() - 0.5D)
 							* (double) getWidth(),
 							posY + rand.nextDouble()
@@ -1148,7 +1150,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
 			if (s != null && s.getUniqueID().toString().length() > 0) {
 				((EntityMoChicken) newEntity).setOwnerId(s.getUniqueID());
-				((EntityMoChicken) newEntity).setupConfigVariables(config.getClass(), chicken);
+				((EntityMoChicken) newEntity).setupConfigVariables(config, chicken);
 				((EntityMoChicken) newEntity).setGrowingAge(Math.multiplyExact(growTime, -1));
 				((EntityMoChicken) newEntity).setTamed(childSpawnsTamed);
 			}
@@ -1264,22 +1266,16 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
         return entitytippedarrow;
     }
 
-	public void setupConfigVariables(Class<?> c, EntityType<?> type) {
+	public void setupConfigVariables(ChickenConfigGenerator c, EntityType<?> type) {
 		
 		chicken = type;
-		try {
-			config = (ChickenConfigGenerator) c.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		config = c;
 		
 		// Attack Data
 		hostile = config.IS_HOSTILE.get();
-		effectIDs = getEffectsArray(config.ATTACK_EFFECTS.get().split(","));
-		effectAmplifiers = getIntArray(config.ATTACK_EFFECT_AMPLIFIERS.get().split(","));
-		effectDurations = getIntArray(config.ATTACK_EFFECT_DURATIONS.get().split(","));
+		effectIDs = ObjectTranslators.getEffectsArray(config.ATTACK_EFFECTS.get().split(","));
+		effectAmplifiers = ObjectTranslators.getIntArray(config.ATTACK_EFFECT_AMPLIFIERS.get().split(","));
+		effectDurations = ObjectTranslators.getIntArray(config.ATTACK_EFFECT_DURATIONS.get().split(","));
 		arrowShootSpeed = config.TIME_BETWEEN_ARROWS.get();
 		attackDamage = config.ATTACK_DAMAGE.get();
 		attackSpeed = config.ATTACK_MOVEMENT_SPEED.get();
@@ -1296,7 +1292,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		// Breeding
 		allowBreedingTamed = config.CAN_BREED_TAMED.get();
 		allowBreedingWild = config.CAN_BREED_WILD.get();
-		breedingItem = getItemArray(config.BREEDING_ITEMS.get().split(","));
+		breedingItem = ObjectTranslators.getItemArray(config.BREEDING_ITEMS.get().split(","));
 		childSpawnsTamed = config.CHILD_SPAWNS_TAMED.get();
 		growTime = config.BABY_TO_ADULT_TIME.get();
 		ownerOnlyBreeding = config.OWNER_ONLY_BREEDING.get();
@@ -1315,27 +1311,27 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		hitBoxSizeZ = config.HIT_BOX_Z_SIZE.get();
 		immuneToFire = config.IMMUNE_TO_FIRE.get();
 		lightLevelEmited = config.LIGHT_LEVEL_EMITED.get();
-		particleType = getParticleArray(config.PARTICLE_TYPES.get().split(","));
-		particlesPerTick = getIntArray(config.PARTICLE_OCCURANCES.get().split(","));
+		particleType = ObjectTranslators.getParticleArray(config.PARTICLE_TYPES.get().split(","));
+		particlesPerTick = ObjectTranslators.getIntArray(config.PARTICLE_OCCURANCES.get().split(","));
 		walkSpeed = config.MOVEMENT_SPEED.get();
-		livingSound = getSound(config.LIVING_SOUND.get());
-		hurtSound = getSound(config.HURT_SOUND.get());
-		deathSound = getSound(config.DEATH_SOUND.get());
-		stepSound = getSound(config.STEP_SOUND.get());
+		livingSound = ObjectTranslators.getSound(config.LIVING_SOUND.get());
+		hurtSound = ObjectTranslators.getSound(config.HURT_SOUND.get());
+		deathSound = ObjectTranslators.getSound(config.DEATH_SOUND.get());
+		stepSound = ObjectTranslators.getSound(config.STEP_SOUND.get());
 		canBeIgnited = config.CAN_BE_IGNITED.get();
 		
 		// Laying
 		laysItemsTamed = config.CAN_LAY_ITEMS_TAMED.get();
 		laysItemsWild = config.CAN_LAY_ITEMS_WILD.get();
-		layingItem = getItemArray(config.LAYING_ITEMS.get().split(","));
+		layingItem = ObjectTranslators.getItemArray(config.LAYING_ITEMS.get().split(","));
 		layingItemAmount = config.NUMBER_OF_ITEMS_TO_LAY.get();
-		layingSound = getSound(config.LAYING_SOUND.get());
+		layingSound = ObjectTranslators.getSound(config.LAYING_SOUND.get());
 		minItemLayTime = config.MINIMUM_LAYING_TIME.get();
 		variableItemLayTime = config.VARIABLE_LAYING_TIME.get();
 		
 		// Spawning
 		biomeListType = config.BIOME_WHITELIST_OR_BLACKLIST.get();
-		biomeList = getBiomeArray(config.BIOME_LIST.get().split(","));
+		biomeList = ObjectTranslators.getBiomeArray(config.BIOME_LIST.get().split(","));
 		canSpawn = config.CAN_SPAWN.get();
 		maxSpawnGroupSize = config.MAXIMUM_SPAWN_GROUP_SIZE.get();
 		maxSpawnTemp = config.MAXIMUM_SPAWN_TEMP.get();
@@ -1348,13 +1344,14 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		// Taming
 		canTame = config.CAN_BE_TAMED.get();
 		tamingChance = config.TAMING_CHANCE.get();
-		tamingItem = getItemArray(config.TAMING_ITEMS.get().split(","));
+		tamingItem = ObjectTranslators.getItemArray(config.TAMING_ITEMS.get().split(","));
 		
 		// Tempting
 		canTemptTamed = config.CAN_BE_TEMPTED_TAMED.get();
 		canTemptWild = config.CAN_BE_TEMPTED_WILD.get();
 		delayFollowingBetweenItemHoldings = config.FOLLOWING_DELAY_BETWEEN_ITEM_HOLDINGS.get();
-		temptingItem = getItemArray(config.TEMPTING_ITEMS.get().split(","));
+		if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug(this.getDisplayName().toString() + " " + config.TEMPTING_ITEMS.get() + "");
+		temptingItem = ObjectTranslators.getItemArray(config.TEMPTING_ITEMS.get().split(","));
 		ownerOnlyTempting = config.OWNER_ONLY_TEMPTING.get();
 		temptWalkingSpeed = config.TEMPTED_WALKING_SPEED.get();
 		temptScareByPlayer = config.TEMPT_SCARED_BY_PLAYER.get();
@@ -1392,55 +1389,5 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		tCDMaxSlownessFactor = (float) config.TCD_MAXIMUM_SLOWNESS_FACTOR.get();
 		tCDAdjustmentChance = config.TCD_SLOWNESS_FACTOR_CHANGE_CHANCE.get();
 		tCDAdjustmentFactor = (float) config.TCD_SLOWNESS_FACTOR_CHANGE_FACTOR.get();
-	}
-	
-	private int[] getIntArray(String[] stringArray) {
-		int size = stringArray.length;
-	      int [] intArray = new int [size];
-	      for(int i=0; i<size; i++) {
-	    	  intArray[i] = Integer.parseInt(stringArray[i]);
-	      }
-		return intArray;
-	}
-	
-	private Item[] getItemArray(String[] stringArray) {
-		int size = stringArray.length;
-	      Item [] itemArray = new Item [size];
-	      for(int i=0; i<size; i++) {
-	    	  itemArray[i] = ForgeRegistries.ITEMS.getValue(new ResourceLocation(stringArray[i]));
-	      }
-		return itemArray;
-	}
-	
-	private ParticleType<?>[] getParticleArray(String[] stringArray) {
-		int size = stringArray.length;
-		ParticleType<?>[] particleArray = new ParticleType[size];
-	      for(int i=0; i<size; i++) {
-	    	  particleArray[i] = ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(stringArray[i]));
-	      }
-		return particleArray;
-	}
-	
-	private Biome[] getBiomeArray(String[] stringArray) {
-		int size = stringArray.length;
-		Biome[] biomeArray = new Biome[size];
-	      for(int i=0; i<size; i++) {
-	    	  biomeArray[i] = ForgeRegistries.BIOMES.getValue(new ResourceLocation(stringArray[i]));
-	      }
-		return biomeArray;
-	}
-	
-	private Effect[] getEffectsArray(String[] stringArray) {
-		int size = stringArray.length;
-		Effect[] effectArray = new Effect[size];
-	      for(int i=0; i<size; i++) {
-	    	  effectArray[i] = ForgeRegistries.POTIONS.getValue(new ResourceLocation(stringArray[i]));
-	      }
-		return effectArray;
-	}
-	
-	private SoundEvent getSound(String string) {
-		SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(string));
-		return sound;
 	}
 }
