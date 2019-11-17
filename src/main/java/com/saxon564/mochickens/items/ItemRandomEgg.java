@@ -1,6 +1,7 @@
 package com.saxon564.mochickens.items;
 
 import com.saxon564.mochickens.MoChickens;
+import com.saxon564.mochickens.configs.ChickenConfigGenerator;
 import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
 
 import net.minecraft.block.BlockState;
@@ -89,7 +90,7 @@ public class ItemRandomEgg extends Item {
 			}
 
 			if (MoChickens.egg[random] != null) {
-				Class<?> configs = MoChickens.configs[random];
+				ChickenConfigGenerator configs = MoChickens.configs[random];
 				try {
 					LivingEntity newEntity = (LivingEntity) type.create(world);
 					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {
@@ -145,7 +146,7 @@ public class ItemRandomEgg extends Item {
         			final int random = randomInt(0, MoChickens.eggNum);
         			EntityType<?> type = MoChickens.egg[random];
         			if (type != null) {
-        				Class<?> configs = MoChickens.configs[random];
+        				ChickenConfigGenerator configs = MoChickens.configs[random];
         				try {
         					LivingEntity newEntity = (LivingEntity) type.create(worldIn);
         					if (type.toString().equalsIgnoreCase("class net.minecraft.entity.passive.EntityBat")) {

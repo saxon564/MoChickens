@@ -1,14 +1,14 @@
 package com.saxon564.mochickens.network;
 
-import com.saxon564.mochickens.MoChickens;
-import com.saxon564.mochickens.Reference;
-import com.saxon564.mochickens.network.FireMessage;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+//import com.saxon564.mochickens.MoChickens;
+//import com.saxon564.mochickens.Reference;
+//import com.saxon564.mochickens.network.FireMessage;
+//import net.minecraft.util.ResourceLocation;
+//import net.minecraftforge.fml.network.NetworkRegistry;
+//import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class NetworkHandler {
-	private static final String PROTICOL_VERSION = "1";
+	//private static final String PROTICOL_VERSION = "1";
     
 //    public static void register() {
 //    	MoChickens.network = NetworkRegistry.newSimpleChannel(

@@ -1,6 +1,6 @@
 package com.saxon564.mochickens.registers;
 
-import com.saxon564.mochickens.MoChickens;
+//import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
 
 import net.minecraft.util.ResourceLocation;

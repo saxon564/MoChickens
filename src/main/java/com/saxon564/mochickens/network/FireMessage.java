@@ -2,22 +2,22 @@ package com.saxon564.mochickens.network;
 
 import java.util.function.Supplier;
 
-import javax.xml.ws.handler.MessageContext;
+//import javax.xml.ws.handler.MessageContext;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+//import net.minecraft.block.BlockState;
+//import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+//import net.minecraft.util.SoundCategory;
+//import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+//import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class FireMessage {
     
-    private String text;
+    //private String text;
     private static String player;
     private static int face;
     private static int x;

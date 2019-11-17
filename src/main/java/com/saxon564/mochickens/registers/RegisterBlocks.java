@@ -2,7 +2,6 @@ package com.saxon564.mochickens.registers;
 
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
-import com.saxon564.mochickens.blocks.BlockChickenFireBlock;
 import com.saxon564.mochickens.blocks.BlockFeatherBlock;
 
 //import me.saxon564.mochickens.blocks.BlockChickenFireBlock;
