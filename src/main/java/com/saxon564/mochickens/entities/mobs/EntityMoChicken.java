@@ -755,13 +755,13 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			for (int p = 0; p < particleType.length; ++p) {
 				for (int i = 0; i < particlesPerTick[p]; ++i) {
 					
-					/*world.addParticle(particleType[p].getDeserializer().deserialize(particleType[p], new StringReader("")),
+					world.addParticle(particleType[p].getDeserializer().deserialize(particleType[p], new StringReader("")),
 							posX + (rand.nextDouble() - 0.5D)
 							* (double) getWidth(),
 							posY + rand.nextDouble()
 							* (double) getHeight(),
 							posZ + (rand.nextDouble() - 0.5D)
-							* (double) getWidth(), 0.0D, 0.0D, 0.0D);*/
+							* (double) getWidth(), 0.0D, 0.0D, 0.0D);
 				}
 			}
 		}
