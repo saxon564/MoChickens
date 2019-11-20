@@ -216,7 +216,7 @@ public class MoChickens {
 //		myProxy.eventHandlers();
 //		myProxy.registerRenders();
 //		myProxy.registerRenders();
-		RegisterSpawns.entitySpawns();
+//		RegisterSpawns.entitySpawns();
 //		RegisterOreDict.AddOres();
 //		RegisterSounds.init();
 	}

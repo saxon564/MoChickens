@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import com.mojang.brigadier.StringReader;
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.configs.ChickenConfigGenerator;
 import com.saxon564.mochickens.configs.ConfigHandler;
@@ -14,6 +15,7 @@ import com.saxon564.mochickens.entities.mobs.ai.ChickAITempt;
 import com.saxon564.mochickens.entities.mobs.ai.ChickNearestAttackableTarget;
 import com.saxon564.mochickens.misc.ObjectTranslators;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -48,6 +50,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -285,16 +288,16 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
 	@Override
 	public final void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
-		UUID s = null;
-
+	super.readAdditional(compound);
+	String s;
+	
 		if (compound.contains("OwnerUUID", 8)) {
-			s = compound.getUniqueId("OwnerUUID");
+			s = compound.getString("OwnerUUID");
+			MoChickens.CHICKEN_LOGGER.debug("Reading Owner Contains 8! " + s.toString());
 		} else {
 			String s1 = compound.getString("Owner");
-			if (s1 != null && s1 != "") {
-				s = UUID.fromString(PreYggdrasilConverter.convertMobOwnerIfNeeded(getServer(), s1));
-			}
+			s = PreYggdrasilConverter.convertMobOwnerIfNeeded(getServer(), s1);
+			MoChickens.CHICKEN_LOGGER.debug("Reading Owner: " + s);
 		}
 		
 		if (compound.contains("ExplodingChickenSyndrome")) {
@@ -313,9 +316,16 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			setTrickleFactor(compound.getFloat("TrickleFactor"));
 		}
 		
-		if (s != null && s.toString().length() > 0 && !s.toString().equals("00000000-0000-0000-0000-000000000000")) {
-			setTamed(true);
-			setOwnerId(s);
+		if (!s.isEmpty()) {
+			if (!s.equals("00000000-0000-0000-0000-000000000000")) {
+				MoChickens.CHICKEN_LOGGER.debug("Setting Owner! " + s);
+				setOwnerId(UUID.fromString(s));
+				MoChickens.CHICKEN_LOGGER.debug("Owner After set: " + getOwnerId().toString());
+				setTamed(true);
+			} else {
+				MoChickens.CHICKEN_LOGGER.debug("Forget The Owner! " + s);
+				setTamed(false);
+			}
 		}
 	}
 	
@@ -326,8 +336,10 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
         if (getOwnerId() == null)
         {
+        	MoChickens.CHICKEN_LOGGER.debug("Writing Owner Null");
             compound.putString("OwnerUUID", "");
         } else {
+        	MoChickens.CHICKEN_LOGGER.debug("Writing Owner: " + getOwnerId().toString());
             compound.putString("OwnerUUID", getOwnerId().toString());
         }
         if (getExplodingChickenSyndrome()) {
@@ -390,27 +402,20 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	@Override
 	public boolean isTamed()
     {
-		int tamedInt = (((Byte)dataManager.get(TAMED)).byteValue() & 4);
-		boolean tamed = tamedInt != 0;
-		
-        return tamed;
+		return (dataManager.get(TAMED) & 4) != 0;
     }
 
 	@Override
 	public void setTamed(boolean tamed)
     {
-        byte b0 = ((Byte)dataManager.get(TAMED)).byteValue();
-
-        if (tamed)
-        {
-            dataManager.set(TAMED, Byte.valueOf((byte)(b0 | 4)));
-        	dataManager.set(TAMED, Byte.valueOf((byte)(b0 & -5)));
-        }
-        else
-        {
-            dataManager.set(TAMED, Byte.valueOf((byte)(b0 & -5)));
-        }
-
+		byte b0 = dataManager.get(TAMED);
+	      if (tamed) {
+	         dataManager.set(TAMED, (byte)(b0 | 4));
+	      } else {
+	         dataManager.set(TAMED, (byte)(b0 & -5));
+	      }
+	      
+		MoChickens.CHICKEN_LOGGER.debug("Setting Tamed AI");
         setupTaimedAI(tamed);
     }
 	
@@ -432,7 +437,8 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 				goalSelector.removeGoal(aiArrowAttack);
 			}
 			if ((canTemptWild) || (canTemptTamed && isTamed())) {
-				goalSelector.addGoal(3, new ChickAITempt(this, 1.0D, temptingItem, false, ownerOnlyTempting, getOwner().getUniqueID(), canTemptWild, canTemptTamed));
+				MoChickens.CHICKEN_LOGGER.debug(getOwnerId().toString());
+				goalSelector.addGoal(3, new ChickAITempt(this, 1.0D, temptingItem, false, ownerOnlyTempting, getOwnerId(), canTemptWild, canTemptTamed));
 			}
 			despawn = despawnTamed;
 			ran = 0;
@@ -543,7 +549,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			if (flag) {
 				if (i > 0) {
 					target.knockBack(this, (float)i * 0.5F, (double)MathHelper.sin(rotationYaw * 0.017453292F), (double)(-MathHelper.cos(rotationYaw * 0.017453292F)));
-					setMotion(this.getMotion().mul(0.6D, 1.0D, 0.6D));
+					setMotion(getMotion().mul(0.6D, 1.0D, 0.6D));
 				}
 
 				int j = EnchantmentHelper.getFireAspectModifier(this);
@@ -604,7 +610,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		BlockPos pos = new BlockPos((int) posX, (int) posY, (int) posZ);
 		if (world.getLight(pos) < lightLevelEmited) {
 			//System.out.println("Light Set");
-			world.getChunkProvider().getLightManager().func_215573_a(pos, config.LIGHT_LEVEL_EMITED.get());
+			/*world.getChunkProvider().getLightManager().func_215573_a(pos, config.LIGHT_LEVEL_EMITED.get());
 			world.notifyNeighbors(pos, world.getBlockState(pos).getBlock());
 			world.getChunkProvider().getLightManager().getLightEngine(LightType.BLOCK).func_215567_a(pos, false);
 			world.getLightFor(LightType.BLOCK, pos.up());
@@ -612,7 +618,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			world.getLightFor(LightType.BLOCK, pos.north());
 			world.getLightFor(LightType.BLOCK, pos.south());
 			world.getLightFor(LightType.BLOCK, pos.east());
-			world.getLightFor(LightType.BLOCK, pos.west());
+			world.getLightFor(LightType.BLOCK, pos.west());*/
 		}
 	}
 	
@@ -748,13 +754,14 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		if (emitsParticles) {
 			for (int p = 0; p < particleType.length; ++p) {
 				for (int i = 0; i < particlesPerTick[p]; ++i) {
-					world.addParticle(particleType[p],
+					
+					/*world.addParticle(particleType[p].getDeserializer().deserialize(particleType[p], new StringReader("")),
 							posX + (rand.nextDouble() - 0.5D)
 							* (double) getWidth(),
 							posY + rand.nextDouble()
 							* (double) getHeight(),
 							posZ + (rand.nextDouble() - 0.5D)
-							* (double) getWidth(), 0.0D, 0.0D, 0.0D);
+							* (double) getWidth(), 0.0D, 0.0D, 0.0D);*/
 				}
 			}
 		}
@@ -786,13 +793,13 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			playSound(layingSound, 1.0F,
 					(rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 			if (layingItem != null) {
-				entityDropItem(layingItem[randomInt(0, layingItem.length)], layingItemAmount);
+				entityDropItem(layingItem[randomInt(0, (layingItem.length - 1))], layingItemAmount);
+				timeUntilNextEgg = rand.nextInt(variableItemLayTime) + minItemLayTime;
+			} else {
+				entityDropItem(Items.EGG, layingItemAmount);
 				timeUntilNextEgg = rand.nextInt(variableItemLayTime) + minItemLayTime;
 			}
-		} else {
-			entityDropItem(Items.EGG, layingItemAmount);
-			timeUntilNextEgg = rand.nextInt(variableItemLayTime) + minItemLayTime;
-		}
+		} 
 
 		if (getTrickleChickenDisorder()) {
 			if (getTrickleFactor() != 0.0F) {
@@ -1073,68 +1080,62 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow,
 	 * gets into the saddle on a pig.
 	 */
+	@Override
 	public boolean processInteract(PlayerEntity player, Hand hand) {
 		
 		ItemStack itemstack = player.getHeldItem(hand);
-		
-		if (isBreedingItem(itemstack, player)) {
-			if (getGrowingAge() == 0 && canBreed()) {
-				consumeItemFromStack(player, itemstack);
-				setInLove(player);
-				return true;
-			}
-			
-			if (isChild()) {
-				consumeItemFromStack(player, itemstack);
-				ageUp((int)((float)(-getGrowingAge() / 20) * 0.1F), true);
-				return true;
-			}
-		}
-		
-		if (canTame) {
-			if (!isTamed()) {
+		if (!itemstack.isEmpty()) {
+			if (isBreedingItem(itemstack.getItem(), player)) {
+				if (getGrowingAge() == 0 && canBreed()) {
+					consumeItemFromStack(player, itemstack);
+					setInLove(player);
+					return true;
+				}
 				
-				if (!itemstack.isEmpty() && tamingItem.toString().contains((itemstack.getItem().getRegistryName().toString()))) {
-					if (!player.isCreative()) {
-						itemstack.setCount(itemstack.getCount() - 1);
-					}
-	
-					if (itemstack.getCount() <= 0) {
-						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem,
-								(ItemStack) null);
-					}
-	
-					if (!world.isRemote) {
-						if (rand.nextInt(tamingChance) == 0) {
-							setTamed(true);
-							navigator.clearPath();
-							setAttackTarget((LivingEntity) null);
-							setAttackTarget(null);
-							setOwnerId(player.getUniqueID());
-							playTameEffect(true);
-						} else {
-							playTameEffect(false);
-							world.setEntityState(this, (byte) 6);
+				if (isChild()) {
+					consumeItemFromStack(player, itemstack);
+					ageUp((int)((float)(-getGrowingAge() / 20) * 0.1F), true);
+					return true;
+				}
+			}
+		
+			if (canTame) {
+				if (!isTamed()) {
+					for (Item item : tamingItem) {
+						if (item == itemstack.getItem()) {
+							consumeItemFromStack(player, itemstack);
+							if (!world.isRemote) {
+								if (rand.nextInt(tamingChance) == 0) {
+									setOwnerId(player.getUniqueID());
+									setTamedBy(player);
+									navigator.clearPath();
+									setAttackTarget((LivingEntity) null);
+									setAttackTarget(null);
+									playTameEffect(true);
+								} else {
+									playTameEffect(false);
+									world.setEntityState(this, (byte) 6);
+								}
+							}
+					
 						}
 					}
-	
+				
+				}
+			}
+
+			if ((itemstack.getItem() == Items.FLINT_AND_STEEL) && canBeIgnited) {
+				world.playSound(player, posX, posY, posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, getSoundCategory(), 1.0F, rand.nextFloat() * 0.4F + 0.8F);
+				player.swingArm(hand);
+				if (!world.isRemote) {
+					blowUp();
+					itemstack.damageItem(1, player, (p_213625_1_) -> {
+						p_213625_1_.sendBreakAnimation(hand);
+					});
+					return true;
 				}
 			}
 		}
-
-		if ((itemstack.getItem() == Items.FLINT_AND_STEEL) && canBeIgnited) {
-			this.world.playSound(player, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F);
-			player.swingArm(hand);
-			if (!this.world.isRemote) {
-				this.blowUp();
-				itemstack.damageItem(1, player, (p_213625_1_) -> {
-					p_213625_1_.sendBreakAnimation(hand);
-				});
-				return true;
-			}
-		}
-
 		return super.processInteract(player, hand);
 	}
 
@@ -1168,11 +1169,16 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	 * Checks if the parameter is an item which this animal can be fed to breed
 	 * it (wheat, carrots or seeds depending on the animal type)
 	 */
-	public boolean isBreedingItem(ItemStack par1ItemStack, PlayerEntity player) {
+	public boolean isBreedingItem(Item item, PlayerEntity player) {
 		if ((allowBreedingWild && !isTamed()) || (allowBreedingTamed && isTamed())) {
-			if (!ownerOnlyBreeding || getOwner().getUniqueID() == player.getUniqueID()) {
-				return !par1ItemStack.isEmpty() && breedingItem.toString()
-						.contains(par1ItemStack.getItem().getRegistryName().toString());
+			if (!ownerOnlyBreeding || (getOwner().getUniqueID() == player.getUniqueID())) {
+				for (Item loopItem : breedingItem) {
+					if (loopItem == item) {
+						return true;
+						
+					}
+				}
+				return false;
 			} else {
 				return false;
 			}
@@ -1350,7 +1356,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		canTemptTamed = config.CAN_BE_TEMPTED_TAMED.get();
 		canTemptWild = config.CAN_BE_TEMPTED_WILD.get();
 		delayFollowingBetweenItemHoldings = config.FOLLOWING_DELAY_BETWEEN_ITEM_HOLDINGS.get();
-		if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug(this.getDisplayName().toString() + " " + config.TEMPTING_ITEMS.get() + "");
+		if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug(getDisplayName().toString() + " " + config.TEMPTING_ITEMS.get() + "");
 		temptingItem = ObjectTranslators.getItemArray(config.TEMPTING_ITEMS.get().split(","));
 		ownerOnlyTempting = config.OWNER_ONLY_TEMPTING.get();
 		temptWalkingSpeed = config.TEMPTED_WALKING_SPEED.get();

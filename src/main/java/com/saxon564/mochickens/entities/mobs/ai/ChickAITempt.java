@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.collect.Sets;
+import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
 
 import net.minecraft.entity.ai.goal.Goal;
@@ -84,8 +85,13 @@ public class ChickAITempt extends Goal
 	        else
 	        {
 	            temptingPlayer = temptedEntity.world.getClosestPlayer(temptedEntity, 10.0D);
-	            if (!onlyOwner || temptingPlayer.getUniqueID() == entityOwnerId) {
-	            	return temptingPlayer == null ? false : isTempting(temptingPlayer.getHeldItemMainhand()) || isTempting(temptingPlayer.getHeldItemOffhand());
+	            if (temptingPlayer != null) {
+	            	
+		            if (!onlyOwner || temptingPlayer.getUniqueID().toString().equals(entityOwnerId.toString())) {
+		            	return temptingPlayer == null ? false : isTempting(temptingPlayer.getHeldItemMainhand()) || isTempting(temptingPlayer.getHeldItemOffhand());
+		            } else {
+		            	return false;
+		            }
 	            } else {
 	            	return false;
 	            }
@@ -103,7 +109,7 @@ public class ChickAITempt extends Goal
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean continueExecuting()
+    public boolean shouldContinueExecuting()
     {
         if (scaredByPlayerMovement)
         {

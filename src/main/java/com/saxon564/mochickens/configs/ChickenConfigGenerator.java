@@ -287,7 +287,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 			boolean childSpawnsTamed, boolean ownerOnlyBreeding) {	
 		CONFIG.push("Breeding");
 		CAN_BREED_TAMED = CONFIG.translation("allowBreedingTamed").comment(com.BREEDING_TAMED + canBreedTamed).define("Allow_Breeding_When_Tamed", canBreedTamed);
-		CAN_BREED_WILD = CONFIG.translation("allowBreedingWild").comment(com.BREEDING_WILD + canBreedWild).define("Allow_Breeding_When_Tamed", canBreedWild);
+		CAN_BREED_WILD = CONFIG.translation("allowBreedingWild").comment(com.BREEDING_WILD + canBreedWild).define("Allow_Breeding_When_Wild", canBreedWild);
 		BREEDING_ITEMS = CONFIG.translation("breedingItems").comment(com.BREEDING_ITEMS + itemBreed + "\"").define("Breeding_Items", itemBreed.toString());
 		BABY_TO_ADULT_TIME = CONFIG.translation("growTime").comment(com.BREEDING_GROW_TIME + growTime).define("Growing_Time", growTime);
 		CHILD_SPAWNS_TAMED = CONFIG.translation("childSpawnsTamed").comment(com.CHILD_TAMED_BREEDING + childSpawnsTamed).define("Child_Spawns_Tamed", childSpawnsTamed);

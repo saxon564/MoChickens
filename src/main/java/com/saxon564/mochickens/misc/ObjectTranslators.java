@@ -4,8 +4,8 @@ import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.configs.ConfigHandler;
 
 import net.minecraft.item.Item;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -47,9 +47,9 @@ public class ObjectTranslators {
 		return itemArray;
 	}
 	
-	public static ParticleType<?>[] getParticleArray(String[] stringArray) {
+	public static ParticleType<? extends IParticleData>[] getParticleArray(String[] stringArray) {
 		int size = stringArray.length;
-		ParticleType<?>[] particleArray = new ParticleType[size];
+		ParticleType<? extends IParticleData>[] particleArray = new ParticleType<?>[size];
 	      for(int i=0; i<size; i++) {
 	    	  if ((!stringArray[i].equals("")) && (!stringArray[i].equals(null))) {
 	    		  String resource = stringArray[i].replace("[", "");
