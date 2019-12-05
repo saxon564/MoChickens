@@ -1,0 +1,24 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"iii",
+		"iii",
+		"iii"
+	],
+	
+	"key":
+	{
+		"i":
+		{
+			"item":"mochickens:coal_feather"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:coal_feather_block"
+	}
+}

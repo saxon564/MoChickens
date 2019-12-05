@@ -8,21 +8,19 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.pathfinding.Path;
 
-public class ChickAISwell extends Goal
-{
+public class ChickAISwell extends Goal {
     /** The creeper that is swelling. */
     EntityMoChicken swellingChicken;
-    Path path;
     boolean moves;
     double speed;
+    Path path;
 
     /**
      * The creeper's attack target. This is used for the changing of the creeper's state.
      */
     LivingEntity chickenAttackTarget;
 
-    public ChickAISwell(EntityMoChicken par1EntityChicken, boolean movingExplosion, double moveSpeed)
-    {
+    public ChickAISwell(EntityMoChicken par1EntityChicken, boolean movingExplosion, double moveSpeed) {
         swellingChicken = par1EntityChicken;
         moves = movingExplosion;
         speed = moveSpeed;
@@ -32,55 +30,47 @@ public class ChickAISwell extends Goal
 	/**
      * Returns whether the EntityAIBase should begin execution.
      */
-    public boolean shouldExecute()
-    {
+    @Override
+    public boolean shouldExecute() {
         LivingEntity entitylivingbase = swellingChicken.getAttackTarget();
-        this.path = this.swellingChicken.getNavigator().getPathToEntityLiving(entitylivingbase, 0);
         return swellingChicken.getChickenState() > 0 || entitylivingbase != null && swellingChicken.getDistanceSq(entitylivingbase) < 9.0D;
     }
 
     /**
      * Execute a one shot task or start executing a continuous task
      */
-    public void startExecuting()
-    {
+    @Override
+    public void startExecuting() {
+        chickenAttackTarget = swellingChicken.getAttackTarget();
+        this.path = this.swellingChicken.getNavigator().getPathToEntityLiving(chickenAttackTarget, 0);
     	if (!moves) {
     		swellingChicken.getNavigator().clearPath();
     	} else {
     		swellingChicken.getNavigator().setPath(path, speed);
     	}
-        chickenAttackTarget = swellingChicken.getAttackTarget();
     }
 
     /**
      * Resets the task
      */
-    public void resetTask()
-    {
+    @Override
+    public void resetTask() {
         this.chickenAttackTarget = null;
     }
 
     /**
      * Updates the task
      */
-    public void updateTask()
-    {
+    @Override
+    public void tick() {
     	if (!swellingChicken.explodingByECS) {
-	        if (this.chickenAttackTarget == null)
-	        {
-	        	System.out.println("Cleared Chicken State!");
+	        if (this.chickenAttackTarget == null) {
 	            this.swellingChicken.setChickenState(-1);
-	        }
-	        else if (this.swellingChicken.getDistanceSq(this.chickenAttackTarget) > 49.0D)
-	        {
+	        } else if (this.swellingChicken.getDistanceSq(this.chickenAttackTarget) > 49.0D) {
 	            this.swellingChicken.setChickenState(-1);
-	        }
-	        else if (!this.swellingChicken.getEntitySenses().canSee(this.chickenAttackTarget))
-	        {
+	        } else if (!this.swellingChicken.getEntitySenses().canSee(this.chickenAttackTarget)) {
 	            this.swellingChicken.setChickenState(-1);
-	        }
-	        else
-	        {
+	        } else {
 	            this.swellingChicken.setChickenState(1);
 	        }
     	}

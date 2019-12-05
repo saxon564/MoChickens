@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.configs.ChickenConfigGenerator;
 import com.saxon564.mochickens.configs.ConfigHandler;
@@ -15,7 +16,6 @@ import com.saxon564.mochickens.entities.mobs.ai.ChickAITempt;
 import com.saxon564.mochickens.entities.mobs.ai.ChickNearestAttackableTarget;
 import com.saxon564.mochickens.misc.ObjectTranslators;
 
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -49,7 +49,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
@@ -62,14 +61,16 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.Explosion.Mode;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.NibbleArray;
 
 public class EntityMoChicken extends TameableEntity implements IRangedAttackMob {
 	private static final UUID attackingSpeedBoostModifierUUID = UUID
@@ -107,123 +108,124 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	protected ChickenConfigGenerator config;
 	
 	// Attack Data
-	protected static boolean hostile;
-	protected static Effect[] effectIDs;
-	protected static int[] effectAmplifiers;
-	protected static int[] effectDurations;
-	protected static int arrowShootSpeed;
-	protected static double attackDamage;
-	protected static double attackSpeed;
-	protected static double attackTrackingRange;
-	protected static boolean canBlowUp;
-	protected static boolean canShootArrows;
-	protected static int explosionRadius;
-	protected static boolean movesWhenPrimed;
-	protected static double primedMovementSpeed;
-	protected static int fireDuration;
-	protected static int fuseTime;
-	protected static boolean setTargetOnFire;
+	protected boolean hostile;
+	protected Effect[] effectIDs;
+	protected int[] effectAmplifiers;
+	protected int[] effectDurations;
+	protected int arrowShootSpeed;
+	protected double attackDamage;
+	protected double attackSpeed;
+	protected double attackTrackingRange;
+	protected boolean canBlowUp;
+	protected boolean canShootArrows;
+	protected int explosionRadius;
+	protected boolean movesWhenPrimed;
+	protected double primedMovementSpeed;
+	protected int fireDuration;
+	protected int fuseTime;
+	protected boolean setTargetOnFire;
 	
 	// Breeding
-	protected static boolean allowBreedingTamed;
-	protected static boolean allowBreedingWild;
-	protected static Item[] breedingItem;
-	protected static int growTime;
-	protected static Boolean childSpawnsTamed;
-	protected static Boolean ownerOnlyBreeding;
+	protected boolean allowBreedingTamed;
+	protected boolean allowBreedingWild;
+	protected Item[] breedingItem;
+	protected int growTime;
+	protected Boolean childSpawnsTamed;
+	protected Boolean ownerOnlyBreeding;
 	
 	// Entity Data
-	protected static boolean allowTeleporting;
-	protected static boolean burnsInSun;
-	protected static double damageFromWater;
-	protected static boolean despawnTamed;
-	protected static boolean despawnUntamed;
-	protected static boolean emitsLight;
-	protected static boolean emitsParticles;
-	protected static boolean getsHurtByWater;
-	protected static double health;
-	protected static double hitBoxSizeX;
-	protected static double hitBoxSizeZ;
-	protected static boolean immuneToFire;
-	protected static int lightLevelEmited;
-	protected static ParticleType<?>[] particleType;
-	protected static int[] particlesPerTick;
-	protected static double walkSpeed;
-	protected static SoundEvent livingSound;
-	protected static SoundEvent hurtSound;
-	protected static SoundEvent deathSound;
-	protected static SoundEvent stepSound;
-	protected static Boolean canBeIgnited;
+	protected boolean allowTeleporting;
+	protected boolean burnsInSun;
+	protected double damageFromWater;
+	protected boolean despawnTamed;
+	protected boolean despawnUntamed;
+	protected boolean emitsLight;
+	protected boolean emitsParticles;
+	protected boolean getsHurtByWater;
+	protected double health;
+	protected double hitBoxSizeX;
+	protected double hitBoxSizeZ;
+	protected boolean immuneToFire;
+	protected int lightLevelEmited;
+	protected ParticleType<?>[] particleType;
+	protected int[] particlesPerTick;
+	protected String[] particleData;
+	protected double walkSpeed;
+	protected SoundEvent livingSound;
+	protected SoundEvent hurtSound;
+	protected SoundEvent deathSound;
+	protected SoundEvent stepSound;
+	protected Boolean canBeIgnited;
 	
 	// Laying
-	protected static boolean laysItemsTamed;
-	protected static boolean laysItemsWild;
-	protected static Item[] layingItem;
-	protected static int layingItemAmount;
-	protected static SoundEvent layingSound;
-	protected static int minItemLayTime;
-	protected static int variableItemLayTime;
+	protected boolean laysItemsTamed;
+	protected boolean laysItemsWild;
+	protected Item[] layingItem;
+	protected int layingItemAmount;
+	protected SoundEvent layingSound;
+	protected int minItemLayTime;
+	protected int variableItemLayTime;
 	
 	// Spawning
-	protected static boolean canSpawn;
-	protected static String biomeListType;
-	protected static Biome[] biomeList;
-	protected static int maxSpawnGroupSize;
-	protected static double maxSpawnTemp;
-	protected static int minSpawnGroupSize;
-	protected static double minSpawnTemp;
-	protected static int spawnProbability;
-	protected static int minSpawnLightLevel;
-	protected static int maxSpawnLightLevel;
+	protected boolean canSpawn;
+	protected String biomeListType;
+	protected Biome[] biomeList;
+	protected int maxSpawnGroupSize;
+	protected double maxSpawnTemp;
+	protected int minSpawnGroupSize;
+	protected double minSpawnTemp;
+	protected int spawnProbability;
+	protected int minSpawnLightLevel;
+	protected int maxSpawnLightLevel;
 	
 	// Taming
-	protected static boolean canTame;
-	protected static int tamingChance;
-	protected static Item[] tamingItem;
+	protected boolean canTame;
+	protected int tamingChance;
+	protected Item[] tamingItem;
 	
 	// Tempting
-	protected static boolean canTemptTamed;
-	protected static boolean canTemptWild;
-	protected static int delayFollowingBetweenItemHoldings;
-	protected static Item[] temptingItem;
-	protected static boolean ownerOnlyTempting;
-	protected static boolean temptScareByPlayer;
-	protected static double temptWalkingSpeed;
+	protected boolean canTemptTamed;
+	protected boolean canTemptWild;
+	protected int delayFollowingBetweenItemHoldings;
+	protected Item[] temptingItem;
+	protected boolean ownerOnlyTempting;
+	protected boolean temptScareByPlayer;
+	protected double temptWalkingSpeed;
 	
 	//~~~~~~~~~~~~~~~~~Infections~~~~~~~~~~~~~~~~~\\
 	// Exploding Chicken Syndrome
-	protected static boolean explodingChickenSyndrome;
-	protected static boolean eCSNotifyOwnerWhenInfected;
-	protected static boolean eCSInfectedWhenWild;
-	protected static boolean eCSInfectedWhenTamed;
-	protected static boolean eCSClearInfectionWhenTamed;
-	protected static int eCSBabyInfectionChance;
-	protected static int eCSInfectionChance;
-	protected static Boolean eCSDoesFalseFuse;
-	protected static int eCSFalseFuseChance;
-	protected static int eCSExplosionChance;
+	protected boolean explodingChickenSyndrome;
+	protected boolean eCSNotifyOwnerWhenInfected;
+	protected boolean eCSInfectedWhenWild;
+	protected boolean eCSInfectedWhenTamed;
+	protected boolean eCSClearInfectionWhenTamed;
+	protected int eCSBabyInfectionChance;
+	protected int eCSInfectionChance;
+	protected Boolean eCSDoesFalseFuse;
+	protected int eCSFalseFuseChance;
+	protected int eCSExplosionChance;
 	
 	//Mad Chicken Disease
-	protected static boolean madChickenDisease;
-	protected static boolean mCDNotifyOwnerWhenInfected;
-	protected static boolean mCDInfectedWhenWild;
-	protected static boolean mCDInfectedWhenTamed;
-	protected static boolean mCDClearInfectionWhenTamed;
-	protected static int mCDBabyInfectionChance;
-	protected static int mCDInfectionChance;
+	protected boolean madChickenDisease;
+	protected boolean mCDNotifyOwnerWhenInfected;
+	protected boolean mCDInfectedWhenWild;
+	protected boolean mCDInfectedWhenTamed;
+	protected boolean mCDClearInfectionWhenTamed;
+	protected int mCDBabyInfectionChance;
+	protected int mCDInfectionChance;
 	
 	//Trickle Chicken Disorder
-	protected static boolean trickleChickenDisorder;
-	protected static boolean tCDNotifyOwnerWhenInfected;
-	protected static boolean tCDInfectedWhenWild;
-	protected static boolean tCDInfectedWhenTamed;
-	protected static boolean tCDClearInfectionWhenTamed;
-	protected static int tCDBabyInfectionChance;
-	protected static int tCDInfectionChance;
-	protected static float tCDBaseSlownessFactor;
-	protected static float tCDMaxSlownessFactor;
-	protected static int tCDAdjustmentChance;
-	protected static float tCDAdjustmentFactor;
+	protected boolean trickleChickenDisorder;
+	protected boolean tCDNotifyOwnerWhenInfected;
+	protected boolean tCDInfectedWhenWild;
+	protected boolean tCDInfectedWhenTamed;
+	protected boolean tCDClearInfectionWhenTamed;
+	protected int tCDBabyInfectionChance;
+	protected int tCDInfectionChance;
+	protected float tCDBaseSlownessFactor;
+	protected float tCDMaxSlownessFactor;
+	protected int tCDAdjustmentChance;
+	protected float tCDAdjustmentFactor;
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\\
 	
 	
@@ -235,12 +237,19 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	public int timeUntilNextEgg;
 
 	private ChickAIAttackRangedBow aiArrowAttack;
+	private ChickAISwell aiSwell;
 
 	public EntityMoChicken(EntityType<? extends EntityMoChicken> type, World par1World) {
 		super(type, par1World);
 		attackingSpeedBoostModifier = (new AttributeModifier(
 				attackingSpeedBoostModifierUUID, "attackingSpeedBoostModifier",
 				attackSpeed, AttributeModifier.Operation.ADDITION)).setSaved(false);
+		
+	}
+	
+	@Override
+	protected void registerGoals() {
+		MoChickens.CHICKEN_LOGGER.debug("Setting Goals");
 		if (burnsInSun) {
 			goalSelector.addGoal(2, new RestrictSunGoal(this));
 			goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
@@ -248,7 +257,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		goalSelector.addGoal(1, new SwimGoal(this));
 		goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
 		if (canBlowUp) {
-			goalSelector.addGoal(2, new ChickAISwell(this, movesWhenPrimed, primedMovementSpeed));
+			aiSwell = new ChickAISwell(this, movesWhenPrimed, primedMovementSpeed);
 		}
 		goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
 		goalSelector.addGoal(5, new RandomWalkingGoal(this, 1.0D));
@@ -261,6 +270,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		setTamed(false);
 	}
 
+	@Override
 	protected void registerData() {
 		super.registerData();
 		dataManager.register(STATE, Integer.valueOf(-1));
@@ -270,13 +280,6 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		dataManager.register(MADCHICKENDISEASE, false);
 		dataManager.register(TRICKLECHICKENDISORDER, false);
 		dataManager.register(TRICKLEFACTOR, 0.0F);
-	}
-
-	/**
-	 * Returns true if the newer Entity AI code should be run
-	 */
-	public boolean isAIEnabled() {
-		return true;
 	}
 
 	public void registerAttributes(ChickenConfigGenerator c, EntityType<?> cl) {
@@ -367,27 +370,31 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
         }
     }
 
-	protected boolean canDespawn() {
+	@Override
+	public boolean canDespawn(double distanceToClosestPlayer) {
 		if (ran == 0) {
 			ran = 1;
 		}
 		return despawn;
 	}
 	
-	protected SoundEvent getLivingSound() {
+	@Override
+	protected SoundEvent getAmbientSound() {
         return livingSound;
     }
 
     /**
      * Returns the sound this mob makes when it is hurt.
      */
-    protected SoundEvent getHurtSound() {
+	@Override
+    protected SoundEvent getHurtSound(DamageSource source) {
         return hurtSound;
     }
 
     /**
      * Returns the sound this mob makes on death.
      */
+	@Override
     protected SoundEvent getDeathSound() {
         return deathSound;
     }
@@ -395,8 +402,9 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
     /**
      * Plays step sound at given x, y, z for the entity
      */
-    protected void playStepSound(int par1, int par2, int par3, int par4) {
-        playSound(stepSound, 0.15F, 1.0F);
+	@Override
+    protected void playStepSound(BlockPos pos, BlockState blockIn) {
+		playSound(stepSound, 0.15F, 1.0F);
     }
 	
 	@Override
@@ -415,7 +423,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	         dataManager.set(TAMED, (byte)(b0 & -5));
 	      }
 	      
-		MoChickens.CHICKEN_LOGGER.debug("Setting Tamed AI");
+		MoChickens.CHICKEN_LOGGER.debug("Setting Tamed AI: " + tamed);
         setupTaimedAI(tamed);
     }
 	
@@ -436,13 +444,16 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			if (canShootArrows) {
 				goalSelector.removeGoal(aiArrowAttack);
 			}
+			if (canBlowUp) {
+				goalSelector.removeGoal(aiSwell);
+			}
 			if ((canTemptWild) || (canTemptTamed && isTamed())) {
 				MoChickens.CHICKEN_LOGGER.debug(getOwnerId().toString());
 				goalSelector.addGoal(3, new ChickAITempt(this, 1.0D, temptingItem, false, ownerOnlyTempting, getOwnerId(), canTemptWild, canTemptTamed));
 			}
 			despawn = despawnTamed;
 			ran = 0;
-			canDespawn();
+			canDespawn(0D);
 			if (laysItemsTamed) {
 				timeUntilNextEgg = rand.nextInt(variableItemLayTime) + minItemLayTime;
 			} else {
@@ -454,12 +465,20 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			} else {
 				goalSelector.addGoal(2, new MeleeAttackGoal(this, attackSpeed, false));
 			}
+			
+			if (canBlowUp) {
+				MoChickens.CHICKEN_LOGGER.debug("Adding Explosion Goal! " + canBlowUp);
+				goalSelector.addGoal(2, aiSwell);
+			} else {
+				MoChickens.CHICKEN_LOGGER.debug("Not Adding Explosion Goal!" + canBlowUp);
+			}
+			
 			targetSelector.addGoal(1, new ChickNearestAttackableTarget<>(
 					this, PlayerEntity.class, true, attackTrackingRange));
 			setChickenState(-1);
 			despawn = despawnUntamed;
 			ran = 0;
-			canDespawn();
+			canDespawn(0D);
 		} else {
 			despawn = despawnUntamed;
 			ran = 0;
@@ -468,7 +487,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			} else {
 				timeUntilNextEgg = -1;
 			}
-			canDespawn();
+			canDespawn(0D);
 		}
 
 		if (world.getDifficulty().toString().equalsIgnoreCase(
@@ -495,6 +514,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		}
     }
 
+	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
 		if (isInvulnerableTo(par1DamageSource)) {
 			return false;
@@ -607,18 +627,27 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	}
 
 	private void addLight() {
-		BlockPos pos = new BlockPos((int) posX, (int) posY, (int) posZ);
+		BlockPos pos = getPosition();
+		//MoChickens.CHICKEN_LOGGER.debug("Attempting To Set Light To " + lightLevelEmited);
 		if (world.getLight(pos) < lightLevelEmited) {
-			//System.out.println("Light Set");
-			/*world.getChunkProvider().getLightManager().func_215573_a(pos, config.LIGHT_LEVEL_EMITED.get());
-			world.notifyNeighbors(pos, world.getBlockState(pos).getBlock());
+			//MoChickens.CHICKEN_LOGGER.debug("Light Set");
+			//MoChickens.CHICKEN_LOGGER.debug("Current Block Light Before: " + world.getBlockState(pos).getLightValue());
+			NibbleArray nibble = world.getChunkProvider().getLightManager().getLightEngine(LightType.BLOCK).getData(SectionPos.from(pos)).copy();
+			//MoChickens.CHICKEN_LOGGER.debug(nibble.toString());
+			int x = Math.abs(pos.getX() % 16);
+			int y = Math.abs(pos.getY() % 16);
+			int z = Math.abs(pos.getZ() % 16);
+			nibble.set(x, y, z, lightLevelEmited);
+			world.getChunkProvider().getLightManager().setData(LightType.BLOCK, SectionPos.from(pos), nibble);
 			world.getChunkProvider().getLightManager().getLightEngine(LightType.BLOCK).func_215567_a(pos, false);
-			world.getLightFor(LightType.BLOCK, pos.up());
-			world.getLightFor(LightType.BLOCK, pos.down());
-			world.getLightFor(LightType.BLOCK, pos.north());
-			world.getLightFor(LightType.BLOCK, pos.south());
-			world.getLightFor(LightType.BLOCK, pos.east());
-			world.getLightFor(LightType.BLOCK, pos.west());*/
+			world.notifyNeighbors(pos, world.getBlockState(pos).getBlock());
+			//MoChickens.CHICKEN_LOGGER.debug("Current Block Light After: " + world.getBlockState(pos).getLightValue());
+			//world.getLightFor(LightType.BLOCK, pos.up());
+			//world.getLightFor(LightType.BLOCK, pos.down());
+			//world.getLightFor(LightType.BLOCK, pos.north());
+			//world.getLightFor(LightType.BLOCK, pos.south());
+			//world.getLightFor(LightType.BLOCK, pos.east());
+			//world.getLightFor(LightType.BLOCK, pos.west());
 		}
 	}
 	
@@ -627,10 +656,11 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
     {
         if (!world.isRemote && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && getOwner() instanceof ServerPlayerEntity)
         {
-        	getOwner().sendMessage(getDisplayName().appendText(" at " + dateFormat() + " by " + cause.getImmediateSource().getName()));
+        	getOwner().sendMessage(getDisplayName().appendText(" at " + dateFormat() + " by " + cause.getImmediateSource().getName().getFormattedText()));
 
         }
-
+		//world.getChunkProvider().getLightManager().getLightEngine(LightType.BLOCK).func_215567_a(getPosition(), false);
+		world.notifyNeighbors(getPosition(), world.getBlockState(getPosition()).getBlock());
         super.onDeath(cause);
     }
 
@@ -640,12 +670,19 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	 * sunlight and start to burn.
 	 */
 	private int loc = 0;
+	@Override
 	public void livingTick() {
 		super.livingTick();
 		if (loc == 0) {
 			if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug(chicken + " X:" + posX + " Y:" + posY + " Z:" + posZ);
 			loc ++;
 		}
+		
+	Vec3d vec3d = this.getMotion();
+	if (!this.onGround && vec3d.y < 0.0D) {
+		this.setMotion(vec3d.mul(1.0D, 0.6D, 1.0D));
+    }
+	      
 		if (world.isDaytime() && !world.isRemote && burnsInSun) {
 			float f = getBrightness();
 
@@ -754,14 +791,32 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		if (emitsParticles) {
 			for (int p = 0; p < particleType.length; ++p) {
 				for (int i = 0; i < particlesPerTick[p]; ++i) {
-					
-					world.addParticle(particleType[p].getDeserializer().deserialize(particleType[p], new StringReader("")),
-							posX + (rand.nextDouble() - 0.5D)
-							* (double) getWidth(),
-							posY + rand.nextDouble()
-							* (double) getHeight(),
-							posZ + (rand.nextDouble() - 0.5D)
-							* (double) getWidth(), 0.0D, 0.0D, 0.0D);
+					if (particleData[p].contains("[") || particleData[p].contains("]")) {
+						particleData[p] = particleData[p].replace("[", "");
+						particleData[p] = particleData[p].replace("]", "");
+					}
+					try {
+						if (!particleType[p].getRegistryName().toString().equalsIgnoreCase("minecraft:note")) {
+							world.addParticle(deserializeParticle(new StringReader(particleData[p] + " 1.0 0"), particleType[p]),
+									posX + (rand.nextDouble() - 0.5D)
+									* (double) getWidth(),
+									posY + rand.nextDouble()
+									* (double) getHeight(),
+									posZ + (rand.nextDouble() - 0.5D)
+									* (double) getWidth(), 0.0D, 0.0D, 0.0D);
+						} else {
+							particleData[p] = particleData[p].replace(" ", "");
+							world.addParticle(deserializeParticle(new StringReader(""), particleType[p]),
+									posX + (rand.nextDouble() - 0.5D)
+									* (double) getWidth(),
+									posY + rand.nextDouble()
+									* (double) getHeight(),
+									posZ + (rand.nextDouble() - 0.5D)
+									* (double) getWidth(), ObjectTranslators.getDouble(particleData[p]), 0.0D, 0.0D);
+						}
+					} catch (CommandSyntaxException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -834,6 +889,10 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		if (dead) {
 			world.getLightFor(LightType.BLOCK, new BlockPos((int) posX, (int) posY, (int) posZ));
 		}
+	}
+	
+	private static <T extends IParticleData> T deserializeParticle(StringReader reader, ParticleType<T> type) throws CommandSyntaxException {
+	      return type.getDeserializer().deserialize(type, reader);
 	}
 	
 	public void manageInfections() {
@@ -962,6 +1021,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	public void blowUp() {
 		if (isAlive()) {
 			lastActiveTime = timeSinceIgnited;
+			
 			int i = getChickenState();
 
 			if (i > 0 && timeSinceIgnited == 0) {
@@ -976,13 +1036,11 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
 			if (timeSinceIgnited >= fuseTime) {
 				timeSinceIgnited = fuseTime;
-
 				if (!world.isRemote) {
 					LivingEntity target = getAttackTarget();
-					Mode flag = (world.getGameRules().get(GameRules.MOB_GRIEFING).get()) ? Mode.BREAK : Mode.NONE;
-					world.createExplosion(
-							this, posX, posY, posZ,
-							(float) explosionRadius, flag);
+					Explosion.Mode explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
+			        dead = true;
+					world.createExplosion(this, posX, posY, posZ, (float) explosionRadius, explosion$mode);
 					if (dataManager.get(EXPLODINGCHICKENSYNDROME)) {
 						mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" has blown up from Exploding Chicken Syndrome!"));
 						mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" at " + dateFormat()));
@@ -990,7 +1048,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 					if (target != null) {
 						applyEffects(target);
 					}
-					dead = true;
+					remove();
 				}
 			}
 		}
@@ -1001,8 +1059,6 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		Date date = new Date();
 		return dateFormat.format(date);
 	}
-	
-	public void fall(float distance, float damageMultiplier) {}
 
 	public static int randomInt(int low, int high) {
 		int result = (int) (Math.random() * (high - low + 1)) + low;
@@ -1014,16 +1070,14 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 				* par1) / (float) (fuseTime - 2);
 	}
 
-	public int getChickenState()
-    {
+	public int getChickenState() {
         return ((Integer)dataManager.get(STATE)).intValue();
     }
 
     /**
      * Sets the state of creeper, -1 to idle and 1 to be 'in fuse'
      */
-    public void setChickenState(int state)
-    {
+    public void setChickenState(int state) {
         dataManager.set(STATE, Integer.valueOf(state));
     }
 
@@ -1053,6 +1107,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	/**
 	 * Returns the item the mob drops on death.
 	 */
+	
 	protected Item getDropItemId() {
 		return Items.FEATHER;
 	}
@@ -1061,9 +1116,10 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity
 	 * has recently been hit by a player. @param par2 - Level of Looting used to
 	 * kill this mob.
-	 */
-	protected void dropFewItems(boolean par1, int par2) {
-		int j = rand.nextInt(3) + rand.nextInt(1 + par2);
+	 *
+	@Override
+	protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
+		int j = rand.nextInt(3) + rand.nextInt(1 + looting);
 
 		for (int k = 0; k < j; ++k) {
 			entityDropItem((Item) Items.FEATHER, 1);
@@ -1074,7 +1130,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		} else {
 			entityDropItem((Item) Items.CHICKEN, 1);
 		}
-	}
+	}*/
 
 	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow,
@@ -1319,6 +1375,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		lightLevelEmited = config.LIGHT_LEVEL_EMITED.get();
 		particleType = ObjectTranslators.getParticleArray(config.PARTICLE_TYPES.get().split(","));
 		particlesPerTick = ObjectTranslators.getIntArray(config.PARTICLE_OCCURANCES.get().split(","));
+		particleData = config.PARTICLE_ARGUMENTS.get().split(",");
 		walkSpeed = config.MOVEMENT_SPEED.get();
 		livingSound = ObjectTranslators.getSound(config.LIVING_SOUND.get());
 		hurtSound = ObjectTranslators.getSound(config.HURT_SOUND.get());

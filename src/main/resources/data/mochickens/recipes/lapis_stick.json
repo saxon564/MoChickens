@@ -1,0 +1,23 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"i",
+		"i"
+	],
+	
+	"key":
+	{
+		"i":
+		{
+			"item":"minecraft:lapis_lazuli"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:lapis_stick"
+	}
+}

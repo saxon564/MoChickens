@@ -1,0 +1,23 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"i",
+		"i"
+	],
+	
+	"key":
+	{
+		"i":
+		{
+			"item":"minecraft:coal"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:coal_stick"
+	}
+}

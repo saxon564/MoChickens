@@ -74,6 +74,15 @@ public class ConfigComments {
 				+ "Default: \"";
 	protected final String PARTICLE_OCCURANCES = "How many particles show per tick\n"
 				+ "Default: \"";
+	protected final String PARTICLE_ARGUMENTS = "Values required for certain particles to show\n"
+			+ "Do NOT use the following particles unless you know how the arguments work:\n"
+			+ "minecraft:ambient_entity_effect\n"
+			+ "minecraft:block\n"
+			+ "minecraft:dust\n"
+			+ "minecraft:entity_effect\n"
+			+ "minecraft:item\n"
+			+ "minecraft:note_emitter\n"
+			+ "Default: \"";
 	protected final String LIVING_SOUND = "Sound chicken makes when alive\n"
 				+ "Default: \"";
 	protected final String HURT_SOUND = "Sound chicken makes when it takes damage\n"

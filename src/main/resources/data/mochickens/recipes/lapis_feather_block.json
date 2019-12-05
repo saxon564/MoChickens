@@ -1,0 +1,24 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"iii",
+		"iii",
+		"iii"
+	],
+	
+	"key":
+	{
+		"i":
+		{
+			"item":"mochickens:lapis_feather"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:lapis_feather_block"
+	}
+}

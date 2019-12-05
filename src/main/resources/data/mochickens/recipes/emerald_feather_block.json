@@ -1,0 +1,25 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"iii",
+		"iii",
+		"iii"
+	],
+	
+	"key":
+	{
+		"i":
+		{
+			"item":"mochickens:emerald_feather",
+			"data":6
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:emerald_feather_block"
+	}
+}

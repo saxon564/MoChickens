@@ -2,14 +2,12 @@ package com.saxon564.mochickens.entities.mobs.models;
 
 import org.lwjgl.opengl.GL11;
 
-import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
-
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelEnderChicken<T extends EntityMoChicken> extends EntityModel<T>
+public class ModelEnderChicken<T extends Entity> extends EntityModel<T>
 {
   //fields
     RendererModel rleg;
@@ -83,43 +81,42 @@ public class ModelEnderChicken<T extends EntityMoChicken> extends EntityModel<T>
       //setRotation(Head_Spike, -0.9852332F, 0F, 0F);
   }
   
-  public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5)
+  public void render(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
   {
-    super.render(entity, f, f1, f2, f3, f4, f5);
+    super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
     
     if (isChild)
     {
-    	setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+    	setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
         float f6 = 2.0F;
         GL11.glPushMatrix();
-        GL11.glTranslatef(0.0F, 5.0F * f5, 2.0F * f5);
-        head.render(f5);
-        bill.render(f5);
-        chin.render(f5);
-        //Head_Spike.render(f5);
+        GL11.glTranslatef(0.0F, 5.0F * scale, 2.0F * scale);
+        head.render(scale);
+        bill.render(scale);
+        chin.render(scale);
+        //Head_Spike.render(scale);
         GL11.glPopMatrix();
         GL11.glPushMatrix();
         GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-        GL11.glTranslatef(0.0F, 24.0F * f5, 0.0F);
-        body.render(f5);
-        rleg.render(f5);
-        lleg.render(f5);
-        rwing.render(f5);
-        lwing.render(f5);
+        GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
+        body.render(scale);
+        rleg.render(scale);
+        lleg.render(scale);
+        rwing.render(scale);
+        lwing.render(scale);
         GL11.glPopMatrix();
     }
     else
     {
-    setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-    rleg.render(f5);
-    lleg.render(f5);
-    body.render(f5);
-    rwing.render(f5);
-    head.render(f5);
-    lwing.render(f5);
-    bill.render(f5);
-    chin.render(f5);
-    //Head_Spike.render(f5);
+    setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
+    rleg.render(scale);
+    lleg.render(scale);
+    body.render(scale);
+    rwing.render(scale);
+    head.render(scale);
+    lwing.render(scale);
+    bill.render(scale);
+    chin.render(scale);
     }
   }
   
@@ -130,20 +127,20 @@ public class ModelEnderChicken<T extends EntityMoChicken> extends EntityModel<T>
     model.rotateAngleZ = z;
   }
   
-  public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity)
+  public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, Entity entity)
   {
-      head.rotateAngleX = par5 / (180F / (float)Math.PI);
-      head.rotateAngleY = par4 / (180F / (float)Math.PI);
+      head.rotateAngleX = headPitch / (180F / (float)Math.PI);
+      head.rotateAngleY = netHeadYaw / (180F / (float)Math.PI);
       bill.rotateAngleX = head.rotateAngleX;
       bill.rotateAngleY = head.rotateAngleY;
       chin.rotateAngleX = head.rotateAngleX;
       chin.rotateAngleY = head.rotateAngleY;
       //Head_Spike.rotateAngleX = head.rotateAngleX;
       //Head_Spike.rotateAngleY = head.rotateAngleY;
-      rleg.rotateAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
-      lleg.rotateAngleX = MathHelper.cos(par1 * 0.6662F + (float)Math.PI) * 1.4F * par2;
-      lwing.rotateAngleZ = par3;
-      rwing.rotateAngleZ = -par3;
+      rleg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+      lleg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+      lwing.rotateAngleZ = ageInTicks;
+      rwing.rotateAngleZ = -ageInTicks;
   }
 
 }

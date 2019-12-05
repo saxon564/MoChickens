@@ -38,6 +38,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 	public BooleanValue EMITS_PARTICLES;
 	public ConfigValue<String> PARTICLE_TYPES;
 	public ConfigValue<String> PARTICLE_OCCURANCES;
+	public ConfigValue<String> PARTICLE_ARGUMENTS;
 	public ConfigValue<String> LIVING_SOUND;
 	public ConfigValue<String> HURT_SOUND;
 	public ConfigValue<String> DEATH_SOUND;
@@ -139,7 +140,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 			boolean teleport, boolean emitLight, int light,
 			boolean immuneFire, boolean fireInLight, boolean waterHurt,
 			double waterDamaged, boolean emitParticles, List<String> particle,
-			List<String> particleOccurance, String livingSound,
+			List<String> particleOccurance, List<String> particleArguments, String livingSound,
 			String hurtSound, String deathSound, String stepSound, boolean canBeIgnited, 
 //			< ----- Taming ----- >
 			boolean canTame, List<String> itemTame, int chance,
@@ -180,8 +181,8 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 				blacklistWhitelist, biomeListIn, customBiomes);
 		entityData(healthIn, speedIn, hitX, hitZ, despawnUntamed, despawnTamed, silent, 
 				teleport, emitLight, light, immuneFire, fireInLight, waterHurt, waterDamaged, 
-				emitParticles, particle, particleOccurance, livingSound, hurtSound, deathSound,
-				stepSound, canBeIgnited);
+				emitParticles, particle, particleOccurance, particleArguments, livingSound, hurtSound,
+				deathSound, stepSound, canBeIgnited);
 		taming(canTame, itemTame, chance);
 		tempting(canTemptTamed, canTemptWild, itemTempt, delay, ownerOnlyTempting, temptedWalkingSpeed, temptScareByPlayer);
 		breeding(canBreedTamed, canBreedWild, itemBreed, growTime, childSpawnsTamed, ownerOnlyBreeding);
@@ -234,7 +235,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 			boolean despawnUntamed, boolean despawnTamed, boolean silent, 
 			boolean teleport, boolean emitLight, int light, boolean immuneFire, boolean fireInLight, 
 			boolean waterHurt, double waterDamaged, boolean emitParticles, List<String> particle, 
-			List<String> particleOccurance, String livingSound, String hurtSound, String deathSound,
+			List<String> particleOccurance, List<String> particleArguments, String livingSound, String hurtSound, String deathSound,
 			String stepSound, boolean canBeIgnited)	{
 		CONFIG.push("Entity_Data");
 		HEALTH = CONFIG.translation("health").comment(com.HEALTH + health).define("Health", health);
@@ -254,6 +255,7 @@ public class ChickenConfigGenerator extends ForgeConfigSpec.Builder {
 		EMITS_PARTICLES = CONFIG.translation("emitsParticles").comment(com.EMITS_PARTICLES + emitParticles).define("Emits_Particles", emitParticles);
 		PARTICLE_TYPES = CONFIG.translation("particleType").comment(com.PARTICLES + particle.toString() + "\"").define("Particle_Types", particle.toString());
 		PARTICLE_OCCURANCES = CONFIG.translation("particlesPerTick").comment(com.PARTICLE_OCCURANCES + particleOccurance.toString() + "\"").define("Particles_Per_Tick", particleOccurance.toString());
+		PARTICLE_ARGUMENTS = CONFIG.translation("particlearguments").comment(com.PARTICLE_ARGUMENTS + particleArguments.toString() + "\"").define("Particles_Arguments", particleArguments.toString());
 		LIVING_SOUND = CONFIG.translation("livingSound").comment(com.LIVING_SOUND + livingSound + "\"").define("Living_Sound", livingSound);
 		HURT_SOUND = CONFIG.translation("hurtSound").comment(com.HURT_SOUND + hurtSound + "\"").define("Hurt_Sound", hurtSound);
 		DEATH_SOUND = CONFIG.translation("deathSound").comment(com.DEATH_SOUND + deathSound + "\"").define("Death_Sound", deathSound);

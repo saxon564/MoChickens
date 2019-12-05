@@ -13,6 +13,15 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ObjectTranslators {
+	public static double getDouble(String string) {
+	      double doub = 0;
+    	  if ((!string.equals("")) && (!string.equals(null))) {
+    		  if (ConfigHandler.DEBUG.get()) MoChickens.CHICKEN_LOGGER.debug("Double: '" + string + "'");
+    		  doub = Double.parseDouble(string);
+    	  }
+		return doub;
+	}
+	
 	public static int[] getIntArray(String[] stringArray) {
 		int size = stringArray.length;
 	      int [] intArray = new int [size];

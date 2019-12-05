@@ -32,12 +32,14 @@ import com.saxon564.mochickens.misc.MoChickensCreativeTab;
 import com.saxon564.mochickens.proxies.ClientProxyMoChickens;
 import com.saxon564.mochickens.proxies.CommonProxyMoChickens;
 import com.saxon564.mochickens.proxies.IProxy;
-import com.saxon564.mochickens.registers.RegisterSpawns;
+import com.saxon564.mochickens.registers.RegisterChickens;
+import com.saxon564.mochickens.registers.RegisterRenders;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,6 +51,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 
@@ -98,27 +101,27 @@ public class MoChickens {
 	public static ItemFeatherBlock DIAMOND_FEATHER_BLOCK_ITEM;
 	public static ItemFeatherBlock EMERALD_FEATHER_BLOCK_ITEM;
 	public static ItemFeatherBlock QUARTZ_FEATHER_BLOCK_ITEM;
-	public static Item BEEFY_CHICKEN_EGG;
-	public static Item BLAZING_CHICKEN_EGG;
-	public static Item CLAY_CHICKEN_EGG;
-	public static Item COAL_CHICKEN_EGG;
-	public static Item COOKIE_CHICKEN_EGG;
-	public static Item CREEPER_CHICKEN_EGG;
-	public static Item DIAMOND_CHICKEN_EGG;
-	public static Item EMERALD_CHICKEN_EGG;
-	public static Item ENCHANTED_CHICKEN_EGG;
-	public static Item ENDER_CHICKEN_EGG;
-	public static Item GIANT_CHICKEN_EGG;
-	public static Item GLOWING_CHICKEN_EGG;
-	public static Item GOLD_CHICKEN_EGG;
-	public static Item IRON_CHICKEN_EGG;
-	public static Item LAPIS_CHICKEN_EGG;
-	public static Item NUUW_CHICKEN_EGG;
-	public static Item QUARTZ_CHICKEN_EGG;
-	public static Item RAINBOW_CHICKEN_EGG;
-	public static Item REDSTONE_CHICKEN_EGG;
-	public static Item SKELETON_CHICKEN_EGG;
-	public static Item SNOW_CHICKEN_EGG;
+	public static SpawnEggItem BEEFY_CHICKEN_EGG;
+	public static SpawnEggItem BLAZING_CHICKEN_EGG;
+	public static SpawnEggItem CLAY_CHICKEN_EGG;
+	public static SpawnEggItem COAL_CHICKEN_EGG;
+	public static SpawnEggItem COOKIE_CHICKEN_EGG;
+	public static SpawnEggItem CREEPER_CHICKEN_EGG;
+	public static SpawnEggItem DIAMOND_CHICKEN_EGG;
+	public static SpawnEggItem EMERALD_CHICKEN_EGG;
+	public static SpawnEggItem ENCHANTED_CHICKEN_EGG;
+	public static SpawnEggItem ENDER_CHICKEN_EGG;
+	public static SpawnEggItem GIANT_CHICKEN_EGG;
+	public static SpawnEggItem GLOWING_CHICKEN_EGG;
+	public static SpawnEggItem GOLD_CHICKEN_EGG;
+	public static SpawnEggItem IRON_CHICKEN_EGG;
+	public static SpawnEggItem LAPIS_CHICKEN_EGG;
+	public static SpawnEggItem NUUW_CHICKEN_EGG;
+	public static SpawnEggItem QUARTZ_CHICKEN_EGG;
+	public static SpawnEggItem RAINBOW_CHICKEN_EGG;
+	public static SpawnEggItem REDSTONE_CHICKEN_EGG;
+	public static SpawnEggItem SKELETON_CHICKEN_EGG;
+	public static SpawnEggItem SNOW_CHICKEN_EGG;
 	
 	// Initialize Blocks
 	//public static Block FETHER_PORTAL;
@@ -173,6 +176,7 @@ public class MoChickens {
 	public MoChickens() {
 		
 //		NetworkHandler.register();
+		RegisterChickens.createChickens();
 		
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
@@ -181,8 +185,6 @@ public class MoChickens {
 		MinecraftForge.EVENT_BUS.register(this);
 
 		ConfigHandler.loadConfig();
-		
-		//CHICKEN_LOGGER.warn("Skeleton: " + ConfigHandler.SKELETON_CHICKEN_CONFIG.get("Spawning.Biomes.minecraft_nether.Spawn_Probability"));
 		
 		registerRandomEgg();
 		
@@ -193,6 +195,7 @@ public class MoChickens {
 	}
 
 	public void clientSetup(final FMLClientSetupEvent event) {
+		if (FMLEnvironment.dist.isDedicatedServer()) return;	
 		//network.registerMessage(FireMessage.Handler.class, FireMessage.class, 0, Side.SERVER);
 		 
 
@@ -202,23 +205,12 @@ public class MoChickens {
 		//Structures
 		//MapGenStructureIO.registerStructure(MapGenChickenVillage.ChickenStart.class, "Chicken_Village");
 		//VillageBuildings.registerVillagePieces();
-		
-		/*if (Loader.isModLoaded(Thaumcraft.id)) {
-			loadThaumcraft();
-		}*/
-		//CraftingRecipes.CraftingRecipieManager();
-		//RegisterSpawns.generateBiomeData();
-		
-		
-//		//path = event.getModConfigurationDirectory().toString() + "\\MoChickens";
+
 //		network = NetworkRegistry.newSimpleChannel(new ResourceLocation(Reference.MOD_ID), "MoChickens");
-//		//FileManager.PreInit(event);
+//		FileManager.PreInit(event);
 //		myProxy.eventHandlers();
-//		myProxy.registerRenders();
-//		myProxy.registerRenders();
 //		RegisterSpawns.entitySpawns();
-//		RegisterOreDict.AddOres();
-//		RegisterSounds.init();
+		RegisterRenders.chickens();
 	}
 	
 	private static void registerRandomEgg() {

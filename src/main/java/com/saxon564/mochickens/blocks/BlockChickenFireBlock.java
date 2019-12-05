@@ -213,7 +213,7 @@ public class BlockChickenFireBlock extends Block {
 
 	         Block block = blockstate.getBlock();
 	         if (block instanceof TNTBlock) {
-	            TNTBlock.explode(worldIn, pos);
+	            //TNTBlock.catchFire(this.getDefaultState(), worldIn, pos, null);
 	         }
 	      }
 

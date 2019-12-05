@@ -1,0 +1,38 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" t ",
+		"l r",
+		" b "
+	],
+	
+	"key":
+	{
+		"t":
+		{
+			"item": "mochickens:emerald_stick"
+		},
+		
+		"l":
+		{
+			"item": "mochickens:diamond_stick"
+		},
+		
+		"r":
+		{
+			"item": "mochickens:redstone_stick"
+		},
+		
+		"b":
+		{
+			"item": "mochickens:iron_stick"
+		}
+	},
+	
+	"result":
+	{
+		"item":"mochickens:inner_taming_disc"
+	}
+}

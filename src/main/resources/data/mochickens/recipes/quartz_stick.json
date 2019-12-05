@@ -1,0 +1,23 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"i",
+		"i"
+	],
+	
+	"key":
+	{
+		"i":
+		{
+			"item":"minecraft:quartz"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:quartz_stick"
+	}
+}

@@ -2,7 +2,7 @@ package com.saxon564.mochickens.entities.mobs.renders;
 
 import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityDiamondChicken;
-import com.saxon564.mochickens.entities.mobs.models.ModelCChicken;
+import com.saxon564.mochickens.entities.mobs.models.ModelRedstoneChicken;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -12,13 +12,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class RenderDiamondChicken extends MobRenderer<EntityDiamondChicken, ModelCChicken<EntityDiamondChicken>>
+public class RenderDiamondChicken extends MobRenderer<EntityDiamondChicken, ModelRedstoneChicken<EntityDiamondChicken>>
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/mobs/diamondchicken.png");
 
     public RenderDiamondChicken(EntityRendererManager renderManager)
     {
-        super(renderManager, new ModelCChicken<>(), 0.3F);
+        super(renderManager, new ModelRedstoneChicken<>(), 0.3F);
     }
 
     @Override

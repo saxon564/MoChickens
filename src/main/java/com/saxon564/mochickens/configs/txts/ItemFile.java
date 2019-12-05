@@ -19,6 +19,10 @@ public class ItemFile {
 		if (ConfigHandler.ITEMS.get()) {
 			generateString("Items.txt", ForgeRegistries.ITEMS.getKeys());
 		}
+		
+		if (ConfigHandler.BLOCKS.get()) {
+			generateString("Blocks.txt", ForgeRegistries.BLOCKS.getKeys());
+		}
 
 		if (ConfigHandler.BIOMES.get()) {
 			generateString("Biomes.txt", ForgeRegistries.BIOMES.getKeys());

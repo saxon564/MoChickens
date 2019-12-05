@@ -1,5 +1,6 @@
 package com.saxon564.mochickens.entities.mobs.renders;
 
+import com.saxon564.mochickens.Reference;
 import com.saxon564.mochickens.entities.mobs.EntityIronChicken;
 import com.saxon564.mochickens.entities.mobs.models.ModelCChicken;
 
@@ -13,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class RenderIronChicken extends MobRenderer<EntityIronChicken, ModelCChicken<EntityIronChicken>>
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("mochickens:textures/mobs/ironChicken.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/mobs/ironchicken.png");
 
     public RenderIronChicken(EntityRendererManager renderManager)
     {

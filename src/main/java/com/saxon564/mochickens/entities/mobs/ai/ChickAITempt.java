@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.collect.Sets;
-import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.entities.mobs.EntityMoChicken;
 
 import net.minecraft.entity.ai.goal.Goal;

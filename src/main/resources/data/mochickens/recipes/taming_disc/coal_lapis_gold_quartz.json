@@ -1,0 +1,44 @@
+{
+	"type":"minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" t ",
+		"lir",
+		" b "
+	],
+	
+	"key":
+	{
+		"t":
+		{
+			"item": "mochickens:coal_stick"
+		},
+		
+		"l":
+		{
+			"item": "mochickens:lapis_stick"
+		},
+		
+		"r":
+		{
+			"item": "mochickens:gold_stick"
+		},
+		
+		"b":
+		{
+			"item": "mochickens:quartz_stick"
+		},
+		
+		"i":
+		{
+			"item":"mochickens:inner_taming_disc"
+		}
+		
+	},
+	
+	"result":
+	{
+		"item":"mochickens:taming_disc"
+	}
+}
