@@ -101,6 +101,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	private int ran;
 	private EntityType<?> chicken;
 	public boolean explodingByECS;
+	public boolean explodingByFlint;
 	
 	/**********************************/
 	/*********config variables*********/
@@ -228,8 +229,6 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	protected float tCDAdjustmentFactor;
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\\
 	
-	
-
 	private int lastActiveTime;
 	private int timeSinceIgnited;
 
@@ -1180,9 +1179,11 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 				}
 			}
 
-			if ((itemstack.getItem() == Items.FLINT_AND_STEEL) && canBeIgnited) {
+			if (itemstack.getItem().equals(Items.FLINT_AND_STEEL) && canBeIgnited) {
 				world.playSound(player, posX, posY, posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, getSoundCategory(), 1.0F, rand.nextFloat() * 0.4F + 0.8F);
 				player.swingArm(hand);
+				explodingByFlint = true;
+				setChickenState(1);
 				if (!world.isRemote) {
 					blowUp();
 					itemstack.damageItem(1, player, (p_213625_1_) -> {

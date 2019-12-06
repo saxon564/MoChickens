@@ -41,12 +41,14 @@ public class ChickAISwell extends Goal {
      */
     @Override
     public void startExecuting() {
-        chickenAttackTarget = swellingChicken.getAttackTarget();
-        this.path = this.swellingChicken.getNavigator().getPathToEntityLiving(chickenAttackTarget, 0);
-    	if (!moves) {
-    		swellingChicken.getNavigator().clearPath();
-    	} else {
-    		swellingChicken.getNavigator().setPath(path, speed);
+    	if (!swellingChicken.explodingByECS && !swellingChicken.explodingByFlint) {
+	        chickenAttackTarget = swellingChicken.getAttackTarget();
+	        this.path = this.swellingChicken.getNavigator().getPathToEntityLiving(chickenAttackTarget, 0);
+	    	if (!moves) {
+	    		swellingChicken.getNavigator().clearPath();
+	    	} else {
+	    		swellingChicken.getNavigator().setPath(path, speed);
+	    	}
     	}
     }
 
@@ -63,7 +65,7 @@ public class ChickAISwell extends Goal {
      */
     @Override
     public void tick() {
-    	if (!swellingChicken.explodingByECS) {
+    	if (!swellingChicken.explodingByECS && !swellingChicken.explodingByFlint) {
 	        if (this.chickenAttackTarget == null) {
 	            this.swellingChicken.setChickenState(-1);
 	        } else if (this.swellingChicken.getDistanceSq(this.chickenAttackTarget) > 49.0D) {
