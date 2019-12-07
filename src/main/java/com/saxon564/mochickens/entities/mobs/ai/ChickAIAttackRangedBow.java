@@ -9,8 +9,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.BowItem;
 import net.minecraft.util.Hand;
 
-public class ChickAIAttackRangedBow extends Goal
-{
+public class ChickAIAttackRangedBow extends Goal {
     private final EntityMoChicken entity;
     private final double moveSpeedAmp;
     private int attackCooldown;
@@ -21,8 +20,7 @@ public class ChickAIAttackRangedBow extends Goal
     private boolean strafingBackwards;
     private int strafingTime = -1;
 
-    public ChickAIAttackRangedBow(EntityMoChicken chicken, double speedAmplifier, int delay, float maxDistance)
-    {
+    public ChickAIAttackRangedBow(EntityMoChicken chicken, double speedAmplifier, int delay, float maxDistance) {
         this.entity = chicken;
         this.moveSpeedAmp = speedAmplifier;
         this.attackCooldown = delay;
@@ -30,45 +28,39 @@ public class ChickAIAttackRangedBow extends Goal
         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
-    public void setAttackCooldown(int p_189428_1_)
-    {
+    public void setAttackCooldown(int p_189428_1_) {
         this.attackCooldown = p_189428_1_;
     }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
     	return this.entity.getAttackTarget() == null ? false : this.isBowInMainhand();
     }
 
-    protected boolean isBowInMainhand()
-    {
+    protected boolean isBowInMainhand() {
         return true;
     }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean continueExecuting()
-    {
+    public boolean continueExecuting() {
     	return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.isBowInMainhand();
     }
 
     /**
      * Execute a one shot task or start executing a continuous task
      */
-    public void startExecuting()
-    {
+    public void startExecuting() {
         super.startExecuting();
     }
 
     /**
      * Resets the task
      */
-    public void resetTask()
-    {
+    public void resetTask() {
         super.resetTask();
         this.seeTime = 0;
         this.attackTime = -1;
@@ -77,92 +69,66 @@ public class ChickAIAttackRangedBow extends Goal
     /**
      * Updates the task
      */
-    public void updateTask()
-    {
+    public void tick() {
         LivingEntity entitylivingbase = this.entity.getAttackTarget();
-
-        if (entitylivingbase != null)
-        {
-        	
-            double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
+        if (entitylivingbase != null) {
+        	double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
             boolean flag = this.entity.getEntitySenses().canSee(entitylivingbase);
             boolean flag1 = this.seeTime > 0;
-
-            if (flag != flag1)
-            {
+            if (flag != flag1) {
                 this.seeTime = 0;
             }
 
-            if (flag)
-            {
+            if (flag) {
                 ++this.seeTime;
-            }
-            else
-            {
+            } else {
                 --this.seeTime;
             }
 
-            if (d0 <= (double)this.maxAttackDistance && this.seeTime >= 20)
-            {
+            if (d0 <= (double)this.maxAttackDistance && this.seeTime >= 20) {
                 this.entity.getNavigator().clearPath();
                 ++this.strafingTime;
-            }
-            else
-            {
+            } else {
                 this.entity.getNavigator().tryMoveToEntityLiving(entitylivingbase, this.moveSpeedAmp);
                 this.strafingTime = -1;
             }
 
-            if (this.strafingTime >= 20)
-            {
-                if ((double)this.entity.getRNG().nextFloat() < 0.3D)
-                {
+            if (this.strafingTime >= 20) {
+                if ((double)this.entity.getRNG().nextFloat() < 0.3D) {
                     this.strafingClockwise = !this.strafingClockwise;
                 }
 
-                if ((double)this.entity.getRNG().nextFloat() < 0.3D)
-                {
+                if ((double)this.entity.getRNG().nextFloat() < 0.3D) {
                     this.strafingBackwards = !this.strafingBackwards;
                 }
 
                 this.strafingTime = 0;
             }
 
-            if (this.strafingTime > -1)
-            {
-                if (d0 > (double)(this.maxAttackDistance * 0.75F))
-                {
+            if (this.strafingTime > -1) {
+                if (d0 > (double)(this.maxAttackDistance * 0.75F)) {
                     this.strafingBackwards = false;
-                }
-                else if (d0 < (double)(this.maxAttackDistance * 0.25F))
-                {
+                } else if (d0 < (double)(this.maxAttackDistance * 0.25F)) {
                     this.strafingBackwards = true;
                 }
 
                 this.entity.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
                 this.entity.faceEntity(entitylivingbase, 30.0F, 30.0F);
-            }
-            else
-            {
+            } else {
                 this.entity.getLookController().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
             }
             
             if (this.attackTime > 0) {
             	--this.attackTime;
-            }
-            else if (flag)
-            {
+            } else if (flag) {
             	int i = 2100;
 
-                if (i >= 20)
-                {
+                if (i >= 20) {
                     this.entity.resetActiveHand();
                     this.entity.attackEntityWithRangedAttack(entitylivingbase, BowItem.getArrowVelocity(i));
                     this.attackTime = this.attackCooldown;
                 }
-            }
-            else if (--this.attackTime <= 0 && this.seeTime >= -60)
-            {
+            } else if (--this.attackTime <= 0 && this.seeTime >= -60) {
                 this.entity.setActiveHand(Hand.MAIN_HAND);
             }
         }

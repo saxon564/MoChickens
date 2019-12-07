@@ -118,8 +118,10 @@ public class ConfigComments {
 				+ "Default: ";
 	protected final String OWNER_TEMPTING = "Can chicken only be tempted by its owner\n"
 				+ "Default: ";
-	protected final String TEMPTING_SPEED = "Speed in which the chicken moves when tempted\n"
-				+ "in blocks (1.0 = 1 block)\n"
+	protected final String TEMPTING_SPEED = "Speed factor of walking speed the chicken moves when tempted\n"
+				+ "1.0 = normal speed\n"
+				+ "0.0-0.99 = slower\n"
+				+ "1.01 and up = faster\n"
 				+ "Default: ";
 	protected final String TEMPTING_SCARE = "Chicken can be scared away from being tempted\n"
 				+ "Default: ";
@@ -171,7 +173,10 @@ public class ConfigComments {
 				+ "Default: ";
 	protected final String ATTACK_FIRE_TIME = "How long the target is set on fire\n"
 				+ "Default: ";
-	protected final String ATTACK_SPEED = "How fast the chicken moves when it is attacking (1.0 = 1 Block)\n"
+	protected final String ATTACK_SPEED = "Factor of walking speed the chicken moves when it is attacking\n"
+				+ "1.0 = normal speed\n"
+				+ "0.0-0.99 = slower\n"
+				+ "1.01 and up = faster\n"
 				+ "Default: ";
 	protected final String ATTACK_EFFECTS = "Effects chicken give target when it hurts target\n"
 				+ "Default: \"";
@@ -189,7 +194,10 @@ public class ConfigComments {
 				+ "Default: ";
 	protected final String ATTACK_PRIMED_MOVEMENT = "Chicken can still move when exploding\n"
 				+ "Default: ";
-	protected final String ATTACK_PRIMED_SPEED = "How fast does the chicken move in blocks when exploding (1.0 = 1 Block)\n"
+	protected final String ATTACK_PRIMED_SPEED = "Factor of walking speed the chicken moves when exploding\n"
+				+ "1.0 = normal speed\n"
+				+ "0.0-0.99 = slower\n"
+				+ "1.01 and up = faster\n"
 				+ "Default: ";
 	protected final String ATTACK_ARROWS = "Attacks by shooting arrows\n"
 				+ "Default: ";

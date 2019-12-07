@@ -17,7 +17,6 @@ import com.saxon564.mochickens.entities.mobs.ai.ChickNearestAttackableTarget;
 import com.saxon564.mochickens.misc.ObjectTranslators;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
@@ -77,7 +76,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
 	private static AttributeModifier attackingSpeedBoostModifier;
 	
-	private final Minecraft mc = Minecraft.getInstance();
+	//private final Minecraft mc = Minecraft.getInstance();
 
 	private Entity entityToAttack;
 	private Entity lastEntityToAttack;
@@ -255,17 +254,12 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		}
 		goalSelector.addGoal(1, new SwimGoal(this));
 		goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-		if (canBlowUp) {
-			aiSwell = new ChickAISwell(this, movesWhenPrimed, primedMovementSpeed);
-		}
+		if (canBlowUp) aiSwell = new ChickAISwell(this, movesWhenPrimed, primedMovementSpeed);
 		goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
 		goalSelector.addGoal(5, new RandomWalkingGoal(this, 1.0D));
-		goalSelector.addGoal(6, new LookAtGoal(this,
-				PlayerEntity.class, 6.0F));
+		goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		goalSelector.addGoal(7, new LookRandomlyGoal(this));
-		if (canShootArrows) {
-			aiArrowAttack = new ChickAIAttackRangedBow(this, 1.0D, arrowShootSpeed, 15.0F);
-		}
+		if (canShootArrows) aiArrowAttack = new ChickAIAttackRangedBow(this, 1.0D, arrowShootSpeed, 15.0F);
 		setTamed(false);
 	}
 
@@ -295,85 +289,39 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	
 		if (compound.contains("OwnerUUID", 8)) {
 			s = compound.getString("OwnerUUID");
-			MoChickens.CHICKEN_LOGGER.debug("Reading Owner Contains 8! " + s.toString());
 		} else {
 			String s1 = compound.getString("Owner");
 			s = PreYggdrasilConverter.convertMobOwnerIfNeeded(getServer(), s1);
-			MoChickens.CHICKEN_LOGGER.debug("Reading Owner: " + s);
 		}
 		
-		if (compound.contains("ExplodingChickenSyndrome")) {
-			setExplodingChickenSyndrome(compound.getBoolean("ExplodingChickenSyndrome"));
-		}
-		
-		if (compound.contains("MadChickenDisease")) {
-			setMadChickenDisease(compound.getBoolean("MadChickenDisease"));
-		}
-		
-		if (compound.contains("TrickleChickenDisorder")) {
-			setTrickleChickenDisorder(compound.getBoolean("TrickleChickenDisorder"));
-		}
-		
-		if (compound.contains("TrickleFactor")) {
-			setTrickleFactor(compound.getFloat("TrickleFactor"));
-		}
+		if (compound.contains("ExplodingChickenSyndrome")) setExplodingChickenSyndrome(compound.getBoolean("ExplodingChickenSyndrome"));
+		if (compound.contains("MadChickenDisease")) setMadChickenDisease(compound.getBoolean("MadChickenDisease"));
+		if (compound.contains("TrickleChickenDisorder")) setTrickleChickenDisorder(compound.getBoolean("TrickleChickenDisorder"));
+		if (compound.contains("TrickleFactor")) setTrickleFactor(compound.getFloat("TrickleFactor"));
 		
 		if (!s.isEmpty()) {
 			if (!s.equals("00000000-0000-0000-0000-000000000000")) {
-				MoChickens.CHICKEN_LOGGER.debug("Setting Owner! " + s);
 				setOwnerId(UUID.fromString(s));
-				MoChickens.CHICKEN_LOGGER.debug("Owner After set: " + getOwnerId().toString());
 				setTamed(true);
 			} else {
-				MoChickens.CHICKEN_LOGGER.debug("Forget The Owner! " + s);
 				setTamed(false);
 			}
 		}
 	}
 	
 	@Override
-	public void writeAdditional(CompoundNBT compound)
-    {
+	public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-
-        if (getOwnerId() == null)
-        {
-        	MoChickens.CHICKEN_LOGGER.debug("Writing Owner Null");
-            compound.putString("OwnerUUID", "");
-        } else {
-        	MoChickens.CHICKEN_LOGGER.debug("Writing Owner: " + getOwnerId().toString());
-            compound.putString("OwnerUUID", getOwnerId().toString());
-        }
-        if (getExplodingChickenSyndrome()) {
-        	compound.putBoolean("ExplodingChickenSyndrome", true);
-        } else {
-        	compound.putBoolean("ExplodingChickenSyndrome", false);
-        }
-        
-        if (getMadChickenDisease()) {
-        	compound.putBoolean("MadChickenDisease", true);
-        } else {
-        	compound.putBoolean("MadChickenDisease", false);
-        }
-        
-        if (getTrickleChickenDisorder()) {
-        	compound.putBoolean("TrickleChickenDisorder", true);
-        } else {
-        	compound.putBoolean("TrickleChickenDisorder", false);
-        }
-        
-        if (getTrickleFactor() != 0.0F) {
-        	compound.putFloat("TrickleChickenDisorder", getTrickleFactor());
-        } else {
-        	compound.putFloat("TrickleChickenDisorder", 0.0F);
-        }
+        compound.putString("OwnerUUID", ((getOwnerId() == null) ? "" : getOwnerId().toString()));
+        compound.putBoolean("ExplodingChickenSyndrome", getExplodingChickenSyndrome());
+        compound.putBoolean("MadChickenDisease", getMadChickenDisease());
+        compound.putBoolean("TrickleChickenDisorder", getTrickleChickenDisorder());
+        compound.putFloat("TrickleChickenDisorder", ((getTrickleFactor() != 0.0F) ? getTrickleFactor() : 0.0F));     
     }
 
 	@Override
 	public boolean canDespawn(double distanceToClosestPlayer) {
-		if (ran == 0) {
-			ran = 1;
-		}
+		if (ran == 0) ran = 1;
 		return despawn;
 	}
 	
@@ -407,30 +355,20 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
     }
 	
 	@Override
-	public boolean isTamed()
-    {
+	public boolean isTamed() {
 		return (dataManager.get(TAMED) & 4) != 0;
     }
 
 	@Override
-	public void setTamed(boolean tamed)
-    {
+	public void setTamed(boolean tamed) {
 		byte b0 = dataManager.get(TAMED);
-	      if (tamed) {
-	         dataManager.set(TAMED, (byte)(b0 | 4));
-	      } else {
-	         dataManager.set(TAMED, (byte)(b0 & -5));
-	      }
-	      
-		MoChickens.CHICKEN_LOGGER.debug("Setting Tamed AI: " + tamed);
+	    dataManager.set(TAMED, (byte)((tamed) ? (b0 | 4) : (b0 & -5)));
         setupTaimedAI(tamed);
     }
 	
 	public void setupTaimedAI(boolean tamed) {
 		if (tamed) {
-			if (getExplodingChickenSyndrome() && eCSClearInfectionWhenTamed) {
-				setExplodingChickenSyndrome(false);
-			}
+			if (getExplodingChickenSyndrome() && eCSClearInfectionWhenTamed) setExplodingChickenSyndrome(false);
 			if (getMadChickenDisease() && mCDClearInfectionWhenTamed) {
 				System.out.println(getName() + " Infection Cleared!");
 				setMadChickenDisease(false);
@@ -440,24 +378,13 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			world.setEntityState(this, (byte) 7);
 			goalSelector.removeGoal(new ChickNearestAttackableTarget<>(
 					this, PlayerEntity.class, true, attackTrackingRange));
-			if (canShootArrows) {
-				goalSelector.removeGoal(aiArrowAttack);
-			}
-			if (canBlowUp) {
-				goalSelector.removeGoal(aiSwell);
-			}
-			if ((canTemptWild) || (canTemptTamed && isTamed())) {
-				MoChickens.CHICKEN_LOGGER.debug(getOwnerId().toString());
-				goalSelector.addGoal(3, new ChickAITempt(this, 1.0D, temptingItem, false, ownerOnlyTempting, getOwnerId(), canTemptWild, canTemptTamed));
-			}
+			if (canShootArrows) goalSelector.removeGoal(aiArrowAttack);
+			if (canBlowUp) goalSelector.removeGoal(aiSwell);
+			if ((canTemptWild) || (canTemptTamed && isTamed())) goalSelector.addGoal(3, new ChickAITempt(this, 1.0D, temptingItem, false, ownerOnlyTempting, getOwnerId(), canTemptWild, canTemptTamed));
 			despawn = despawnTamed;
 			ran = 0;
 			canDespawn(0D);
-			if (laysItemsTamed) {
-				timeUntilNextEgg = rand.nextInt(variableItemLayTime) + minItemLayTime;
-			} else {
-				timeUntilNextEgg = -1;
-			}
+			timeUntilNextEgg = ((laysItemsTamed) ? rand.nextInt(variableItemLayTime) + minItemLayTime : -1);
 		} else if (hostile) {
 			if (canShootArrows) {
 				goalSelector.addGoal(4, aiArrowAttack);
@@ -465,12 +392,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 				goalSelector.addGoal(2, new MeleeAttackGoal(this, attackSpeed, false));
 			}
 			
-			if (canBlowUp) {
-				MoChickens.CHICKEN_LOGGER.debug("Adding Explosion Goal! " + canBlowUp);
-				goalSelector.addGoal(2, aiSwell);
-			} else {
-				MoChickens.CHICKEN_LOGGER.debug("Not Adding Explosion Goal!" + canBlowUp);
-			}
+			if (canBlowUp) goalSelector.addGoal(2, aiSwell);
 			
 			targetSelector.addGoal(1, new ChickNearestAttackableTarget<>(
 					this, PlayerEntity.class, true, attackTrackingRange));
@@ -481,18 +403,11 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		} else {
 			despawn = despawnUntamed;
 			ran = 0;
-			if (laysItemsWild) {
-				timeUntilNextEgg = rand.nextInt(variableItemLayTime) + minItemLayTime;
-			} else {
-				timeUntilNextEgg = -1;
-			}
+			timeUntilNextEgg = ((laysItemsWild) ? rand.nextInt(variableItemLayTime) + minItemLayTime : -1);
 			canDespawn(0D);
 		}
 
-		if (world.getDifficulty().toString().equalsIgnoreCase(
-				"peaceful")) {
-			difficultyChange();
-		}
+		if (world.getDifficulty().toString().equalsIgnoreCase("peaceful")) difficultyChange();
 	}
 	
 	@Override
@@ -503,11 +418,8 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			BlockPos pos = new BlockPos((int) posX, (int) posY, (int) posZ);
 			int light = world.getNeighborAwareLightSubtracted(pos, 0);
 			BlockState iBlockStateDown = world.getBlockState((new BlockPos(this)).down());
-			if (iBlockStateDown.canEntitySpawn(worldIn, pos, getType()) && (light >= minSpawnLightLevel) && (light <= maxSpawnLightLevel)) {
-				return true;
-			} else {
-				return false;
-			}
+			return (iBlockStateDown.canEntitySpawn(worldIn, pos, getType()) && (light >= minSpawnLightLevel)
+					&& (light <= maxSpawnLightLevel)) ? true : false;
 		} else {
 			return false;
 		}
@@ -521,17 +433,13 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			setScreaming(true);
 
 			if (par1DamageSource instanceof EntityDamageSource
-					&& par1DamageSource.getTrueSource() instanceof PlayerEntity) {
-				isAggressive = true;
-			}
+					&& par1DamageSource.getTrueSource() instanceof PlayerEntity) isAggressive = true;
 
 			if (par1DamageSource instanceof EntityDamageSource) {
 				isAggressive = false;
 
 				for (int i = 0; i < 64; ++i) {
-					if (teleportRandomly()) {
-						return true;
-					}
+					if (teleportRandomly()) return true;
 				}
 
 				return super.attackEntityFrom(par1DamageSource, par2);
@@ -546,9 +454,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
 	@Override
 	public boolean attackEntityAsMob(Entity par1Entity) {
-		if ((!isTamed())
-				&& (hostile)
-				&& (!canBlowUp)) {
+		if ((!isTamed()) && (hostile) && (!canBlowUp)) {
 			LivingEntity target = getAttackTarget();
 			float f = (float) attackDamage;
 			int i = 0;
@@ -557,13 +463,10 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 				f += EnchantmentHelper.getModifierForCreature(getHeldItemMainhand(), ((LivingEntity)par1Entity).getCreatureAttribute());
 	            i += EnchantmentHelper.getKnockbackModifier(this);
 				applyEffects(target);
-				if (setTargetOnFire) {
-					target.setFire(fireDuration);
-				}
+				if (setTargetOnFire) target.setFire(fireDuration);
 			}
 
-			boolean flag = par1Entity.attackEntityFrom(
-					DamageSource.causeMobDamage(this), f);
+			boolean flag = par1Entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
 
 			if (flag) {
 				if (i > 0) {
@@ -573,21 +476,16 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
 				int j = EnchantmentHelper.getFireAspectModifier(this);
 
-				if (j > 0) {
-					target.setFire(j * 4);
-				}
+				if (j > 0) target.setFire(j * 4);
 
-				if (par1Entity instanceof PlayerEntity)
-	            {
+				if (par1Entity instanceof PlayerEntity) {
 					PlayerEntity entityp = (PlayerEntity)par1Entity;
 	                ItemStack itemstack1 = entityp.isHandActive() ? entityp.getActiveItemStack() : ItemStack.EMPTY;
 
-	                if (!itemstack1.isEmpty() && itemstack1.getItem() == Items.SHIELD)
-	                {
+	                if (!itemstack1.isEmpty() && itemstack1.getItem() == Items.SHIELD) {
 	                    float f1 = 0.25F + (float)EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
 
-	                    if (rand.nextFloat() < f1)
-	                    {
+	                    if (rand.nextFloat() < f1) {
 	                        entityp.getCooldownTracker().setCooldown(Items.SHIELD, 100);
 	                        world.setEntityState(entityp, (byte)30);
 	                    }
@@ -610,7 +508,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			int amplifier = effectAmplifiers[p];
 			int duration = effectDurations[p];
 			if (checkpot(pot, amplifier, duration) != "") {
-				target.addPotionEffect(new EffectInstance(pot, duration, amplifier));
+				target.addPotionEffect(new EffectInstance(pot, duration * 20, amplifier));
 			} else {
 				MoChickens.CHICKEN_LOGGER.error("Effect " + effectIDs[p] + " was not found!");
 			}
@@ -618,11 +516,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	}
 
 	private String checkpot(Effect pot, int amplifier, int duration) {
-		String test = "";
-		if (pot != null) {
-			test = new EffectInstance(pot, amplifier, duration).getEffectName();
-		}
-		return test;
+		return ((pot != null) ? new EffectInstance(pot, amplifier, duration).getEffectName() : "");
 	}
 
 	private void addLight() {
@@ -651,14 +545,11 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	}
 	
 	@Override
-	public void onDeath(DamageSource cause)
-    {
-        if (!world.isRemote && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && getOwner() instanceof ServerPlayerEntity)
-        {
-        	getOwner().sendMessage(getDisplayName().appendText(" at " + dateFormat() + " by " + cause.getImmediateSource().getName().getFormattedText()));
+	public void onDeath(DamageSource cause) {
+		MoChickens.CHICKEN_LOGGER.debug("Hit onDeath Method!");
+        if (!world.isRemote && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) 
+        		&& getOwner() instanceof ServerPlayerEntity) getOwner().sendMessage(getDisplayName().appendText(" at " + dateFormat() + " by " + cause.getImmediateSource().getName().getFormattedText()));
 
-        }
-		//world.getChunkProvider().getLightManager().getLightEngine(LightType.BLOCK).func_215567_a(getPosition(), false);
 		world.notifyNeighbors(getPosition(), world.getBlockState(getPosition()).getBlock());
         super.onDeath(cause);
     }
@@ -677,36 +568,25 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			loc ++;
 		}
 		
-	Vec3d vec3d = this.getMotion();
-	if (!this.onGround && vec3d.y < 0.0D) {
-		this.setMotion(vec3d.mul(1.0D, 0.6D, 1.0D));
-    }
+		Vec3d vec3d = this.getMotion();
+		if (!this.onGround && vec3d.y < 0.0D) this.setMotion(vec3d.mul(1.0D, 0.6D, 1.0D));
 	      
 		if (world.isDaytime() && !world.isRemote && burnsInSun) {
 			float f = getBrightness();
 
-			if (f > 0.5F
-					&& rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
-					&& world.canBlockSeeSky(new BlockPos(
-							MathHelper.floor(posX),
-							MathHelper.floor(posY),
-							MathHelper.floor(posZ)))) {
+			if (f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && world.canBlockSeeSky(
+					new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)))) {
 				boolean flag = true;
 
-				if (flag) {
-					setFire(8);
-				}
+				if (flag) setFire(8);
 			}
 		}
 
 		if (lastEntityToAttack != entityToAttack) {
-			IAttributeInstance attributeinstance = this
-					.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			IAttributeInstance attributeinstance = this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 			attributeinstance.removeModifier(attackingSpeedBoostModifier);
 
-			if (entityToAttack != null) {
-				attributeinstance.applyModifier(attackingSpeedBoostModifier);
-			}
+			if (entityToAttack != null) attributeinstance.applyModifier(attackingSpeedBoostModifier);
 		}
 
 		lastEntityToAttack = entityToAttack;
@@ -715,10 +595,8 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			if (world.isDaytime() && !world.isRemote) {
 				float f = getBrightness();
 
-				if (f > 0.5F && world.canBlockSeeSky(new BlockPos(
-						MathHelper.floor(posX),
-						MathHelper.floor(posY),
-						MathHelper.floor(posZ)))
+				if (f > 0.5F && world.canBlockSeeSky(
+						new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)))
 						&& rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F) {
 					entityToAttack = null;
 					setScreaming(false);
@@ -735,27 +613,18 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 				teleportRandomly();
 			}
 
-			if (isScreaming() && !isAggressive
-					&& rand.nextInt(100) == 0) {
-				setScreaming(false);
-			}
+			if (isScreaming() && !isAggressive && rand.nextInt(100) == 0) setScreaming(false);
 
 			isJumping = false;
 
-			if (entityToAttack != null) {
-				faceEntity(entityToAttack, 100.0F, 100.0F);
-			}
+			if (entityToAttack != null) faceEntity(entityToAttack, 100.0F, 100.0F);
 
 			if (!world.isRemote && isAlive()) {
 				if (entityToAttack != null) {
 					if (entityToAttack instanceof PlayerEntity) {
-						if (entityToAttack.getDistanceSq(this) < 16.0D) {
-							teleportRandomly();
-						}
-
+						if (entityToAttack.getDistanceSq(this) < 16.0D) teleportRandomly();
 						teleportDelay = 0;
-					} else if (entityToAttack.getDistanceSq(this) > 256.0D
-							&& teleportDelay++ >= 30
+					} else if (entityToAttack.getDistanceSq(this) > 256.0D && teleportDelay++ >= 30
 							&& teleportToEntity(entityToAttack)) {
 						teleportDelay = 0;
 					}
@@ -766,26 +635,15 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			}
 		}
 
-		if ((!isTamed()) && (canBlowUp) && (hostile)) {
-			blowUp();
-		}
+		if ((!isTamed()) && (canBlowUp) && (hostile)) blowUp();
 
 		field_70888_h = field_70886_e;
 		field_70884_g = destPos;
-		destPos = (float) ((double) destPos + (double)
-				(onGround ? -1 : 4) * 0.3D);
+		destPos = (float) ((double) destPos + (double) (onGround ? -1 : 4) * 0.3D);
 
-		if (destPos < 0.0F) {
-			destPos = 0.0F;
-		}
-
-		if (destPos > 1.0F) {
-			destPos = 1.0F;
-		}
-
-		if (!onGround && field_70889_i < 1.0F) {
-			field_70889_i = 1.0F;
-		}
+		if (destPos < 0.0F) destPos = 0.0F;
+		if (destPos > 1.0F) destPos = 1.0F;
+		if (!onGround && field_70889_i < 1.0F) field_70889_i = 1.0F;
 
 		if (emitsParticles) {
 			for (int p = 0; p < particleType.length; ++p) {
@@ -797,21 +655,17 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 					try {
 						if (!particleType[p].getRegistryName().toString().equalsIgnoreCase("minecraft:note")) {
 							world.addParticle(deserializeParticle(new StringReader(particleData[p] + " 1.0 0"), particleType[p]),
-									posX + (rand.nextDouble() - 0.5D)
-									* (double) getWidth(),
-									posY + rand.nextDouble()
-									* (double) getHeight(),
-									posZ + (rand.nextDouble() - 0.5D)
-									* (double) getWidth(), 0.0D, 0.0D, 0.0D);
+									posX + (rand.nextDouble() - 0.5D) * (double) getWidth(),
+									posY + rand.nextDouble() * (double) getHeight(),
+									posZ + (rand.nextDouble() - 0.5D) * (double) getWidth(),
+									0.0D, 0.0D, 0.0D);
 						} else {
 							particleData[p] = particleData[p].replace(" ", "");
 							world.addParticle(deserializeParticle(new StringReader(""), particleType[p]),
-									posX + (rand.nextDouble() - 0.5D)
-									* (double) getWidth(),
-									posY + rand.nextDouble()
-									* (double) getHeight(),
-									posZ + (rand.nextDouble() - 0.5D)
-									* (double) getWidth(), ObjectTranslators.getDouble(particleData[p]), 0.0D, 0.0D);
+									posX + (rand.nextDouble() - 0.5D) * (double) getWidth(),
+									posY + rand.nextDouble() * (double) getHeight(),
+									posZ + (rand.nextDouble() - 0.5D) * (double) getWidth(),
+									ObjectTranslators.getDouble(particleData[p]), 0.0D, 0.0D);
 						}
 					} catch (CommandSyntaxException e) {
 						e.printStackTrace();
@@ -820,19 +674,13 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			}
 		}
 
-		if (emitsLight) {
-			addLight();
-		}
+		if (emitsLight) addLight();
 
-		if ((isWet()) && (getsHurtByWater)) {
-			attackEntityFrom(DamageSource.DROWN, (float) damageFromWater);
-		}
+		if ((isWet()) && (getsHurtByWater)) attackEntityFrom(DamageSource.DROWN, (float) damageFromWater);
 
 		field_70889_i = (float) ((double) field_70889_i * 0.9D);
 
-		if (!onGround && moveVertical < 0.0D) {
-			moveVertical *= 0.6D;
-		}
+		if (!onGround && moveVertical < 0.0D) moveVertical *= 0.6D;
 
 		field_70886_e += field_70889_i * 2.0F;
 
@@ -844,8 +692,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		if (!isChild() && ((laysItemsWild && !isTamed()) || (laysItemsTamed &&  isTamed())) && !world.isRemote
 				&& --timeUntilNextEgg == 0) {
 
-			playSound(layingSound, 1.0F,
-					(rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+			playSound(layingSound, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 			if (layingItem != null) {
 				entityDropItem(layingItem[randomInt(0, (layingItem.length - 1))], layingItemAmount);
 				timeUntilNextEgg = rand.nextInt(variableItemLayTime) + minItemLayTime;
@@ -858,21 +705,16 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		if (getTrickleChickenDisorder()) {
 			if (getTrickleFactor() != 0.0F) {
 				int adjust = (int) (Math.random() * (tCDAdjustmentChance + 1));
-				if (tCDAdjustmentFactor < 0) {
-					tCDAdjustmentFactor = tCDAdjustmentFactor * -1;
-				}
+				if (tCDAdjustmentFactor < 0) tCDAdjustmentFactor = tCDAdjustmentFactor * -1;
+				
 				if (adjust == 0) {
 					float newAdjustment = getTrickleFactor();
 					if (tCDBaseSlownessFactor > tCDMaxSlownessFactor) {
 						newAdjustment = getTrickleFactor() - tCDAdjustmentFactor;
-						if (newAdjustment < tCDMaxSlownessFactor) {
-							newAdjustment = tCDMaxSlownessFactor;
-						}
+						if (newAdjustment < tCDMaxSlownessFactor) newAdjustment = tCDMaxSlownessFactor;
 					} else if (tCDBaseSlownessFactor < tCDMaxSlownessFactor) {
 						newAdjustment = getTrickleFactor() + tCDAdjustmentFactor;
-						if (newAdjustment > tCDMaxSlownessFactor) {
-							newAdjustment = tCDMaxSlownessFactor;
-						}
+						if (newAdjustment > tCDMaxSlownessFactor) newAdjustment = tCDMaxSlownessFactor;
 					}
 					setTrickleFactor(newAdjustment);
 					timeUntilNextEgg = (int) Math.ceil(timeUntilNextEgg / getTrickleFactor());
@@ -885,9 +727,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
 		manageInfections();
 
-		if (dead) {
-			world.getLightFor(LightType.BLOCK, new BlockPos((int) posX, (int) posY, (int) posZ));
-		}
+		if (dead) world.getLightFor(LightType.BLOCK, new BlockPos((int) posX, (int) posY, (int) posZ));
 	}
 	
 	private static <T extends IParticleData> T deserializeParticle(StringReader reader, ParticleType<T> type) throws CommandSyntaxException {
@@ -897,33 +737,23 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	public void manageInfections() {
 		if (!world.isRemote) {
 			if (explodingChickenSyndrome && !getExplodingChickenSyndrome()) {
-				int rand;
-				if (isChild()) {
-					rand = randomInt(1, eCSBabyInfectionChance);
-				} else {
-					rand = randomInt(1, eCSInfectionChance);
-				}
+				int rand = randomInt(1, ((isChild()) ? eCSBabyInfectionChance : eCSInfectionChance));
+				
 				if (rand == 1) {
 					if (isTamed() && eCSInfectedWhenTamed) {
 						setExplodingChickenSyndrome(true);
 						if (eCSNotifyOwnerWhenInfected) {
-							if (world.getPlayers().contains(getOwner())) {
-								getOwner().sendMessage(getDisplayName().appendText(" has been infected with Exploding Chicken Syndrome!"));
-							}
+							if (world.getPlayers().contains(getOwner())) getOwner().sendMessage(getDisplayName().appendText(" has been infected with Exploding Chicken Syndrome!"));
 						}
 					}
-					if (!isTamed() && eCSInfectedWhenWild) {
-						setExplodingChickenSyndrome(true);
-					}
+					if (!isTamed() && eCSInfectedWhenWild) setExplodingChickenSyndrome(true);
 				}
 			}
 			
 			if (getExplodingChickenSyndrome()) {
 				int rand = randomInt(1, eCSFalseFuseChance);
 				int rand2 = randomInt(1, eCSExplosionChance);
-				if (rand == 1) {
-					playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
-				}
+				if (rand == 1) playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
 				if (rand2 == 1) {
 					explodingByECS = true;
 					setChickenState(1);
@@ -932,42 +762,24 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			}
 			
 			if (madChickenDisease && !getMadChickenDisease()) {
-				int rand;
-				if (isChild()) {
-					rand = randomInt(1, mCDBabyInfectionChance);
-				} else {
-					rand = randomInt(1, mCDInfectionChance);
-				}
+				int rand = randomInt(1, (isChild()) ? mCDBabyInfectionChance : mCDInfectionChance);
 				if (rand == 1) {
 					if (isTamed() && mCDInfectedWhenTamed) {
 						setMadChickenDisease(true);
-						if (mCDNotifyOwnerWhenInfected) {
-							getOwner().sendMessage(getDisplayName().appendText(" has been infected with Mad Chicken Disease!"));
-						}
+						if (mCDNotifyOwnerWhenInfected) getOwner().sendMessage(getDisplayName().appendText(" has been infected with Mad Chicken Disease!"));
 					}
-					if (!isTamed() && mCDInfectedWhenWild) {
-						setMadChickenDisease(true);
-					}
+					if (!isTamed() && mCDInfectedWhenWild) setMadChickenDisease(true);
 				}
 			}
 			
 			if (trickleChickenDisorder && !getTrickleChickenDisorder()) {
-				int rand;
-				if (isChild()) {
-					rand = randomInt(1, tCDBabyInfectionChance);
-				} else {
-					rand = randomInt(1, tCDInfectionChance);
-				}
+				int rand = randomInt(1, (isChild()) ? tCDBabyInfectionChance : tCDInfectionChance);
 				if (rand == 1) {
 					if (isTamed() && tCDInfectedWhenTamed) {
 						setTrickleChickenDisorder(true);
-						if (tCDNotifyOwnerWhenInfected) {
-							getOwner().sendMessage(getDisplayName().appendText(" has been infected with Trickle Chicken Disorder!"));
-						}
+						if (tCDNotifyOwnerWhenInfected) getOwner().sendMessage(getDisplayName().appendText(" has been infected with Trickle Chicken Disorder!"));
 					}
-					if (!isTamed() && tCDInfectedWhenWild) {
-						setTrickleChickenDisorder(true);
-					}
+					if (!isTamed() && tCDInfectedWhenWild) setTrickleChickenDisorder(true);
 				}
 			}
 		}
@@ -1011,10 +823,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	}
 	
 	public void setTrickleFactor(Float f) {
-		if (f < 0) {
-			f = f * -1;
-		}
-		dataManager.set(TRICKLEFACTOR, f);
+		dataManager.set(TRICKLEFACTOR, (f < 0) ? f * -1 : f);
 	}
 	
 	public void blowUp() {
@@ -1023,35 +832,48 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			
 			int i = getChickenState();
 
-			if (i > 0 && timeSinceIgnited == 0) {
-				playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
-			}
+			if (i > 0 && timeSinceIgnited == 0) playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
 
 			timeSinceIgnited += i;
 
-			if (timeSinceIgnited < 0) {
-				timeSinceIgnited = 0;
-			}
+			if (timeSinceIgnited < 0) timeSinceIgnited = 0;
 
 			if (timeSinceIgnited >= fuseTime) {
 				timeSinceIgnited = fuseTime;
-				if (!world.isRemote) {
+				//if (!world.isRemote) {
 					LivingEntity target = getAttackTarget();
+					MoChickens.CHICKEN_LOGGER.debug("Before Mode");
 					Explosion.Mode explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
+					MoChickens.CHICKEN_LOGGER.debug("After Mode, Before Dead");
 			        dead = true;
+			        MoChickens.CHICKEN_LOGGER.debug("After Dead, Before Explosion");
 					world.createExplosion(this, posX, posY, posZ, (float) explosionRadius, explosion$mode);
-					if (dataManager.get(EXPLODINGCHICKENSYNDROME)) {
+					MoChickens.CHICKEN_LOGGER.debug("After Explsion, Before Target");
+					/*if (dataManager.get(EXPLODINGCHICKENSYNDROME)) {
 						mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" has blown up from Exploding Chicken Syndrome!"));
 						mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" at " + dateFormat()));
-					}
-					if (target != null) {
-						applyEffects(target);
-					}
+					}*/
+					if (target != null) applyEffects(target);
+					MoChickens.CHICKEN_LOGGER.debug("After Target, Before Remove");
 					remove();
-				}
+					MoChickens.CHICKEN_LOGGER.debug("After Remove");
+				//}
 			}
 		}
 	}
+	
+	public void remove() {
+		MoChickens.CHICKEN_LOGGER.debug("Inside Remove 1");
+	      this.remove(false);
+	   }
+
+	   public void remove(boolean keepData) {
+		   MoChickens.CHICKEN_LOGGER.debug("Inside Remove 2");
+	      this.removed = true;
+	      MoChickens.CHICKEN_LOGGER.debug("After Remove True");
+	      if (!keepData)
+	         this.invalidateCaps();
+	   }
 	
 	public String dateFormat() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -1060,13 +882,11 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	}
 
 	public static int randomInt(int low, int high) {
-		int result = (int) (Math.random() * (high - low + 1)) + low;
-		return result;
+		return (int) (Math.random() * (high - low + 1)) + low;
 	}
 
 	public float getChickenFlashIntensity(float par1) {
-		return ((float) lastActiveTime + (float) (timeSinceIgnited - lastActiveTime)
-				* par1) / (float) (fuseTime - 2);
+		return ((float) lastActiveTime + (float) (timeSinceIgnited - lastActiveTime) * par1) / (float) (fuseTime - 2);
 	}
 
 	public int getChickenState() {
@@ -1081,8 +901,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
     }
 
 	private void difficultyChange() {
-		if (world.getDifficulty().toString().equalsIgnoreCase(
-				"peaceful")) {
+		if (world.getDifficulty().toString().equalsIgnoreCase("peaceful")) {
 			navigator.clearPath();
 			setAttackTarget((LivingEntity) null);
 			setAttackTarget(null);
@@ -1112,26 +931,6 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	}
 
 	/**
-	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity
-	 * has recently been hit by a player. @param par2 - Level of Looting used to
-	 * kill this mob.
-	 *
-	@Override
-	protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
-		int j = rand.nextInt(3) + rand.nextInt(1 + looting);
-
-		for (int k = 0; k < j; ++k) {
-			entityDropItem((Item) Items.FEATHER, 1);
-		}
-
-		if (isBurning()) {
-			entityDropItem((Item) Items.COOKED_CHICKEN, 1);
-		} else {
-			entityDropItem((Item) Items.CHICKEN, 1);
-		}
-	}*/
-
-	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow,
 	 * gets into the saddle on a pig.
 	 */
@@ -1154,28 +953,24 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 				}
 			}
 		
-			if (canTame) {
-				if (!isTamed()) {
-					for (Item item : tamingItem) {
-						if (item == itemstack.getItem()) {
-							consumeItemFromStack(player, itemstack);
-							if (!world.isRemote) {
-								if (rand.nextInt(tamingChance) == 0) {
-									setOwnerId(player.getUniqueID());
-									setTamedBy(player);
-									navigator.clearPath();
-									setAttackTarget((LivingEntity) null);
-									setAttackTarget(null);
-									playTameEffect(true);
-								} else {
-									playTameEffect(false);
-									world.setEntityState(this, (byte) 6);
-								}
+			if (canTame && !isTamed()) {
+				for (Item item : tamingItem) {
+					if (item == itemstack.getItem()) {
+						consumeItemFromStack(player, itemstack);
+						if (!world.isRemote) {
+							if (rand.nextInt(tamingChance) == 0) {
+								setOwnerId(player.getUniqueID());
+								setTamedBy(player);
+								navigator.clearPath();
+								setAttackTarget((LivingEntity) null);
+								setAttackTarget(null);
+								playTameEffect(true);
+							} else {
+								playTameEffect(false);
+								world.setEntityState(this, (byte) 6);
 							}
-					
 						}
 					}
-				
 				}
 			}
 
@@ -1216,7 +1011,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 			return (EntityMoChicken) newEntity;
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-		}  catch (SecurityException e) {
+		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -1230,10 +1025,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		if ((allowBreedingWild && !isTamed()) || (allowBreedingTamed && isTamed())) {
 			if (!ownerOnlyBreeding || (getOwner().getUniqueID() == player.getUniqueID())) {
 				for (Item loopItem : breedingItem) {
-					if (loopItem == item) {
-						return true;
-						
-					}
+					if (loopItem == item) return true;
 				}
 				return false;
 			} else {
@@ -1248,8 +1040,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 		return spawnBabyAnimal(par1EntityAgeable);
 	}
 
-	public boolean isScreaming()
-    {
+	public boolean isScreaming() {
         return ((Boolean)dataManager.get(SCREAMING)).booleanValue();
     }
 
@@ -1269,29 +1060,22 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 	}
 
 	protected boolean teleportToEntity(Entity par1Entity) {
-		Vec3d vec3 = new Vec3d(posX - par1Entity.posX,
-				getBoundingBox().minY + (double) (getHeight() / 1.5F)
-						- par1Entity.posY + (double) par1Entity.getEyeHeight(),
-				posZ - par1Entity.posZ);
+		Vec3d vec3 = new Vec3d(posX - par1Entity.posX, getBoundingBox().minY + (double) (getHeight() / 1.5F)
+				- par1Entity.posY + (double) par1Entity.getEyeHeight(), posZ - par1Entity.posZ);
 		vec3 = vec3.normalize();
 		double d0 = 16.0D;
-		double d1 = posX + (rand.nextDouble() - 0.5D) * 8.0D
-				- vec3.x * d0;
-		double d2 = posY + (double) (rand.nextInt(16) - 8)
-				- vec3.y * d0;
-		double d3 = posZ + (rand.nextDouble() - 0.5D) * 8.0D
-				- vec3.z * d0;
+		double d1 = posX + (rand.nextDouble() - 0.5D) * 8.0D - vec3.x * d0;
+		double d2 = posY + (double) (rand.nextInt(16) - 8) - vec3.y * d0;
+		double d3 = posZ + (rand.nextDouble() - 0.5D) * 8.0D - vec3.z * d0;
 		return teleportTo(d1, d2, d3);
 	}
 
-	private boolean teleportTo(double x, double y, double z)
-    {
+	private boolean teleportTo(double x, double y, double z) {
         net.minecraftforge.event.entity.living.EnderTeleportEvent event = new net.minecraftforge.event.entity.living.EnderTeleportEvent(this, x, y, z, 0);
         if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event)) return false;
         boolean flag = attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
 
-        if (flag)
-        {
+        if (flag) {
             world.playSound((PlayerEntity)null, prevPosX, prevPosY, prevPosZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, getSoundCategory(), 1.0F, 1.0F);
             playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
         }
@@ -1300,8 +1084,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
     }
 
 	@Override
-	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor)
-    {
+	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
         ArrowEntity entityarrow = getArrow(distanceFactor);
         double d0 = target.posX - posX;
         double d1 = target.getBoundingBox().minY + (double)(target.getHeight() / 3.0F) - entityarrow.posY;
@@ -1313,8 +1096,7 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
         
     }
 	
-	protected ArrowEntity getArrow(float power)
-    {
+	protected ArrowEntity getArrow(float power) {
         ArrowEntity entitytippedarrow = new ArrowEntity(world, this);
         for (int p = 0; p < effectIDs.length; p++) {
         	Effect pot = effectIDs[p];
