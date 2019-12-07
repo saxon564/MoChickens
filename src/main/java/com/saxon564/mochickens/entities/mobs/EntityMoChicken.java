@@ -840,40 +840,21 @@ public class EntityMoChicken extends TameableEntity implements IRangedAttackMob 
 
 			if (timeSinceIgnited >= fuseTime) {
 				timeSinceIgnited = fuseTime;
-				//if (!world.isRemote) {
+				if (!world.isRemote) {
 					LivingEntity target = getAttackTarget();
-					MoChickens.CHICKEN_LOGGER.debug("Before Mode");
 					Explosion.Mode explosion$mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
-					MoChickens.CHICKEN_LOGGER.debug("After Mode, Before Dead");
 			        dead = true;
-			        MoChickens.CHICKEN_LOGGER.debug("After Dead, Before Explosion");
-					world.createExplosion(this, posX, posY, posZ, (float) explosionRadius, explosion$mode);
-					MoChickens.CHICKEN_LOGGER.debug("After Explsion, Before Target");
+					world.createExplosion(this, posX, posY, posZ, explosionRadius, explosion$mode);
 					/*if (dataManager.get(EXPLODINGCHICKENSYNDROME)) {
 						mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" has blown up from Exploding Chicken Syndrome!"));
 						mc.ingameGUI.getChatGUI().printChatMessage(getDisplayName().appendText(" at " + dateFormat()));
 					}*/
 					if (target != null) applyEffects(target);
-					MoChickens.CHICKEN_LOGGER.debug("After Target, Before Remove");
 					remove();
-					MoChickens.CHICKEN_LOGGER.debug("After Remove");
-				//}
+				}
 			}
 		}
 	}
-	
-	public void remove() {
-		MoChickens.CHICKEN_LOGGER.debug("Inside Remove 1");
-	      this.remove(false);
-	   }
-
-	   public void remove(boolean keepData) {
-		   MoChickens.CHICKEN_LOGGER.debug("Inside Remove 2");
-	      this.removed = true;
-	      MoChickens.CHICKEN_LOGGER.debug("After Remove True");
-	      if (!keepData)
-	         this.invalidateCaps();
-	   }
 	
 	public String dateFormat() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
