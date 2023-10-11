@@ -133,7 +133,7 @@ public class MoChicken extends TamableAnimal implements RangedAttackMob {
 		}
 	}
 
-	/*@SuppressWarnings("resource")
+	@SuppressWarnings("resource")
 	public void aiStep() {
 		super.aiStep();
 		this.oFlap = this.flap;
@@ -183,7 +183,7 @@ public class MoChicken extends TamableAnimal implements RangedAttackMob {
 			this.eggTime = this.random.nextInt(config.VARIABLE_LAYING_TIME.get()) + config.MINIMUM_LAYING_TIME.get();
 		}
 
-	}*/
+	}
 
 	protected boolean isFlapping() {
 		return this.flyDist > this.nextFlap;
