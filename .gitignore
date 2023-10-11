@@ -20,15 +20,11 @@ build
 # other
 eclipse
 run
-saves
-mods
-logs
-config
-crash-reports
-resourcepacks
-new mochickens stuff
-MoChickensCrafting and Misc images
-rub.bat
-usercache.json
-usernamecache.json
-options.txt
+run-data
+MDK-main.zip
+TEMPLATE_LICENSE.txt
+bbmodels/MoChickenModel.bbmodel
+MoChickensCrafting and Misc images/*
+new mochickens stuff/*
+Old Code/*
+temp removed/*

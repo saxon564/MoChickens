@@ -1,24 +1,24 @@
 {
-	"layDiamond": {
-	   "category": "neutral",
-	   "subtitle": "mochickens.subtitle.layDiamond",
-	   "sounds": [
+	"laydiamond":{
+	   "category":"neutral",
+	   "subtitle":"mochickens.subtitle.laydiamond",
+	   "sounds":[
 	       "mochickens:laydiamond"
 	   ]
 	},
-	"deepCluck": {
-	   "category": "neutral",
-       "subtitle": "mochickens.subtitle.deepCluck",
-	   "sounds": [
+	"deepcluck":{
+	   "category":"neutral",
+       "subtitle":"mochickens.subtitle.deepcluck",
+	   "sounds":[
 	       "mochickens:deepcluck1",
 	       "mochickens:deepcluck2",
 	       "mochickens:deepcluck3"
 	       ]
 	},
-	"giantHurt": {
-	   "category": "neutral",
-       "subtitle": "mochickens.subtitle.giantHurt",
-	   "sounds": [
+	"gianthurt":{
+	   "category":"neutral",
+       "subtitle":"mochickens.subtitle.gianthurt",
+	   "sounds":[
 	       "mochickens:gianthurt1",
 	       "mochickens:gianthurt2"
 	   ]

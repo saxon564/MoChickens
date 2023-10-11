@@ -1,6 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "mochickens:blocks/redstone_feather_block"
-    }
-}

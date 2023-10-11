@@ -1,28 +1,27 @@
 package com.saxon564.mochickens.registers;
 
-import com.saxon564.mochickens.MoChickens;
+//import com.saxon564.mochickens.MoChickens;
 import com.saxon564.mochickens.Reference;
+import com.saxon564.mochickens.registers.collections.MoChickensSounds;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class RegisterSounds {
-	private static int size = 0;
 	
-	public static void init(){
-		size = SoundEvent.REGISTRY.getKeys().size();
-		
-		MoChickens.DEEP_CLUCK = register("deepCluck");
-		MoChickens.GIANT_HURT = register("giantHurt");
-		MoChickens.DIAMOND_LAY = register("layDiamond");
+	public static DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Reference.MOD_ID);
+	
+	public static void registerSounds() {
+			MoChickensSounds.DEEP_CLUCK = register("deepcluck");
+			MoChickensSounds.GIANT_HURT = register("gianthurt");
+			MoChickensSounds.DIAMOND_LAY = register("laydiamond");
 	}
 	
-	public static SoundEvent register(String name){
+	public static RegistryObject<SoundEvent> register(String name){
 		ResourceLocation location = new ResourceLocation(Reference.MOD_ID, name);
-		SoundEvent e = new SoundEvent(location);
-		
-		//SoundEvent.REGISTRY.register(size, location, e);
-		size++;
-		return e;
+		return SOUNDS.register(name, () -> SoundEvent.createFixedRangeEvent(location, 16.0F));
 	}
 }

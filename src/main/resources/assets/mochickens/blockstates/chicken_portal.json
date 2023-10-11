@@ -1,6 +1,0 @@
-{
-    "variants": {
-        "axis=z": { "model": "mochickens:chicken_portal_ew" },
-        "axis=x": { "model": "mochickens:chicken_portal_ns" }
-    }
-}
