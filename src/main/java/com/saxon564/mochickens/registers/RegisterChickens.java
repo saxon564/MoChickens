@@ -35,7 +35,7 @@ public class RegisterChickens {
 	private static <T extends MoChicken> EntityType<? extends MoChicken> getEntity(EntityFactory<T> chicken,
 			float sizeX, float sizeZ, String type) {
 		return (EntityType<? extends MoChicken>) EntityType.Builder.<T>of(chicken, MobCategory.MISC).sized(sizeX, sizeZ)
-				.clientTrackingRange(4).updateInterval(20)
+				.clientTrackingRange(4).updateInterval(1)
 				.build(new ResourceLocation(Reference.MOD_ID, type).toString());
 	}
 

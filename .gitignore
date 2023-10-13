@@ -18,6 +18,7 @@ build
 .gradle
 
 # other
+*.bbmodel
 eclipse
 run
 run-data

@@ -31,7 +31,7 @@ public class ItemFile {
 
 		if (ConfigHandler.BIOMES.get()) {
 			generateString("Biomes.txt", level.registryAccess().registryOrThrow(Registries.BIOME).keySet());
-			MoChickens.CHICKEN_LOGGER.debug("BIOMES: " + level.registryAccess().registryOrThrow(Registries.BIOME).keySet());
+			//MoChickens.CHICKEN_LOGGER.debug("BIOMES: " + level.registryAccess().registryOrThrow(Registries.BIOME).keySet());
 		}
 
 		if (ConfigHandler.SOUNDS.get()) {
